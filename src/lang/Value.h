@@ -7,6 +7,7 @@ typedef enum LISP_TYPE {
     LISP_TYPE_NIL,
     LISP_TYPE_NUMBER,
     LISP_TYPE_STRING,
+    LISP_TYPE_SYMBOL,
     LISP_TYPE_LIST
 } LISP_TYPE;
 
@@ -19,6 +20,7 @@ typedef struct lisp_Value {
         struct lisp_Nil nil;
         struct lisp_Number number;
         struct lisp_String string;
+        struct lisp_Symbol symbol;
         struct lisp_List list;
     };
 } lisp_Value;
@@ -26,6 +28,7 @@ typedef struct lisp_Value {
 
 inline static lisp_Value* lisp_Value_ch(lisp_State*, lisp_u8);
 inline static lisp_Value* lisp_Value_cstring(lisp_State*, lisp_u8*);
+inline static lisp_Value* lisp_Value_symbol(lisp_State*, lisp_u8*);
 inline static lisp_Value* lisp_Value_nil(lisp_State*);
 inline static lisp_Value* lisp_Value_number(lisp_State*, lisp_f64);
 inline static lisp_Value* lisp_Value_list(lisp_State*);

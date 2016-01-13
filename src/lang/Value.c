@@ -20,6 +20,15 @@ inline static lisp_Value* lisp_Value_cstring(lisp_State* state, lisp_u8* cstring
     return value;
 }
 
+inline static lisp_Value* lisp_Value_symbol(lisp_State* state, lisp_u8* cstring) {
+    lisp_Value* value = lisp_State_alloc(state);
+    value->type = LISP_TYPE_SYMBOL;
+    value->symbol.value = value;
+    value->ref_count = 1;
+    lisp_Symbol_cstring(state, &value->symbol, cstring);
+    return value;
+}
+
 inline static lisp_Value* lisp_Value_nil(lisp_State* state) {
     lisp_Value* value = lisp_State_alloc(state);
     value->type = LISP_TYPE_NIL;
@@ -57,6 +66,9 @@ inline static void lisp_Value_delete(lisp_State* state, lisp_Value* value) {
         case LISP_TYPE_STRING:
             lisp_String_delete(state, &value->string);
             break;
+        case LISP_TYPE_SYMBOL:
+            lisp_Symbol_delete(state, &value->symbol);
+            break;
         case LISP_TYPE_NIL:
         case LISP_TYPE_NUMBER:
             break;
@@ -87,7 +99,10 @@ inline static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* va
         case LISP_TYPE_NUMBER:
             return lisp_Number_to_string(state, &value->number);
         case LISP_TYPE_STRING:
+            lisp_Value_ref(value);
             return value;
+        case LISP_TYPE_SYMBOL:
+            return lisp_Symbol_to_string(state, &value->symbol);
     }
 }
 

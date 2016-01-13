@@ -11,6 +11,7 @@ struct lisp_Value;
 #include "./Nil.h"
 #include "./Number.h"
 #include "./String.h"
+#include "./Symbol.h"
 #include "./Value.h"
 
 

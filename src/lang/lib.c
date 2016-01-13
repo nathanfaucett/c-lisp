@@ -7,6 +7,7 @@
 #include "./Nil.c"
 #include "./Number.c"
 #include "./String.c"
+#include "./Symbol.c"
 #include "./Value.c"
 
 
