@@ -27,7 +27,7 @@ typedef struct lisp_Value {
 
 
 inline static lisp_Value* lisp_Value_ch(lisp_State*, lisp_u8);
-inline static lisp_Value* lisp_Value_cstring(lisp_State*, lisp_u8*);
+inline static lisp_Value* lisp_Value_string(lisp_State*, lisp_u8*);
 inline static lisp_Value* lisp_Value_symbol(lisp_State*, lisp_u8*);
 inline static lisp_Value* lisp_Value_nil(lisp_State*);
 inline static lisp_Value* lisp_Value_number(lisp_State*, lisp_f64);

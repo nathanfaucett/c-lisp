@@ -5,6 +5,7 @@
 static inline lisp_State* lisp_State_new(lisp_State* state) {
     lisp_Memory_new(&state->memory);
     state->nil = lisp_Value_nil(state);
+    state->empty_list = lisp_Value_list(state);
     return state;
 }
 

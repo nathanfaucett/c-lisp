@@ -8,7 +8,7 @@ inline static lisp_Number* lisp_Number_new(lisp_Number* number, lisp_f64 float_v
 }
 
 inline static struct lisp_Value* lisp_Number_to_string(lisp_State* state, lisp_Number* number) {
-    return lisp_Value_cstring(state, "Number");
+    return lisp_Value_string(state, "Number");
 }
 
 

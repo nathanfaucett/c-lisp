@@ -22,8 +22,9 @@ typedef struct lisp_List {
     lisp_u32 size;
 } lisp_List;
 
-inline static lisp_List* lisp_List_new(lisp_List*, lisp_ListNode*, lisp_ListNode*, lisp_u32);
 inline static void lisp_List_delete(lisp_State*, lisp_List*);
+
+inline static lisp_List* lisp_List_init(lisp_List*, lisp_ListNode*, lisp_ListNode*, lisp_u32);
 
 inline static lisp_ListNode* lisp_ListNode_find_node(lisp_List*, lisp_u32);
 inline static struct lisp_Value* lisp_List_get_index(lisp_List*, lisp_u32);
@@ -33,6 +34,9 @@ inline static lisp_ListNode* lisp_copy_list_nodes(lisp_ListNode*, lisp_ListNode*
 
 inline static struct lisp_Value* lisp_List_push(lisp_State*, lisp_List*, struct lisp_Value*);
 inline static struct lisp_Value* lisp_List_unshift(lisp_State*, lisp_List*, struct lisp_Value*);
+
+inline static struct lisp_Value* lisp_List_pop(lisp_State*, lisp_List*);
+inline static struct lisp_Value* lisp_List_shift(lisp_State*, lisp_List*);
 
 inline static struct lisp_Value* lisp_List_to_string(lisp_State*, lisp_List*);
 

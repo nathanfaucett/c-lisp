@@ -3,7 +3,7 @@
 
 
 inline static lisp_Value* lisp_Nil_to_string(lisp_State* state) {
-    return lisp_Value_cstring(state, "nil");
+    return lisp_Value_string(state, "nil");
 }
 
 

@@ -3,7 +3,7 @@
 
 
 inline static struct lisp_Symbol* lisp_Symbol_cstring(lisp_State* state, lisp_Symbol* symbol, lisp_u8* cstring) {
-    symbol->string = lisp_Value_cstring(state, cstring);
+    symbol->string = lisp_Value_string(state, cstring);
     return symbol;
 }
 

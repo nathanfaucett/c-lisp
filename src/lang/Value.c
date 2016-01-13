@@ -11,7 +11,7 @@ inline static lisp_Value* lisp_Value_ch(lisp_State* state, lisp_u8 ch) {
     return value;
 }
 
-inline static lisp_Value* lisp_Value_cstring(lisp_State* state, lisp_u8* cstring) {
+inline static lisp_Value* lisp_Value_string(lisp_State* state, lisp_u8* cstring) {
     lisp_Value* value = lisp_State_alloc(state);
     value->type = LISP_TYPE_STRING;
     value->string.value = value;
@@ -51,7 +51,7 @@ inline static lisp_Value* lisp_Value_list(lisp_State* state) {
     value->type = LISP_TYPE_LIST;
     value->list.value = value;
     value->ref_count = 1;
-    lisp_List_new(&value->list, NULL, NULL, 0);
+    lisp_List_init(&value->list, NULL, NULL, 0);
     return value;
 }
 

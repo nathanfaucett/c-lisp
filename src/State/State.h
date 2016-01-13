@@ -4,6 +4,7 @@
 
 typedef struct lisp_State {
     struct lisp_Value* nil;
+    struct lisp_Value* empty_list;
     lisp_Memory memory;
 } lisp_State;
 
