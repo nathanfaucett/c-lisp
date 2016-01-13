@@ -35,7 +35,7 @@ inline static void lisp_Value_delete(lisp_State*, lisp_Value*);
 inline static void lisp_Value_ref(lisp_Value*);
 inline static void lisp_Value_deref(lisp_State*, lisp_Value*);
 
-inline static lisp_u8* lisp_Value_to_cstring(lisp_Value*);
+inline static lisp_Value* lisp_Value_to_string(lisp_State*, lisp_Value*);
 
 
 #endif

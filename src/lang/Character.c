@@ -24,5 +24,9 @@ inline static lisp_u8 lisp_Character_to_char(lisp_Character* character) {
     return character->bytes[0];
 }
 
+inline static struct lisp_Value* lisp_Character_to_string(lisp_State* state, lisp_Character* character) {
+    return lisp_Value_cstring(state, character->bytes);
+}
+
 
 #endif

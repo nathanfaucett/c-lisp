@@ -113,8 +113,30 @@ inline static lisp_Value* lisp_List_unshift(lisp_State* state, lisp_List* list, 
     return new_value;
 }
 
-inline static lisp_u8* lisp_List_to_cstring(lisp_List* list) {
-    return str_clone("(List)");
+inline static lisp_Value* lisp_List_to_string(lisp_State* state, lisp_List* list) {
+    lisp_Value* new_value = NULL;
+    lisp_Value* to_string = NULL;
+    lisp_Value* value = lisp_Value_cstring(state, "(");
+    lisp_ListNode* node = list->root;
+
+    while (node != NULL) {
+        to_string = lisp_Value_to_string(state, node->value);
+        new_value = lisp_String_concat(state, &value->string, &to_string->string);
+
+        lisp_Value_deref(state, to_string);
+        lisp_Value_deref(state, value);
+
+        value = new_value;
+        node = node->next;
+    }
+
+    to_string = lisp_Value_cstring(state, ")");
+    new_value = lisp_String_concat(state, &value->string, &to_string->string);
+
+    lisp_Value_deref(state, to_string);
+    lisp_Value_deref(state, value);
+
+    return new_value;
 }
 
 #endif

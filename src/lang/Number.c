@@ -7,8 +7,8 @@ inline static lisp_Number* lisp_Number_new(lisp_Number* number, lisp_f64 float_v
     return number;
 }
 
-inline static lisp_u8* lisp_Number_to_cstring(lisp_Number* number) {
-    return str_clone("Number");
+inline static struct lisp_Value* lisp_Number_to_string(lisp_State* state, lisp_Number* number) {
+    return lisp_Value_cstring(state, "Number");
 }
 
 

@@ -8,7 +8,7 @@ typedef struct lisp_Number {
 } lisp_Number;
 
 inline static lisp_Number* lisp_Number_new(lisp_Number*, lisp_f64);
-inline static lisp_u8* lisp_Number_to_cstring(lisp_Number*);
+inline static struct lisp_Value* lisp_Number_to_string(lisp_State*, lisp_Number*);
 
 
 #endif

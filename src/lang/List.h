@@ -31,6 +31,6 @@ inline static struct lisp_Value* lisp_List_get(lisp_State*, lisp_List*, struct l
 
 inline static struct lisp_Value* lisp_List_unshift(lisp_State*, lisp_List*, struct lisp_Value*);
 
-inline static lisp_u8* lisp_List_to_cstring(lisp_List*);
+inline static struct lisp_Value* lisp_List_to_string(lisp_State*, lisp_List*);
 
 #endif
