@@ -2,24 +2,13 @@
 #define __LISP_LANG_NUMBER_H__
 
 
-namespace lisp {
-    class Number : public Value {
-        private:
-            bool _is_integer;
-            bool _is_float;
-            i32 _integer;
-            f64 _float;
+typedef struct lisp_Number {
+    struct lisp_Value* value;
+    lisp_f64 float_value;
+} lisp_Number;
 
-        public:
-            inline Number(i32 value);
-            inline Number(f64 value);
-
-            inline i32 get_integer(void) const;
-            inline f64 get_float(void) const;
-
-            inline virtual Var<Value> to_string(void);
-    };
-}
+inline static lisp_Number* lisp_Number_new(lisp_Number*, lisp_f64);
+inline static lisp_u8* lisp_Number_to_cstring(lisp_Number*);
 
 
 #endif

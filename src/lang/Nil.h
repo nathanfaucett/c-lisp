@@ -2,13 +2,9 @@
 #define __LISP_LANG_NIL_H__
 
 
-namespace lisp {
-    class Nil : public Value {
-        public:
-            inline Nil(void);
-            inline virtual Var<Value> to_string(void) const;
-    };
-}
+typedef struct lisp_Nil {
+    struct lisp_Value* value;
+} lisp_Nil;
 
 
 #endif

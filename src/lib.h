@@ -2,11 +2,8 @@
 #define __LISP_LIB_H__
 
 
-#include "./types.h"
-
-
-#include "./utils/lib.h"
-#include "./core/lib.h"
+#include "./lisp.h"
+#include "./State/lib.h"
 #include "./lang/lib.h"
 
 

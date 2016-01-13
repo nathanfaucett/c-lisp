@@ -2,13 +2,16 @@
 #define __LISP_LANG_LIB_H__
 
 
-#include "./Var.h"
-#include "./Value.h"
+// forward declare for function prototypes
+struct lisp_Value;
+
+
 #include "./Character.h"
-#include "./String.h"
-#include "./Symbol.h"
+#include "./List.h"
 #include "./Nil.h"
-#include "./List/lib.h"
+#include "./Number.h"
+#include "./String.h"
+#include "./Value.h"
 
 
 #endif

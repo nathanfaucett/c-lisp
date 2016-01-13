@@ -3,7 +3,7 @@
 
 
 #include "./src/lib.h"
-#include "./src/lib.cpp"
+#include "./src/lib.c"
 
 
 #endif
