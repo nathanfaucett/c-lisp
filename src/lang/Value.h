@@ -17,11 +17,11 @@ typedef struct lisp_Value {
     lisp_u32 ref_count;
     union {
         struct lisp_Character character;
+        struct lisp_List list;
         struct lisp_Nil nil;
         struct lisp_Number number;
         struct lisp_String string;
         struct lisp_Symbol symbol;
-        struct lisp_List list;
     };
 } lisp_Value;
 
