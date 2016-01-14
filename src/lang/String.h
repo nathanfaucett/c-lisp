@@ -9,13 +9,13 @@ typedef struct lisp_String {
 } lisp_String;
 
 
-inline static void lisp_String_destructor(lisp_State*, lisp_String*);
+static void lisp_String_destructor(lisp_State*, lisp_String*);
 
-inline static lisp_String* lisp_String_from_cstring(lisp_State*, lisp_String*, lisp_u8*);
+static lisp_String* lisp_String_from_cstring(lisp_State*, lisp_String*, lisp_u8*);
 
-inline static struct lisp_Value* lisp_String_concat(lisp_State*, lisp_String*, lisp_String*);
+static struct lisp_Value* lisp_String_concat(lisp_State*, lisp_String*, lisp_String*);
 
-inline static lisp_u8* lisp_String_to_cstring(lisp_String*);
+static lisp_u8* lisp_String_to_cstring(lisp_String*);
 
 
 #endif

@@ -1,8 +1,10 @@
 COMPILER_C := clang
 COMPILER_CPP := clang++
 
-C_FLAGS := -stdlib=libc -std=c99 -Wall -O3
-CPP_FLAGS := -stdlib=libc++ -std=c++98 -Wno-c++11-compat-deprecated-writable-strings -Wall -O3
+OPT_LVL := -O2
+
+C_FLAGS := -std=libc -ansi $(OPT_LVL) -Wall -Wno-unused-function
+CPP_FLAGS := -stdlib=libc++ -ansi $(OPT_LVL) -Wall -Wno-c++11-compat-deprecated-writable-strings -Wno-unused-function
 
 
 test_c:

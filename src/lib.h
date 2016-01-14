@@ -3,7 +3,9 @@
 
 
 #include "./lisp.h"
-#include "./State/lib.h"
+#include "./Array.h"
+#include "./Map.h"
+#include "./core/lib.h"
 #include "./lang/lib.h"
 
 

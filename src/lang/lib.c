@@ -8,6 +8,7 @@
 #include "./Number.c"
 #include "./String.c"
 #include "./Symbol.c"
+#include "./Vector.c"
 #include "./Value.c"
 
 

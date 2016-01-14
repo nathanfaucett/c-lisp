@@ -2,13 +2,13 @@
 #define __LISP_LANG_STRING_C__
 
 
-inline static void lisp_String_destructor(lisp_State* state, lisp_String* string) {
+static void lisp_String_destructor(lisp_State* state, lisp_String* string) {
     for (lisp_u32 i = 0, il = string->size; i < il; i++) {
         lisp_Value_deref(state, string->chars[i]->value);
     }
 }
 
-inline static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
+static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
     lisp_u32 size = cstring_size(cstring);
     lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
 
@@ -28,7 +28,7 @@ inline static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_Stri
     return string;
 }
 
-inline static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
+static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
     lisp_Value* value = lisp_State_alloc(state);
     lisp_u32 size = a->size + b->size;
     lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
@@ -38,10 +38,10 @@ inline static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, 
         lisp_Value_ref(ch->value);
         chars[i] = ch;
     }
-    for (lisp_u32 i = a->size, il = size, j = 0; i < il; i++, j++) {
-        lisp_Character* ch = b->chars[j];
+    for (lisp_u32 j = a->size, jl = size, k = 0; j < jl; j++, k++) {
+        lisp_Character* ch = b->chars[k];
         lisp_Value_ref(ch->value);
-        chars[i] = ch;
+        chars[j] = ch;
     }
 
     value->string.chars = chars;
@@ -50,7 +50,7 @@ inline static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, 
     return value;
 }
 
-inline static lisp_u8* lisp_String_to_cstring(lisp_String* string) {
+static lisp_u8* lisp_String_to_cstring(lisp_String* string) {
     lisp_u8* cstring = (lisp_u8*) malloc((string->size + 1) * sizeof(lisp_u8));
 
     for (lisp_u32 i = 0, il = string->size; i < il; i++) {

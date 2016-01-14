@@ -9,13 +9,13 @@ typedef struct lisp_Number {
     lisp_f64 f64;
 } lisp_Number;
 
-inline static lisp_Number* lisp_Number_from_i32(lisp_Number*, lisp_i32);
-inline static lisp_Number* lisp_Number_from_f64(lisp_Number*, lisp_f64);
+static lisp_Number* lisp_Number_from_i32(lisp_Number*, lisp_i32);
+static lisp_Number* lisp_Number_from_f64(lisp_Number*, lisp_f64);
 
-inline static lisp_i32 lisp_Number_get_i32(lisp_Number*);
-inline static lisp_f64 lisp_Number_get_f64(lisp_Number*);
+static lisp_i32 lisp_Number_get_i32(lisp_Number*);
+static lisp_f64 lisp_Number_get_f64(lisp_Number*);
 
-inline static struct lisp_Value* lisp_Number_to_string(lisp_State*, lisp_Number*);
+static struct lisp_Value* lisp_Number_to_string(lisp_State*, lisp_Number*);
 
 
 #endif

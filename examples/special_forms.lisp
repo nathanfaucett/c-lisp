@@ -3,6 +3,11 @@
 ; (def PI ^Float32 3.14159265359)
 ; (def PI 3.14159265359) Type is Any
 
+; type defaults to Any
+(swap symbol ^Type? init?)
+; (def x 1)
+; (swap x 2)
+
 ; special forms, returns nil if else case and no else provided
 (if test then else?)
 

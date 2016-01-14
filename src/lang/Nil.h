@@ -6,7 +6,7 @@ typedef struct lisp_Nil {
     struct lisp_Value* value;
 } lisp_Nil;
 
-inline static struct lisp_Value* lisp_Nil_to_string(lisp_State*);
+static struct lisp_Value* lisp_Nil_to_string(lisp_State*);
 
 
 #endif
