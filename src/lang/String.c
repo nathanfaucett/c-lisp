@@ -2,16 +2,21 @@
 #define __LISP_LANG_STRING_C__
 
 
-inline static lisp_String* lisp_String_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
-    lisp_u32 size = str_size(cstring);
+inline static void lisp_String_destructor(lisp_State* state, lisp_String* string) {
+    for (lisp_u32 i = 0, il = string->size; i < il; i++) {
+        lisp_Value_deref(state, string->chars[i]->value);
+    }
+}
+
+inline static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
+    lisp_u32 size = cstring_size(cstring);
     lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
 
     lisp_u32 index = 0;
     lisp_u8 ch = cstring[index];
 
     while (ch != '\0') {
-        lisp_Value* value = lisp_Value_ch(state, ch);
-        lisp_Value_ref(value);
+        lisp_Value* value = lisp_Value_character_from_ch(state, ch);
         chars[index] = &value->character;
         index += 1;
         ch = cstring[index];
@@ -21,12 +26,6 @@ inline static lisp_String* lisp_String_cstring(lisp_State* state, lisp_String* s
     string->size = size;
 
     return string;
-}
-
-inline static void lisp_String_delete(lisp_State* state, lisp_String* string) {
-    for (lisp_u32 i = 0, il = string->size; i < il; i++) {
-        lisp_Value_deref(state, string->chars[i]->value);
-    }
 }
 
 inline static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {

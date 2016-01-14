@@ -2,6 +2,8 @@
 #define __LISP_STATE_LIB_H__
 
 
+struct lisp_Value;
+
 #include "./Memory.h"
 #include "./State.h"
 

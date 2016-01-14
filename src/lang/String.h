@@ -9,8 +9,9 @@ typedef struct lisp_String {
 } lisp_String;
 
 
-inline static lisp_String* lisp_String_cstring(lisp_State*, lisp_String*, lisp_u8*);
-inline static void lisp_String_delete(lisp_State*, lisp_String*);
+inline static void lisp_String_destructor(lisp_State*, lisp_String*);
+
+inline static lisp_String* lisp_String_from_cstring(lisp_State*, lisp_String*, lisp_u8*);
 
 inline static struct lisp_Value* lisp_String_concat(lisp_State*, lisp_String*, lisp_String*);
 

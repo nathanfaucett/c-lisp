@@ -2,7 +2,7 @@
 #define __LISP_LANG_CHARACER_C__
 
 
-inline static lisp_Character* lisp_Character_u8(lisp_Character* character, lisp_u8 ch) {
+inline static lisp_Character* lisp_Character_from_u8(lisp_Character* character, lisp_u8 ch) {
     lisp_u8* bytes = (lisp_u8*) malloc(sizeof(lisp_u8));
     bytes[0] = ch;
     character->bytes = bytes;
@@ -10,13 +10,13 @@ inline static lisp_Character* lisp_Character_u8(lisp_Character* character, lisp_
     return character;
 }
 
-inline static lisp_Character* lisp_Character_bytes(lisp_Character* character, lisp_u8* bytes, lisp_u8 size) {
+inline static lisp_Character* lisp_Character_from_bytes(lisp_Character* character, lisp_u8* bytes, lisp_u8 size) {
     character->bytes = bytes;
     character->size = size;
     return character;
 }
 
-inline static void lisp_Character_delete(lisp_Character* character) {
+inline static void lisp_Character_destructor(lisp_Character* character) {
     free(character->bytes);
 }
 
@@ -25,7 +25,7 @@ inline static lisp_u8 lisp_Character_to_char(lisp_Character* character) {
 }
 
 inline static struct lisp_Value* lisp_Character_to_string(lisp_State* state, lisp_Character* character) {
-    return lisp_Value_string(state, character->bytes);
+    return lisp_Value_string_from_cstring(state, character->bytes);
 }
 
 

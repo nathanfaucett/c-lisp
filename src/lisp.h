@@ -21,11 +21,11 @@ inline static Return name ## _array_copy(TypeA a, TypeB b, lisp_u32 start, lisp_
     return a;\
 }\
 
-CREATE_ARRAY_COPY_PROTO(str, lisp_u8*, lisp_u8*, lisp_u8*);
+CREATE_ARRAY_COPY_PROTO(cstring, lisp_u8*, lisp_u8*, lisp_u8*);
 
 
-inline static lisp_u32 str_size(lisp_u8*);
-inline static lisp_u8* str_copy(lisp_u8*, lisp_u8*);
-inline static lisp_u8* str_clone(lisp_u8*);
+inline static lisp_u32 cstring_size(lisp_u8*);
+inline static lisp_u8* cstring_copy(lisp_u8*, lisp_u8*);
+inline static lisp_u8* cstring_clone(lisp_u8*);
 
 #endif

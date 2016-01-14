@@ -2,15 +2,17 @@
 #define __LISP_STATE_MEMORY_C__
 
 
-static inline lisp_MemoryNode* lisp_MemoryNode_new(lisp_MemoryNode* node, lisp_MemoryNode* next, lisp_Value* value) {
+static inline lisp_MemoryNode* lisp_MemoryNode_constructor(
+    lisp_MemoryNode* node, lisp_MemoryNode* next, lisp_Value* value
+) {
     node->next = next;
     node->value = value;
     return node;
 }
 
-static inline void lisp_MemoryNode_delete(lisp_MemoryNode* node) {
+static inline void lisp_MemoryNode_destructor(lisp_MemoryNode* node) {
     if (node->next != NULL) {
-        lisp_MemoryNode_delete(node->next);
+        lisp_MemoryNode_destructor(node->next);
     }
 
     free(node->value);
@@ -18,17 +20,25 @@ static inline void lisp_MemoryNode_delete(lisp_MemoryNode* node) {
 }
 
 
-static inline lisp_Memory* lisp_Memory_new(lisp_Memory* memory) {
+static inline lisp_Memory* lisp_Memory_constructor(lisp_Memory* memory) {
     memory->root = NULL;
     memory->tail = NULL;
     memory->size = 0;
     return memory;
 }
 
-static inline void lisp_Memory_delete(lisp_Memory* memory) {
+static inline void lisp_Memory_destructor(lisp_Memory* memory) {
     if (memory->root != NULL) {
-        lisp_MemoryNode_delete(memory->root);
+        lisp_MemoryNode_destructor(memory->root);
     }
+}
+
+static inline lisp_Memory* lisp_Memory_new(void) {
+    return lisp_Memory_constructor((lisp_Memory*) malloc(sizeof(lisp_Memory)));
+}
+static inline void lisp_Memory_delete(lisp_Memory* memory) {
+    lisp_Memory_destructor(memory);
+    free(memory);
 }
 
 static inline lisp_Value* lisp_Memory_alloc(lisp_Memory* memory) {
@@ -36,10 +46,10 @@ static inline lisp_Value* lisp_Memory_alloc(lisp_Memory* memory) {
     lisp_Value* value = (lisp_Value*) malloc(sizeof(lisp_Value));
 
     if (memory->root != NULL) {
-        lisp_MemoryNode_new(node, memory->root, value);
+        lisp_MemoryNode_constructor(node, memory->root, value);
         memory->root = node;
     } else {
-        lisp_MemoryNode_new(node, NULL, value);
+        lisp_MemoryNode_constructor(node, NULL, value);
         memory->root = node;
         memory->tail = node;
     }
@@ -65,7 +75,7 @@ static inline void lisp_Memory_dealloc(lisp_Memory* memory, lisp_Value* value) {
         if (prev != NULL) {
             prev->next = next;
         }
-        lisp_MemoryNode_delete(node);
+        lisp_MemoryNode_destructor(node);
 
         memory->root = next;
         memory->size -= 1;

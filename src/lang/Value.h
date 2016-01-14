@@ -26,14 +26,23 @@ typedef struct lisp_Value {
 } lisp_Value;
 
 
-inline static lisp_Value* lisp_Value_ch(lisp_State*, lisp_u8);
-inline static lisp_Value* lisp_Value_string(lisp_State*, lisp_u8*);
-inline static lisp_Value* lisp_Value_symbol(lisp_State*, lisp_u8*);
+inline static struct lisp_Value* lisp_Value_constructor(lisp_Value*, LISP_TYPE);
+inline static void lisp_Value_destructor(lisp_State*, lisp_Value*);
+
+inline static struct lisp_Value* lisp_Value_new(lisp_State*, LISP_TYPE);
+inline static void lisp_Value_delete(lisp_State*, lisp_Value*);
+
+inline static lisp_Value* lisp_Value_character_from_ch(lisp_State*, lisp_u8);
+inline static lisp_Value* lisp_Value_string_from_cstring(lisp_State*, lisp_u8*);
+inline static lisp_Value* lisp_Value_symbol_from_cstring(lisp_State*, lisp_u8*);
+inline static lisp_Value* lisp_Value_number_from_i32(lisp_State*, lisp_i32);
+inline static lisp_Value* lisp_Value_number_from_f64(lisp_State*, lisp_f64);
+
 inline static lisp_Value* lisp_Value_nil(lisp_State*);
-inline static lisp_Value* lisp_Value_number(lisp_State*, lisp_f64);
 inline static lisp_Value* lisp_Value_list(lisp_State*);
 
-inline static void lisp_Value_delete(lisp_State*, lisp_Value*);
+inline static lisp_Value* lisp_Value_new_nil(lisp_State*);
+inline static lisp_Value* lisp_Value_new_list(lisp_State*);
 
 inline static void lisp_Value_ref(lisp_Value*);
 inline static void lisp_Value_deref(lisp_State*, lisp_Value*);

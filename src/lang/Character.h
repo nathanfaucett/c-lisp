@@ -10,10 +10,10 @@ typedef struct lisp_Character {
 } lisp_Character;
 
 
-inline static lisp_Character* lisp_Character_u8(lisp_Character*, lisp_u8);
-inline static lisp_Character* lisp_Character_bytes(lisp_Character*, lisp_u8*, lisp_u8);
+inline static lisp_Character* lisp_Character_from_u8(lisp_Character*, lisp_u8);
+inline static lisp_Character* lisp_Character_from_bytes(lisp_Character*, lisp_u8*, lisp_u8);
 
-inline static void lisp_Character_delete(lisp_Character*);
+inline static void lisp_Character_destructor(lisp_Character*);
 
 inline static lisp_u8 lisp_Character_to_char(lisp_Character*);
 inline static struct lisp_Value* lisp_Character_to_string(lisp_State*, lisp_Character*);
