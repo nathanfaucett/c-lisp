@@ -17,5 +17,7 @@ static struct lisp_Value* lisp_String_concat(lisp_State*, lisp_String*, lisp_Str
 
 static lisp_u8* lisp_String_to_cstring(lisp_String*);
 
+static lisp_bool lisp_String_equal(lisp_String*, lisp_String*);
+
 
 #endif

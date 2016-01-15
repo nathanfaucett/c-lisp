@@ -17,5 +17,7 @@ static lisp_f64 lisp_Number_get_f64(lisp_Number*);
 
 static struct lisp_Value* lisp_Number_to_string(lisp_State*, lisp_Number*);
 
+static lisp_bool lisp_Number_equal(lisp_Number*, lisp_Number*);
+
 
 #endif

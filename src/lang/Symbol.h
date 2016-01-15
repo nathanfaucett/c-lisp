@@ -13,5 +13,7 @@ static struct lisp_Symbol* lisp_Symbol_from_cstring(lisp_State*, lisp_Symbol*, l
 
 static struct lisp_Value* lisp_Symbol_to_string(lisp_State*, lisp_Symbol*);
 
+static lisp_bool lisp_Symbol_equal(lisp_Symbol*, lisp_Symbol*);
+
 
 #endif

@@ -61,5 +61,18 @@ static lisp_u8* lisp_String_to_cstring(lisp_String* string) {
     return cstring;
 }
 
+static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
+    if (a->size != b->size) {
+        return LISP_FALSE;
+    } else {
+        for (lisp_u32 i = 0, il = a->size; i < il; i++) {
+            if (!lisp_Character_equal(a->chars[i], b->chars[i])) {
+                return LISP_FALSE;
+            }
+        }
+        return LISP_TRUE;
+    }
+}
+
 
 #endif

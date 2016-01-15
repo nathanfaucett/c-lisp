@@ -6,8 +6,8 @@
 #include "./types.h"
 
 
-#define true 1
-#define false 0
+#define LISP_TRUE 1
+#define LISP_FALSE 0
 
 /* forward declare for function prototypes */
 struct lisp_Value;

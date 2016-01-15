@@ -4,13 +4,13 @@
 
 static lisp_Number* lisp_Number_from_i32(lisp_Number* number, lisp_i32 i32) {
     number->i32 = i32;
-    number->is_f64 = false;
+    number->is_f64 = LISP_FALSE;
     return number;
 }
 
 static lisp_Number* lisp_Number_from_f64(lisp_Number* number, lisp_f64 f64) {
     number->f64 = f64;
-    number->is_f64 = true;
+    number->is_f64 = LISP_TRUE;
     return number;
 }
 
@@ -32,6 +32,18 @@ static lisp_f64 lisp_Number_get_f64(lisp_Number* number) {
 
 static lisp_Value* lisp_Number_to_string(lisp_State* state, lisp_Number* number) {
     return lisp_Value_string_from_cstring(state, "Number");
+}
+
+static lisp_bool lisp_Number_equal(lisp_Number* a, lisp_Number* b) {
+    if (a->is_f64) {
+        return a->f64 == lisp_Number_get_f64(b);
+    } else {
+        if (b->is_f64) {
+            return b->f64 == lisp_Number_get_f64(a);
+        } else {
+            return b->i32 == lisp_Number_get_i32(a);
+        }
+    }
 }
 
 

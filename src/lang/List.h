@@ -48,4 +48,6 @@ static struct lisp_Value* lisp_List_remove(lisp_State*, lisp_List*, struct lisp_
 
 static struct lisp_Value* lisp_List_to_string(lisp_State*, lisp_List*);
 
+static lisp_bool lisp_List_equal(lisp_List*, lisp_List*);
+
 #endif

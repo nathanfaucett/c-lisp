@@ -28,5 +28,18 @@ static lisp_Value* lisp_Character_to_string(lisp_State* state, lisp_Character* c
     return lisp_Value_string_from_cstring(state, character->bytes);
 }
 
+static lisp_bool lisp_Character_equal(lisp_Character* a, lisp_Character* b) {
+    if (a->size != b->size) {
+        return LISP_FALSE;
+    } else {
+        for (lisp_u32 i = 0, il = a->size; i < il; i++) {
+            if (a->bytes[i] != b->bytes[i]) {
+                return LISP_FALSE;
+            }
+        }
+        return LISP_TRUE;
+    }
+}
+
 
 #endif

@@ -32,7 +32,7 @@ static lisp_Scope* lisp_Scope_get_scope(lisp_Scope* scope, lisp_Value* key) {
     }
 }
 
-static struct lisp_Value* lisp_Scope_get(lisp_Scope* scope, lisp_Value* key) {
+static lisp_Value* lisp_Scope_get(lisp_Scope* scope, lisp_Value* key) {
     lisp_Scope* key_scope = lisp_Scope_get_scope(scope, key);
 
     if (key_scope != NULL) {

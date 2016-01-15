@@ -67,16 +67,11 @@ static lisp_Value* lisp_List_from_array(lisp_State* state, lisp_Array* array) {
     } else {
         lisp_Value* list_value = lisp_List_internal_new(state);
         lisp_u32 i = size - 1;
-        lisp_Value* value = lisp_Array_get(array, i);
-        lisp_ListNode* tail = lisp_ListNode_new(NULL, value);
+        lisp_ListNode* tail = lisp_ListNode_new(NULL, lisp_Array_get(array, i));
         lisp_ListNode* root = tail;
 
-        lisp_Value_ref(value);
-
         while (i--) {
-            value = lisp_Array_get(array, i);
-            lisp_Value_ref(value);
-            root = lisp_ListNode_new(root, value);
+            root = lisp_ListNode_new(root, lisp_Array_get(array, i));
         }
         lisp_List_constructor(&list_value->list, root, tail, size);
 
@@ -266,6 +261,25 @@ static lisp_Value* lisp_List_to_string(lisp_State* state, lisp_List* list) {
     lisp_Value_deref(state, value);
 
     return new_value;
+}
+
+static lisp_bool lisp_List_equal(lisp_List* a, lisp_List* b) {
+    if (a->size != b->size) {
+        return LISP_FALSE;
+    } else {
+        lisp_ListNode* anode = a->root;
+        lisp_ListNode* bnode = b->root;
+
+        while (anode != NULL) {
+            if (!lisp_Value_equal(anode->value, bnode->value)) {
+                return LISP_FALSE;
+            }
+            anode = anode->next;
+            bnode = bnode->next;
+        }
+
+        return LISP_TRUE;
+    }
 }
 
 #endif

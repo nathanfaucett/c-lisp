@@ -56,5 +56,7 @@ static void lisp_Value_deref(lisp_State*, lisp_Value*);
 
 static lisp_Value* lisp_Value_to_string(lisp_State*, lisp_Value*);
 
+static lisp_bool lisp_Value_equal(lisp_Value*, lisp_Value*);
+
 
 #endif

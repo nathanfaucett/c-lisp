@@ -117,7 +117,7 @@ static lisp_Value* lisp_Value_new_list(lisp_State* state) {
 static lisp_Value* lisp_Value_new_vector(lisp_State* state) {
     lisp_Value* value = lisp_Value_new(state, LISP_TYPE_VECTOR);
     value->vector.value = value;
-    lisp_Vector_constructor(&value->vector, NULL, NULL, 0);
+    lisp_Vector_constructor(&value->vector, NULL, NULL, 0, LISP_VECTOR_SHIFT);
     return value;
 }
 
@@ -150,6 +150,29 @@ static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* value) {
             return lisp_Symbol_to_string(state, &value->symbol);
         case LISP_TYPE_VECTOR:
             return lisp_Vector_to_string(state, &value->vector);
+    }
+}
+
+static lisp_bool lisp_Value_equal(lisp_Value* a, lisp_Value* b) {
+    if (a->type != b->type) {
+        return LISP_FALSE;
+    } else {
+        switch (a->type) {
+            case LISP_TYPE_CHARACTER:
+                return lisp_Character_equal(&a->character, &b->character);
+            case LISP_TYPE_LIST:
+                return lisp_List_equal(&a->list, &b->list);
+            case LISP_TYPE_NIL:
+                return lisp_Nil_equal(&a->nil, &b->nil);
+            case LISP_TYPE_NUMBER:
+                return lisp_Number_equal(&a->number, &b->number);
+            case LISP_TYPE_STRING:
+                return lisp_String_equal(&a->string, &b->string);
+            case LISP_TYPE_SYMBOL:
+                return lisp_Symbol_equal(&a->symbol, &b->symbol);
+            case LISP_TYPE_VECTOR:
+                return lisp_Vector_equal(&a->vector, &b->vector);
+        }
     }
 }
 

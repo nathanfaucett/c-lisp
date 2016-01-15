@@ -17,5 +17,7 @@ static void lisp_Character_destructor(lisp_Character*);
 static lisp_u8 lisp_Character_to_char(lisp_Character*);
 static struct lisp_Value* lisp_Character_to_string(lisp_State*, lisp_Character*);
 
+static lisp_bool lisp_Character_equal(lisp_Character*, lisp_Character*);
+
 
 #endif
