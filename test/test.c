@@ -12,14 +12,15 @@ int main() {
     lisp_Array_push(array, astring);
     lisp_Array_push(array, bstring);
 
-    lisp_Value* dlist = lisp_Value_list_from_array(state, array);
-    lisp_Value* string = lisp_Value_to_string(state, dlist);
+    lisp_Value* vector = lisp_Value_vector_from_array(state, array);
+    lisp_Value* value = lisp_Vector_get(state, &vector->vector, 0);
+
+    lisp_Value* string = lisp_Value_to_string(state, value);
     lisp_u8* cstr = lisp_String_to_cstring(&string->string);
     printf("%s\n", cstr);
     free(cstr);
 
     lisp_Array_delete(array);
-
     lisp_State_delete(state);
 
     return 0;

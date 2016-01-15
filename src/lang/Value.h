@@ -41,7 +41,7 @@ static lisp_Value* lisp_Value_number_from_i32(lisp_State*, lisp_i32);
 static lisp_Value* lisp_Value_number_from_f64(lisp_State*, lisp_f64);
 
 static lisp_Value* lisp_Value_list_from_array(lisp_State*, lisp_Array*);
-static lisp_Value* lisp_Value_list_from_vector(lisp_State*, lisp_Array*);
+static lisp_Value* lisp_Value_vector_from_array(lisp_State*, lisp_Array*);
 
 static lisp_Value* lisp_Value_nil(lisp_State*);
 static lisp_Value* lisp_Value_list(lisp_State*);

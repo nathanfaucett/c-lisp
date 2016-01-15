@@ -79,7 +79,7 @@ static lisp_Value* lisp_Value_list_from_array(lisp_State* state, lisp_Array* arr
     return lisp_List_from_array(state, array);
 }
 
-static lisp_Value* lisp_Value_list_from_vector(lisp_State* state, lisp_Array* array) {
+static lisp_Value* lisp_Value_vector_from_array(lisp_State* state, lisp_Array* array) {
     return lisp_Vector_from_array(state, array);
 }
 
