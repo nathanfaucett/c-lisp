@@ -33,7 +33,7 @@ static void lisp_VectorArray_delete(lisp_State* state, lisp_VectorArray* array) 
 }
 
 static void lisp_VectorArray_copy(lisp_VectorArray* a, lisp_VectorArray* b, lisp_u32 size) {
-    values_array_copy(a->values, b->values, 0, size, 0);
+    lisp_values_copy(a->values, b->values, 0, size, 0);
 }
 
 static void lisp_VectorArray_ref(lisp_VectorArray* array) {
@@ -129,7 +129,7 @@ static lisp_VectorNode* lisp_VectorNode_copy(lisp_VectorNode* node, lisp_VectorN
     if (node->is_values) {
         lisp_VectorArray_copy(node->values, other->values, size);
     } else {
-        vector_nodes_array_copy(node->array, other->array, 0, size, 0);
+        lisp_vector_nodes_copy(node->array, other->array, 0, size, 0);
     }
     return node;
 }

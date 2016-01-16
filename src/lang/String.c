@@ -9,7 +9,7 @@ static void lisp_String_destructor(lisp_State* state, lisp_String* string) {
 }
 
 static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
-    lisp_u32 size = cstring_size(cstring);
+    lisp_u32 size = lisp_cstring_size(cstring);
     lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
 
     lisp_u32 index = 0;

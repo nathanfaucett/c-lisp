@@ -20,12 +20,21 @@ static lisp_bool lisp_Reader_is_whitespace(lisp_u8);
 static lisp_bool lisp_Reader_is_numeric(lisp_u8);
 static lisp_bool lisp_Reader_is_marco(lisp_u8);
 
+static lisp_u8 lisp_Reader_index(lisp_Reader*, lisp_u64);
+static lisp_i64 lisp_Reader_index_of(lisp_u8*, lisp_u8);
+
 static lisp_u8 lisp_Reader_read(lisp_Reader*);
 static lisp_u8 lisp_Reader_unread(lisp_Reader*);
 
-static struct lisp_Value* lisp_Reader_next(lisp_Reader*);
+static lisp_u64 lisp_Reader_next_whitespace(lisp_Reader*, lisp_u8);
+static lisp_u8* lisp_Reader_next_token(lisp_Reader*, lisp_u8);
+static lisp_u8* lisp_Reader_next_number(lisp_Reader*, lisp_u8);
+
+static struct lisp_Value* lisp_Reader_next(lisp_Reader*, lisp_u8);
 
 static struct lisp_Value* lisp_Reader_read_number(lisp_Reader* reader, lisp_u8 ch);
+static struct lisp_Value* lisp_Reader_read_list(lisp_Reader* reader, lisp_u8 ch);
+static struct lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch);
 
 
 #endif

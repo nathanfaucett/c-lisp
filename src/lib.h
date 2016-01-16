@@ -3,6 +3,7 @@
 
 
 #include "./lisp.h"
+#include "./numbers.h"
 #include "./Array.h"
 #include "./Map.h"
 #include "./core/lib.h"

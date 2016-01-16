@@ -238,26 +238,32 @@ static lisp_Value* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_Val
 }
 
 static lisp_Value* lisp_List_to_string(lisp_State* state, lisp_List* list) {
-    lisp_Value* new_value = NULL;
-    lisp_Value* to_string = NULL;
     lisp_Value* value = lisp_Value_string_from_cstring(state, "(");
     lisp_ListNode* node = list->root;
 
     while (node != NULL) {
-        to_string = lisp_Value_to_string(state, node->value);
-        new_value = lisp_String_concat(state, &value->string, &to_string->string);
+        lisp_Value* value_to_string = lisp_Value_to_string(state, node->value);
+        lisp_Value* tmp;
+        node = node->next;
 
-        lisp_Value_deref(state, to_string);
+        if (node != NULL) {
+            lisp_Value* separator = lisp_Value_string_from_cstring(state, " ");
+            tmp = lisp_String_concat(state, &value_to_string->string, &separator->string);
+            lisp_Value_deref(state, separator);
+        } else {
+            tmp = value_to_string;
+        }
+
+        lisp_Value* new_value = lisp_String_concat(state, &value->string, &tmp->string);
         lisp_Value_deref(state, value);
+        lisp_Value_deref(state, tmp);
 
         value = new_value;
-        node = node->next;
     }
 
-    to_string = lisp_Value_string_from_cstring(state, ")");
-    new_value = lisp_String_concat(state, &value->string, &to_string->string);
-
-    lisp_Value_deref(state, to_string);
+    lisp_Value* end_bracket = lisp_Value_string_from_cstring(state, ")");
+    lisp_Value* new_value = lisp_String_concat(state, &value->string, &end_bracket->string);
+    lisp_Value_deref(state, end_bracket);
     lisp_Value_deref(state, value);
 
     return new_value;

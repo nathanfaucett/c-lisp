@@ -31,7 +31,19 @@ static lisp_f64 lisp_Number_get_f64(lisp_Number* number) {
 }
 
 static lisp_Value* lisp_Number_to_string(lisp_State* state, lisp_Number* number) {
-    return lisp_Value_string_from_cstring(state, "Number");
+    lisp_Value* value;
+    lisp_u8* cstring;
+
+    if (number->is_f64) {
+        cstring = lisp_dtoa(number->f64);
+    } else {
+        cstring = lisp_itoa(number->i32);
+    }
+
+    value = lisp_Value_string_from_cstring(state, cstring);
+    free(cstring);
+
+    return value;
 }
 
 static lisp_bool lisp_Number_equal(lisp_Number* a, lisp_Number* b) {

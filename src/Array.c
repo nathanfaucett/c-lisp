@@ -56,7 +56,7 @@ static void lisp_Array_push(lisp_Array* array, lisp_Value* value) {
     lisp_Value** new_slice = (lisp_Value**) malloc((size + 1) * sizeof(lisp_Value*));
 
     if (slice != NULL) {
-        values_array_copy(new_slice, slice, 0, size, 0);
+        lisp_values_copy(new_slice, slice, 0, size, 0);
         free(slice);
     }
     new_slice[size] = value;
@@ -73,8 +73,8 @@ static void lisp_Array_remove(lisp_Array* array, lisp_u32 index) {
         lisp_Value** new_slice = (lisp_Value**) malloc((size - 1) * sizeof(lisp_Value*));
 
         if (slice != NULL) {
-            values_array_copy(new_slice, slice, 0, index, 0);
-            values_array_copy(new_slice, slice, index + 1, size, index);
+            lisp_values_copy(new_slice, slice, 0, index, 0);
+            lisp_values_copy(new_slice, slice, index + 1, size, index);
             free(slice);
         }
 
