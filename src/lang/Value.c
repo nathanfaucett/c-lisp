@@ -13,6 +13,9 @@ static void lisp_Value_destructor(lisp_State* state, lisp_Value* value) {
         case LISP_TYPE_CHARACTER:
             lisp_Character_destructor(&value->character);
             break;
+        case LISP_TYPE_FUNCTION:
+            lisp_Function_destructor(state, &value->function);
+            break;
         case LISP_TYPE_LIST:
             lisp_List_destructor(state, &value->list);
             break;
@@ -52,6 +55,13 @@ static lisp_Value* lisp_Value_character_from_ch(lisp_State* state, lisp_u8 ch) {
     lisp_Value* value = lisp_Value_new(state, LISP_TYPE_CHARACTER);
     value->character.value = value;
     lisp_Character_from_u8(&value->character, ch);
+    return value;
+}
+
+static lisp_Value* lisp_Value_function(lisp_State* state, lisp_Value* name, lisp_Value* params, lisp_Value* body) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_FUNCTION);
+    value->function.value = value;
+    lisp_Function_constructor(&value->function, name, params, body);
     return value;
 }
 
@@ -147,6 +157,8 @@ static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* value) {
             return lisp_Boolean_to_string(state, &value->boolean);
         case LISP_TYPE_CHARACTER:
             return lisp_Character_to_string(state, &value->character);
+        case LISP_TYPE_FUNCTION:
+            return lisp_Function_to_string(state, &value->function);
         case LISP_TYPE_LIST:
             return lisp_List_to_string(state, &value->list);
         case LISP_TYPE_NIL:
@@ -172,6 +184,8 @@ static lisp_bool lisp_Value_equal(lisp_Value* a, lisp_Value* b) {
                 return lisp_Boolean_equal(&a->boolean, &b->boolean);
             case LISP_TYPE_CHARACTER:
                 return lisp_Character_equal(&a->character, &b->character);
+            case LISP_TYPE_FUNCTION:
+                return lisp_Function_equal(&a->function, &b->function);
             case LISP_TYPE_LIST:
                 return lisp_List_equal(&a->list, &b->list);
             case LISP_TYPE_NIL:

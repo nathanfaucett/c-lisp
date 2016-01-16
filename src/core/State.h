@@ -19,5 +19,8 @@ static void lisp_State_delete(lisp_State*);
 static struct lisp_Value* lisp_State_alloc(lisp_State*);
 static void lisp_State_dealloc(lisp_State*, struct lisp_Value*);
 
+static struct lisp_Value* lisp_State_eval_list(lisp_State*, struct lisp_Value*, lisp_Scope*);
+static struct lisp_Value* lisp_State_eval(lisp_State*, struct lisp_Value*, lisp_Scope*);
+
 
 #endif

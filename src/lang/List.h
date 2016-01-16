@@ -30,6 +30,8 @@ static void lisp_List_destructor(lisp_State*, lisp_List*);
 static struct lisp_Value* lisp_List_from_array(lisp_State*, lisp_Array*);
 static struct lisp_Value* lisp_List_internal_new(lisp_State*);
 
+static lisp_u32 lisp_List_size(lisp_List*);
+
 static lisp_ListNode* lisp_List_get_node(lisp_ListNode*, lisp_u32);
 static lisp_ListNode* lisp_List_find_node(lisp_List*, lisp_u32);
 static struct lisp_Value* lisp_List_get(lisp_State*, lisp_List*, lisp_u32);

@@ -84,7 +84,8 @@ static lisp_u8* lisp_itoa(lisp_i32 value) {
 }
 
 static lisp_u8* lisp_dtoa(lisp_f64 value) {
-    return NULL;
+    /* fixme */
+    return lisp_itoa((lisp_i32) value);
 }
 
 #endif

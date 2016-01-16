@@ -32,9 +32,10 @@ static lisp_u8* lisp_Reader_next_number(lisp_Reader*, lisp_u8);
 
 static struct lisp_Value* lisp_Reader_next(lisp_Reader*, lisp_u8);
 
-static struct lisp_Value* lisp_Reader_read_number(lisp_Reader* reader, lisp_u8 ch);
-static struct lisp_Value* lisp_Reader_read_list(lisp_Reader* reader, lisp_u8 ch);
-static struct lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch);
+static struct lisp_Value* lisp_Reader_read_number(lisp_Reader*, lisp_u8);
+static struct lisp_Value* lisp_Reader_read_list(lisp_Reader*, lisp_u8);
+static struct lisp_Value* lisp_Reader_read_vector(lisp_Reader*, lisp_u8);
+static struct lisp_Value* lisp_Reader_read_token(lisp_Reader*, lisp_u8);
 
 
 #endif

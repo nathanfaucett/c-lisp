@@ -7,7 +7,6 @@ typedef struct lisp_Nil {
 } lisp_Nil;
 
 static struct lisp_Value* lisp_Nil_to_string(lisp_State*);
-
 static lisp_bool lisp_Nil_equal(lisp_Nil*, lisp_Nil*);
 
 

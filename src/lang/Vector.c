@@ -224,6 +224,10 @@ static lisp_Value* lisp_Vector_clone(lisp_State* state, lisp_Vector* vector) {
     return value;
 }
 
+static lisp_u32 lisp_Vector_size(lisp_Vector* vector) {
+    return vector->size;
+}
+
 static lisp_u32 lisp_Vector_tail_off(lisp_u32 size) {
     if (size < LISP_VECTOR_SIZE) {
         return 0;

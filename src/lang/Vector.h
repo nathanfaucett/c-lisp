@@ -65,6 +65,8 @@ static struct lisp_Value* lisp_Vector_from_array(lisp_State*, lisp_Array*);
 static struct lisp_Value* lisp_Vector_internal_new(lisp_State*);
 static struct lisp_Value* lisp_Vector_clone(lisp_State*, lisp_Vector*);
 
+static lisp_u32 lisp_Vector_size(lisp_Vector*);
+
 static lisp_u32 lisp_Vector_tail_off(lisp_u32);
 static lisp_VectorNode* lisp_Vector_get_node(lisp_Vector*, lisp_u32);
 static struct lisp_VectorArray* lisp_Vector_get_array_for(lisp_Vector*, lisp_u32);

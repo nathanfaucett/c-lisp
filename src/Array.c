@@ -29,7 +29,7 @@ static lisp_u32 lisp_Array_size(lisp_Array* array) {
 
 static lisp_i32 lisp_Array_index_of(lisp_Array* array, lisp_Value* value) {
     for (lisp_u32 i = 0, il = array->size; i < il; i++) {
-        if (lisp_Array_get(array, i) == value) {
+        if (lisp_Value_equal(lisp_Array_get(array, i), value)) {
             return (lisp_i32) i;
         }
     }

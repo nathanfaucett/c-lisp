@@ -4,6 +4,7 @@
 
 #include "./Boolean.h"
 #include "./Character.h"
+#include "./Function.h"
 #include "./List.h"
 #include "./Nil.h"
 #include "./Number.h"

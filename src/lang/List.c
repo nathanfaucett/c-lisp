@@ -87,6 +87,10 @@ static lisp_Value* lisp_List_internal_new(lisp_State* state) {
     return value;
 }
 
+static lisp_u32 lisp_List_size(lisp_List* list) {
+    return list->size;
+}
+
 static lisp_ListNode* lisp_List_get_node(lisp_ListNode* node, lisp_u32 index) {
     lisp_u32 i = 0;
 

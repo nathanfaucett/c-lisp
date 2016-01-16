@@ -162,6 +162,9 @@ static lisp_Value* lisp_Reader_next(lisp_Reader* reader, lisp_u8 return_on_char)
         if (ch == '(') {
             return lisp_Reader_read_list(reader, ch);
         }
+        if (ch == '[') {
+            return lisp_Reader_read_vector(reader, ch);
+        }
 
         return lisp_Reader_read_token(reader, ch);
     }
@@ -196,6 +199,21 @@ static lisp_Value* lisp_Reader_read_list(lisp_Reader* reader, lisp_u8 ch) {
     return list;
 }
 
+static lisp_Value* lisp_Reader_read_vector(lisp_Reader* reader, lisp_u8 ch) {
+    lisp_Array* array = lisp_Array_new();
+    lisp_Value* value = lisp_Reader_next(reader, ']');
+
+    while (value != NULL) {
+        lisp_Array_push(array, value);
+        value = lisp_Reader_next(reader, ']');
+    }
+
+    lisp_Value* vector = lisp_Value_vector_from_array(reader->state, array);
+    lisp_Array_delete(array);
+
+    return vector;
+}
+
 static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch) {
     lisp_Value* value;
     lisp_u8* cstring = lisp_Reader_next_token(reader, ch);
@@ -208,7 +226,7 @@ static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch) {
         value = lisp_Value_symbol_from_cstring(reader->state, cstring);
     }
     free(cstring);
-    
+
     return value;
 }
 
