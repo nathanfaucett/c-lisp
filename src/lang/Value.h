@@ -3,6 +3,7 @@
 
 
 typedef enum LISP_TYPE {
+    LISP_TYPE_BOOLEAN,
     LISP_TYPE_CHARACTER,
     LISP_TYPE_NIL,
     LISP_TYPE_NUMBER,
@@ -17,6 +18,7 @@ typedef struct lisp_Value {
     LISP_TYPE type;
     lisp_u32 ref_count;
     union {
+        struct lisp_Boolean boolean;
         struct lisp_Character character;
         struct lisp_List list;
         struct lisp_Nil nil;
@@ -34,6 +36,7 @@ static void lisp_Value_destructor(lisp_State*, lisp_Value*);
 static struct lisp_Value* lisp_Value_new(lisp_State*, LISP_TYPE);
 static void lisp_Value_delete(lisp_State*, lisp_Value*);
 
+static lisp_Value* lisp_Value_boolean(lisp_State*, lisp_bool);
 static lisp_Value* lisp_Value_character_from_ch(lisp_State*, lisp_u8);
 static lisp_Value* lisp_Value_string_from_cstring(lisp_State*, lisp_u8*);
 static lisp_Value* lisp_Value_symbol_from_cstring(lisp_State*, lisp_u8*);

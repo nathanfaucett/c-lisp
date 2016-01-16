@@ -6,6 +6,7 @@ struct lisp_State;
 
 #include "./Memory.h"
 #include "./Scope.h"
+#include "./Reader.h"
 #include "./State.h"
 
 

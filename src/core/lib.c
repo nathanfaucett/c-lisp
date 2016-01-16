@@ -4,6 +4,7 @@
 
 #include "./Memory.c"
 #include "./Scope.c"
+#include "./Reader.c"
 #include "./State.c"
 
 

@@ -2,6 +2,7 @@
 #define __LISP_LANG_LIB_H__
 
 
+#include "./Boolean.h"
 #include "./Character.h"
 #include "./List.h"
 #include "./Nil.h"

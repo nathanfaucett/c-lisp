@@ -27,6 +27,7 @@ static void lisp_Value_destructor(lisp_State* state, lisp_Value* value) {
             break;
         case LISP_TYPE_NIL:
         case LISP_TYPE_NUMBER:
+        case LISP_TYPE_BOOLEAN:
             break;
     }
 }
@@ -38,6 +39,13 @@ static lisp_Value* lisp_Value_new(lisp_State* state, LISP_TYPE type) {
 static void lisp_Value_delete(lisp_State* state, lisp_Value* value) {
     lisp_Value_destructor(state, value);
     lisp_State_dealloc(state, value);
+}
+
+static lisp_Value* lisp_Value_boolean(lisp_State* state, lisp_bool boolean_value) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_BOOLEAN);
+    value->boolean.value = value;
+    lisp_Boolean_constructor(&value->boolean, boolean_value);
+    return value;
 }
 
 static lisp_Value* lisp_Value_character_from_ch(lisp_State* state, lisp_u8 ch) {
@@ -135,6 +143,8 @@ static void lisp_Value_deref(lisp_State* state, lisp_Value* value) {
 
 static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* value) {
     switch (value->type) {
+        case LISP_TYPE_BOOLEAN:
+            return lisp_Boolean_to_string(state, &value->boolean);
         case LISP_TYPE_CHARACTER:
             return lisp_Character_to_string(state, &value->character);
         case LISP_TYPE_LIST:
@@ -158,6 +168,8 @@ static lisp_bool lisp_Value_equal(lisp_Value* a, lisp_Value* b) {
         return LISP_FALSE;
     } else {
         switch (a->type) {
+            case LISP_TYPE_BOOLEAN:
+                return lisp_Boolean_equal(&a->boolean, &b->boolean);
             case LISP_TYPE_CHARACTER:
                 return lisp_Character_equal(&a->character, &b->character);
             case LISP_TYPE_LIST:
