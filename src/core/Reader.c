@@ -185,31 +185,31 @@ static lisp_Value* lisp_Reader_read_number(lisp_Reader* reader, lisp_u8 ch) {
 }
 
 static lisp_Value* lisp_Reader_read_list(lisp_Reader* reader, lisp_u8 ch) {
-    lisp_Array* array = lisp_Array_new();
+    lisp_MutList* mut_list = lisp_MutList_new();
     lisp_Value* value = lisp_Reader_next(reader, ')');
 
     while (value != NULL) {
-        lisp_Array_push(array, value);
+        lisp_MutList_push(mut_list, value);
         value = lisp_Reader_next(reader, ')');
     }
 
-    lisp_Value* list = lisp_Value_list_from_array(reader->state, array);
-    lisp_Array_delete(array);
+    lisp_Value* list = lisp_Value_list_from_mut_list(reader->state, mut_list);
+    lisp_MutList_delete(mut_list);
 
     return list;
 }
 
 static lisp_Value* lisp_Reader_read_vector(lisp_Reader* reader, lisp_u8 ch) {
-    lisp_Array* array = lisp_Array_new();
+    lisp_MutList* mut_list = lisp_MutList_new();
     lisp_Value* value = lisp_Reader_next(reader, ']');
 
     while (value != NULL) {
-        lisp_Array_push(array, value);
+        lisp_MutList_push(mut_list, value);
         value = lisp_Reader_next(reader, ']');
     }
 
-    lisp_Value* vector = lisp_Value_vector_from_array(reader->state, array);
-    lisp_Array_delete(array);
+    lisp_Value* vector = lisp_Value_vector_from_mut_list(reader->state, mut_list);
+    lisp_MutList_delete(mut_list);
 
     return vector;
 }
@@ -222,6 +222,8 @@ static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch) {
         value = lisp_Value_boolean(reader->state, 1);
     } else if (lisp_cstring_equal(cstring, "false")) {
         value = lisp_Value_boolean(reader->state, 0);
+    } else if (lisp_cstring_equal(cstring, "nil")) {
+        value = lisp_Value_nil(reader->state);
     } else {
         value = lisp_Value_symbol_from_cstring(reader->state, cstring);
     }

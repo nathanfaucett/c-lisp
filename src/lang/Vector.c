@@ -2,49 +2,49 @@
 #define __LISP_LANG_VECTOR_C__
 
 
-static lisp_VectorArray* lisp_VectorArray_constructor(lisp_VectorArray* array, lisp_Value** values) {
-    array->ref_count = 1;
-    array->values = values;
-    return array;
+static lisp_VectorMutList* lisp_VectorMutList_constructor(lisp_VectorMutList* mut_list, lisp_Value** values) {
+    mut_list->ref_count = 1;
+    mut_list->values = values;
+    return mut_list;
 }
 
-static void lisp_VectorArray_destructor(lisp_State* state, lisp_VectorArray* array) {
+static void lisp_VectorMutList_destructor(lisp_State* state, lisp_VectorMutList* mut_list) {
     lisp_u32 index = 0;
-    lisp_Value* value = array->values[index];
+    lisp_Value* value = mut_list->values[index];
 
     while (value != NULL) {
         lisp_Value_deref(state, value);
         index += 1;
-        value = array->values[index];
+        value = mut_list->values[index];
     }
-    free(array->values);
+    free(mut_list->values);
 }
 
-static lisp_VectorArray* lisp_VectorArray_new(void) {
-    return lisp_VectorArray_constructor(
-        (lisp_VectorArray*) malloc(sizeof(lisp_VectorArray)),
+static lisp_VectorMutList* lisp_VectorMutList_new(void) {
+    return lisp_VectorMutList_constructor(
+        (lisp_VectorMutList*) malloc(sizeof(lisp_VectorMutList)),
         lisp_Vector_alloc_values()
     );
 }
 
-static void lisp_VectorArray_delete(lisp_State* state, lisp_VectorArray* array) {
-    lisp_VectorArray_destructor(state, array);
-    free(array);
+static void lisp_VectorMutList_delete(lisp_State* state, lisp_VectorMutList* mut_list) {
+    lisp_VectorMutList_destructor(state, mut_list);
+    free(mut_list);
 }
 
-static void lisp_VectorArray_copy(lisp_VectorArray* a, lisp_VectorArray* b, lisp_u32 size) {
+static void lisp_VectorMutList_copy(lisp_VectorMutList* a, lisp_VectorMutList* b, lisp_u32 size) {
     lisp_values_copy(a->values, b->values, 0, size, 0);
 }
 
-static void lisp_VectorArray_ref(lisp_VectorArray* array) {
-    array->ref_count += 1;
+static void lisp_VectorMutList_ref(lisp_VectorMutList* mut_list) {
+    mut_list->ref_count += 1;
 }
 
-static void lisp_VectorArray_deref(lisp_State* state, lisp_VectorArray* array) {
-    array->ref_count -= 1;
+static void lisp_VectorMutList_deref(lisp_State* state, lisp_VectorMutList* mut_list) {
+    mut_list->ref_count -= 1;
 
-    if (array->ref_count == 0) {
-        lisp_VectorArray_delete(state, array);
+    if (mut_list->ref_count == 0) {
+        lisp_VectorMutList_delete(state, mut_list);
     }
 }
 
@@ -67,14 +67,14 @@ static lisp_VectorNode** lisp_Vector_alloc_nodes(void) {
 
 
 static lisp_VectorNode* lisp_VectorNode_constructor(
-    lisp_VectorNode* node, lisp_VectorArray* values, lisp_VectorNode** array
+    lisp_VectorNode* node, lisp_VectorMutList* values, lisp_VectorNode** mut_list
 ) {
     node->ref_count = 1;
     if (values != NULL) {
         node->values = values;
         node->is_values = LISP_TRUE;
     } else {
-        node->array = array;
+        node->mut_list = mut_list;
         node->is_values = LISP_FALSE;
     }
     return node;
@@ -82,29 +82,29 @@ static lisp_VectorNode* lisp_VectorNode_constructor(
 
 static void lisp_VectorNode_destructor(lisp_State* state, lisp_VectorNode* node) {
     if (node->is_values) {
-        lisp_VectorArray_deref(state, node->values);
+        lisp_VectorMutList_deref(state, node->values);
     } else {
         lisp_u32 index = 0;
-        lisp_VectorNode* value = node->array[index];
+        lisp_VectorNode* value = node->mut_list[index];
 
         while (value != NULL) {
             lisp_VectorNode_deref(state, value);
             index += 1;
-            value = node->array[index];
+            value = node->mut_list[index];
         }
-        free(node->array);
+        free(node->mut_list);
     }
 }
 
 static lisp_VectorNode* lisp_VectorNode_new_values(void) {
     return lisp_VectorNode_constructor(
         (lisp_VectorNode*) malloc(sizeof(lisp_VectorNode)),
-        lisp_VectorArray_new(),
+        lisp_VectorMutList_new(),
         NULL
     );
 }
 
-static lisp_VectorNode* lisp_VectorNode_new_array(void) {
+static lisp_VectorNode* lisp_VectorNode_new_mut_list(void) {
     return lisp_VectorNode_constructor(
         (lisp_VectorNode*) malloc(sizeof(lisp_VectorNode)),
         NULL,
@@ -112,10 +112,10 @@ static lisp_VectorNode* lisp_VectorNode_new_array(void) {
     );
 }
 
-static lisp_VectorNode* lisp_VectorNode_new_tail(lisp_VectorArray* array) {
+static lisp_VectorNode* lisp_VectorNode_new_tail(lisp_VectorMutList* mut_list) {
     return lisp_VectorNode_constructor(
         (lisp_VectorNode*) malloc(sizeof(lisp_VectorNode)),
-        array,
+        mut_list,
         NULL
     );
 }
@@ -127,9 +127,9 @@ static void lisp_VectorNode_delete(lisp_State* state, lisp_VectorNode* node) {
 
 static lisp_VectorNode* lisp_VectorNode_copy(lisp_VectorNode* node, lisp_VectorNode* other, lisp_u32 size) {
     if (node->is_values) {
-        lisp_VectorArray_copy(node->values, other->values, size);
+        lisp_VectorMutList_copy(node->values, other->values, size);
     } else {
-        lisp_vector_nodes_copy(node->array, other->array, 0, size, 0);
+        lisp_vector_nodes_copy(node->mut_list, other->mut_list, 0, size, 0);
     }
     return node;
 }
@@ -138,7 +138,7 @@ static lisp_VectorNode* lisp_VectorNode_clone(lisp_VectorNode* node, lisp_u32 si
     if (node->is_values) {
         return lisp_VectorNode_copy(lisp_VectorNode_new_values(), node, size);
     } else {
-        return lisp_VectorNode_copy(lisp_VectorNode_new_array(), node, size);
+        return lisp_VectorNode_copy(lisp_VectorNode_new_mut_list(), node, size);
     }
 }
 
@@ -146,15 +146,15 @@ static void lisp_VectorNode_ref(lisp_VectorNode* node) {
     node->ref_count += 1;
 
     if (node->is_values) {
-        lisp_VectorArray_ref(node->values);
+        lisp_VectorMutList_ref(node->values);
     } else {
         lisp_u32 index = 0;
-        lisp_VectorNode* value = node->array[index];
+        lisp_VectorNode* value = node->mut_list[index];
 
         while (value != NULL) {
             lisp_VectorNode_ref(value);
             index += 1;
-            value = node->array[index];
+            value = node->mut_list[index];
         }
     }
 }
@@ -163,15 +163,15 @@ static void lisp_VectorNode_deref(lisp_State* state, lisp_VectorNode* node) {
     node->ref_count -= 1;
 
     if (node->is_values) {
-        lisp_VectorArray_deref(state, node->values);
+        lisp_VectorMutList_deref(state, node->values);
     } else {
         lisp_u32 index = 0;
-        lisp_VectorNode* value = node->array[index];
+        lisp_VectorNode* value = node->mut_list[index];
 
         while (value != NULL) {
             lisp_VectorNode_deref(state, value);
             index += 1;
-            value = node->array[index];
+            value = node->mut_list[index];
         }
     }
 
@@ -182,7 +182,7 @@ static void lisp_VectorNode_deref(lisp_State* state, lisp_VectorNode* node) {
 
 
 static lisp_Vector* lisp_Vector_constructor(
-    lisp_Vector* vector, lisp_VectorNode* root, lisp_VectorArray* tail, lisp_u32 size, lisp_u32 shift
+    lisp_Vector* vector, lisp_VectorNode* root, lisp_VectorMutList* tail, lisp_u32 size, lisp_u32 shift
 ) {
     vector->root = root;
     vector->tail = tail;
@@ -197,14 +197,14 @@ static void lisp_Vector_destructor(lisp_State* state, lisp_Vector* vector) {
     }
 }
 
-static lisp_Value* lisp_Vector_from_array(lisp_State* state, lisp_Array* array) {
-    lisp_u32 size = lisp_Array_size(array);
+static lisp_Value* lisp_Vector_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    lisp_u32 size = lisp_MutList_size(mut_list);
 
     if (size == 0) {
         return lisp_Value_vector(state);
     } else {
         lisp_Value* value = lisp_Vector_internal_new(state);
-        lisp_Vector_push_array(state, &value->vector, array);
+        lisp_Vector_push_mut_list(state, &value->vector, mut_list);
         return value;
     }
 }
@@ -241,14 +241,14 @@ static lisp_VectorNode* lisp_Vector_get_node(lisp_Vector* vector, lisp_u32 index
     lisp_u32 level = vector->shift;
 
     while (level > 0) {
-        node = node->array[(index >> level) & LISP_VECTOR_MASK];
+        node = node->mut_list[(index >> level) & LISP_VECTOR_MASK];
         level = level - LISP_VECTOR_SHIFT;
     }
 
     return node;
 }
 
-static lisp_VectorArray* lisp_Vector_get_array_for(lisp_Vector* vector, lisp_u32 index) {
+static lisp_VectorMutList* lisp_Vector_get_mut_list_for(lisp_Vector* vector, lisp_u32 index) {
     if (index >= lisp_Vector_tail_off(vector->size)) {
         return vector->tail;
     } else {
@@ -257,7 +257,7 @@ static lisp_VectorArray* lisp_Vector_get_array_for(lisp_Vector* vector, lisp_u32
 }
 
 static lisp_Value* lisp_Vector_find_index(lisp_Vector* vector, lisp_u32 index) {
-    return lisp_Vector_get_array_for(vector, index)->values[index & LISP_VECTOR_MASK];
+    return lisp_Vector_get_mut_list_for(vector, index)->values[index & LISP_VECTOR_MASK];
 }
 
 static lisp_Value* lisp_Vector_get(lisp_State* state, lisp_Vector* vector, lisp_u32 index) {
@@ -277,8 +277,8 @@ static lisp_VectorNode* lisp_Vector_new_path_set(
         new_node->values->values[index & LISP_VECTOR_MASK] = value;
     } else {
         lisp_u32 sub_index = (index >> level) & LISP_VECTOR_MASK;
-        new_node->array[sub_index] = lisp_Vector_new_path_set(
-            state, node->array[sub_index], size, index, value, level - LISP_VECTOR_SHIFT
+        new_node->mut_list[sub_index] = lisp_Vector_new_path_set(
+            state, node->mut_list[sub_index], size, index, value, level - LISP_VECTOR_SHIFT
         );
     }
 
@@ -290,14 +290,14 @@ static lisp_Value* lisp_Vector_set(lisp_State* state, lisp_Vector* vector, lisp_
         return vector->value;
     } else {
         if (index >= lisp_Vector_tail_off(vector->size)) {
-            lisp_VectorArray* tail = vector->tail;
+            lisp_VectorMutList* tail = vector->tail;
             lisp_u32 masked_index = index & LISP_VECTOR_MASK;
 
             if (lisp_Value_equal(tail->values[masked_index], value)) {
                 return vector->value;
             } else {
-                lisp_VectorArray* new_tail = lisp_VectorArray_new();
-                lisp_VectorArray_copy(new_tail, tail, (vector->size + 1) & LISP_VECTOR_MASK);
+                lisp_VectorMutList* new_tail = lisp_VectorMutList_new();
+                lisp_VectorMutList_copy(new_tail, tail, (vector->size + 1) & LISP_VECTOR_MASK);
                 new_tail->values[masked_index] = value;
                 lisp_Value* new_vector = lisp_Vector_clone(state, vector);
                 new_vector->vector.tail = new_tail;
@@ -317,8 +317,8 @@ static lisp_VectorNode* lisp_Vector_new_path(lisp_State* state, lisp_VectorNode*
     if (level == 0) {
         return node;
     } else {
-        lisp_VectorNode* new_node = lisp_VectorNode_new_array();
-        new_node->array[0] = lisp_Vector_new_path(state, node, level - LISP_VECTOR_SHIFT);
+        lisp_VectorNode* new_node = lisp_VectorNode_new_mut_list();
+        new_node->mut_list[0] = lisp_Vector_new_path(state, node, level - LISP_VECTOR_SHIFT);
         return new_node;
     }
 }
@@ -333,7 +333,7 @@ static lisp_VectorNode* lisp_Vector_push_tail(
     if (level == LISP_VECTOR_SHIFT) {
         insert_node = tail;
     } else {
-        lisp_VectorNode* child = parent->array[sub_index];
+        lisp_VectorNode* child = parent->mut_list[sub_index];
 
         if (child != NULL) {
             insert_node = lisp_Vector_push_tail(state, child, tail, size, level - LISP_VECTOR_SHIFT);
@@ -342,7 +342,7 @@ static lisp_VectorNode* lisp_Vector_push_tail(
         }
     }
 
-    new_node->array[sub_index] = insert_node;
+    new_node->mut_list[sub_index] = insert_node;
 
     return new_node;
 }
@@ -360,19 +360,19 @@ static void lisp_Vector_push_value(lisp_State* state, lisp_Vector* vector, lisp_
         lisp_u32 new_shift = shift;
 
         if ((size >> LISP_VECTOR_SHIFT) > (1 << shift)) {
-            new_root = lisp_VectorNode_new_array();
-            new_root->array[0] = root;
-            new_root->array[1] = lisp_Vector_new_path(state, tail_node, shift);
+            new_root = lisp_VectorNode_new_mut_list();
+            new_root->mut_list[0] = root;
+            new_root->mut_list[1] = lisp_Vector_new_path(state, tail_node, shift);
             new_shift += LISP_VECTOR_SHIFT;
         } else {
             new_root = lisp_Vector_push_tail(state, root, tail_node, size, shift);
         }
 
-        lisp_VectorArray* new_tail = lisp_VectorArray_new();
+        lisp_VectorMutList* new_tail = lisp_VectorMutList_new();
         new_tail->values[0] = value;
 
         lisp_VectorNode_deref(state, root);
-        lisp_VectorArray_deref(state, vector->tail);
+        lisp_VectorMutList_deref(state, vector->tail);
 
         vector->tail = new_tail;
         vector->root = new_root;
@@ -382,37 +382,37 @@ static void lisp_Vector_push_value(lisp_State* state, lisp_Vector* vector, lisp_
     vector->size = size + 1;
 }
 
-static void lisp_Vector_push_array(lisp_State* state, lisp_Vector* vector, lisp_Array* array) {
-    lisp_VectorArray* tail = vector->tail;
+static void lisp_Vector_push_mut_list(lisp_State* state, lisp_Vector* vector, lisp_MutList* mut_list) {
+    lisp_VectorMutList* tail = vector->tail;
     lisp_u32 size = vector->size;
 
     if (tail == NULL) {
-        vector->tail = lisp_VectorArray_new();
+        vector->tail = lisp_VectorMutList_new();
     } else if (size - lisp_Vector_tail_off(size) < LISP_VECTOR_SIZE) {
-        lisp_VectorArray* new_tail = lisp_VectorArray_new();
-        lisp_VectorArray_copy(tail, new_tail, (size + 1) & LISP_VECTOR_MASK);
-        lisp_VectorArray_deref(state, tail);
+        lisp_VectorMutList* new_tail = lisp_VectorMutList_new();
+        lisp_VectorMutList_copy(tail, new_tail, (size + 1) & LISP_VECTOR_MASK);
+        lisp_VectorMutList_deref(state, tail);
         vector->tail = new_tail;
     }
 
-    for (lisp_u32 i = 0, il = array->size; i < il; i++) {
-        lisp_Vector_push_value(state, vector, lisp_Array_get(array, i));
+    for (lisp_u32 i = 0, il = mut_list->size; i < il; i++) {
+        lisp_Vector_push_value(state, vector, lisp_MutList_get(mut_list, i));
     }
 }
 
 static lisp_Value* lisp_Vector_push(lisp_State* state, lisp_Vector* vector, lisp_Value* value) {
     lisp_u32 size = vector->size;
-    lisp_VectorArray* tail = vector->tail;
+    lisp_VectorMutList* tail = vector->tail;
 
     lisp_Value* new_value = lisp_Vector_clone(state, vector);
     lisp_Vector* new_vector = &new_value->vector;
 
     if (tail == NULL) {
-        new_vector->tail = lisp_VectorArray_new();
+        new_vector->tail = lisp_VectorMutList_new();
     } else if (size - lisp_Vector_tail_off(size) < LISP_VECTOR_SIZE) {
-        lisp_VectorArray* new_tail = lisp_VectorArray_new();
-        lisp_VectorArray_copy(tail, new_tail, (size + 1) & LISP_VECTOR_MASK);
-        lisp_VectorArray_deref(state, tail);
+        lisp_VectorMutList* new_tail = lisp_VectorMutList_new();
+        lisp_VectorMutList_copy(tail, new_tail, (size + 1) & LISP_VECTOR_MASK);
+        lisp_VectorMutList_deref(state, tail);
         new_vector->tail = new_tail;
     }
 

@@ -2,11 +2,10 @@
 #define __LISP_CORE_LIB_H__
 
 
-struct lisp_State;
-
 #include "./Memory.h"
 #include "./Scope.h"
 #include "./Reader.h"
+#include "./special_forms.h"
 #include "./State.h"
 
 

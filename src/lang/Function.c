@@ -21,6 +21,8 @@ static lisp_Value* lisp_Function_call(lisp_State* state, lisp_Function* fn, lisp
     lisp_Scope* fn_scope = lisp_Scope_new(state, scope);
     lisp_bool rest = LISP_FALSE;
 
+    lisp_Scope_def(fn_scope, fn->name, fn->value);
+
     for (lisp_u32 i = 0, il = lisp_Vector_size(&fn->params->vector); i < il; i++) {
         lisp_Value* param = lisp_Vector_get(state, &fn->params->vector, i);
 
@@ -32,14 +34,17 @@ static lisp_Value* lisp_Function_call(lisp_State* state, lisp_Function* fn, lisp
             if (lisp_cstring_equal(cstring, "...")) {
                 rest = LISP_TRUE;
             } else {
-                lisp_Scope_def(fn_scope, param, lisp_List_get(state, &values->list, i));
+                lisp_Scope_def(fn_scope, param, lisp_State_eval(state, lisp_List_get(state, &values->list, i), scope));
             }
 
             free(cstring);
         }
     }
 
-    return lisp_State_eval(state, fn->body, fn_scope);
+    lisp_Value* value = lisp_State_eval(state, fn->body, fn_scope);
+    lisp_Scope_delete(fn_scope);
+
+    return value;
 }
 
 static struct lisp_Value* lisp_Function_to_string(lisp_State* state, lisp_Function* fn) {

@@ -5,6 +5,7 @@
 #include "./Memory.c"
 #include "./Scope.c"
 #include "./Reader.c"
+#include "./special_forms.c"
 #include "./State.c"
 
 

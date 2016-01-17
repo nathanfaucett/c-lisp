@@ -27,7 +27,7 @@ typedef struct lisp_List {
 static lisp_List* lisp_List_constructor(lisp_List*, lisp_ListNode*, lisp_ListNode*, lisp_u32);
 static void lisp_List_destructor(lisp_State*, lisp_List*);
 
-static struct lisp_Value* lisp_List_from_array(lisp_State*, lisp_Array*);
+static struct lisp_Value* lisp_List_from_mut_list(lisp_State*, lisp_MutList*);
 static struct lisp_Value* lisp_List_internal_new(lisp_State*);
 
 static lisp_u32 lisp_List_size(lisp_List*);

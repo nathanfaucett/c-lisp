@@ -5,6 +5,7 @@
 #include "./Boolean.c"
 #include "./Character.c"
 #include "./Function.c"
+#include "./Macro.c"
 #include "./List.c"
 #include "./Nil.c"
 #include "./Number.c"

@@ -15,6 +15,8 @@ static void lisp_Value_destructor(lisp_State* state, lisp_Value* value) {
             break;
         case LISP_TYPE_FUNCTION:
             lisp_Function_destructor(state, &value->function);
+        case LISP_TYPE_MACRO:
+            lisp_Macro_destructor(state, &value->macro);
             break;
         case LISP_TYPE_LIST:
             lisp_List_destructor(state, &value->list);
@@ -65,6 +67,21 @@ static lisp_Value* lisp_Value_function(lisp_State* state, lisp_Value* name, lisp
     return value;
 }
 
+static lisp_Value* lisp_Value_macro(lisp_State* state, lisp_Value* name, lisp_Value* params, lisp_Value* body) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_MACRO);
+    value->macro.value = value;
+    lisp_Macro_constructor(&value->macro, name, params, body);
+    return value;
+}
+
+static lisp_Value* lisp_Value_native_macro(lisp_State* state, lisp_Value* symbol, lisp_function_pointer native) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_MACRO);
+    value->macro.value = value;
+    value->macro.symbol = symbol;
+    value->macro.native = native;
+    return value;
+}
+
 static lisp_Value* lisp_Value_string_from_cstring(lisp_State* state, lisp_u8* cstring) {
     lisp_Value* value = lisp_Value_new(state, LISP_TYPE_STRING);
     value->string.value = value;
@@ -93,12 +110,12 @@ static lisp_Value* lisp_Value_number_from_f64(lisp_State* state, lisp_f64 f64) {
     return value;
 }
 
-static lisp_Value* lisp_Value_list_from_array(lisp_State* state, lisp_Array* array) {
-    return lisp_List_from_array(state, array);
+static lisp_Value* lisp_Value_list_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    return lisp_List_from_mut_list(state, mut_list);
 }
 
-static lisp_Value* lisp_Value_vector_from_array(lisp_State* state, lisp_Array* array) {
-    return lisp_Vector_from_array(state, array);
+static lisp_Value* lisp_Value_vector_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    return lisp_Vector_from_mut_list(state, mut_list);
 }
 
 static lisp_Value* lisp_Value_nil(lisp_State* state) {
@@ -159,6 +176,8 @@ static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* value) {
             return lisp_Character_to_string(state, &value->character);
         case LISP_TYPE_FUNCTION:
             return lisp_Function_to_string(state, &value->function);
+        case LISP_TYPE_MACRO:
+            return lisp_Macro_to_string(state, &value->macro);
         case LISP_TYPE_LIST:
             return lisp_List_to_string(state, &value->list);
         case LISP_TYPE_NIL:
@@ -186,6 +205,8 @@ static lisp_bool lisp_Value_equal(lisp_Value* a, lisp_Value* b) {
                 return lisp_Character_equal(&a->character, &b->character);
             case LISP_TYPE_FUNCTION:
                 return lisp_Function_equal(&a->function, &b->function);
+            case LISP_TYPE_MACRO:
+                return lisp_Macro_equal(&a->macro, &b->macro);
             case LISP_TYPE_LIST:
                 return lisp_List_equal(&a->list, &b->list);
             case LISP_TYPE_NIL:

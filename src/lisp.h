@@ -2,7 +2,6 @@
 #define __LISP_LISP_H__
 
 
-#include <stdlib.h>
 #include "./types.h"
 
 
@@ -11,6 +10,10 @@
 
 /* forward declare for function prototypes */
 struct lisp_Value;
+struct lisp_State;
+struct lisp_Scope;
+
+typedef struct lisp_Value* (*lisp_function_pointer)(struct lisp_State*, struct lisp_Value*, struct lisp_Scope*);
 
 
 #define CREATE_ARRAY_COPY_PROTO(name, TypeA, TypeB, Return)\

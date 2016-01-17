@@ -4,8 +4,8 @@
 
 #include "./lisp.h"
 #include "./numbers.h"
-#include "./Array.h"
-#include "./Map.h"
+#include "./MutList.h"
+#include "./MutMap.h"
 #include "./core/lib.h"
 #include "./lang/lib.h"
 

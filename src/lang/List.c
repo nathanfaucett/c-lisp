@@ -59,19 +59,19 @@ static void lisp_List_destructor(lisp_State* state, lisp_List* list) {
     }
 }
 
-static lisp_Value* lisp_List_from_array(lisp_State* state, lisp_Array* array) {
-    lisp_u32 size = lisp_Array_size(array);
+static lisp_Value* lisp_List_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    lisp_u32 size = lisp_MutList_size(mut_list);
 
     if (size == 0) {
         return lisp_Value_list(state);
     } else {
         lisp_Value* list_value = lisp_List_internal_new(state);
         lisp_u32 i = size - 1;
-        lisp_ListNode* tail = lisp_ListNode_new(NULL, lisp_Array_get(array, i));
+        lisp_ListNode* tail = lisp_ListNode_new(NULL, lisp_MutList_get(mut_list, i));
         lisp_ListNode* root = tail;
 
         while (i--) {
-            root = lisp_ListNode_new(root, lisp_Array_get(array, i));
+            root = lisp_ListNode_new(root, lisp_MutList_get(mut_list, i));
         }
         lisp_List_constructor(&list_value->list, root, tail, size);
 
