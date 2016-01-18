@@ -31,11 +31,13 @@ CREATE_ARRAY_COPY_PROTO(cstr, lisp_u8*, lisp_u8*, lisp_u8*);
 CREATE_ARRAY_COPY_PROTO(values, struct lisp_Value**, struct lisp_Value**, struct lisp_Value**);
 CREATE_ARRAY_COPY_PROTO(vector_nodes, struct lisp_VectorNode**, struct lisp_VectorNode**, struct lisp_VectorNode**);
 
-
 static lisp_u32 lisp_cstring_size(lisp_u8*);
 static lisp_u8* lisp_cstring_copy(lisp_u8*, lisp_u8*);
 static lisp_u8* lisp_cstring_clone(lisp_u8*);
 static lisp_bool lisp_cstring_equal(lisp_u8*, lisp_u8*);
 static void lisp_cstring_reverse(lisp_u8*);
+
+static void lisp_print(struct lisp_State*, struct lisp_Value*);
+
 
 #endif

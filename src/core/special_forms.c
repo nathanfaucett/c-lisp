@@ -54,6 +54,10 @@ static lisp_Value* lisp_special_form_do(lisp_State* state, lisp_Value* input, li
 
     for (lisp_u32 i = 1, il = lisp_List_size(&input->list); i < il; i++) {
         value = lisp_State_eval(state, lisp_List_get(state, &input->list, i), scope);
+
+        if (i != il - 1) {
+            lisp_Value_deref(state, value);
+        }
     }
 
     return value;
@@ -73,6 +77,13 @@ static lisp_Value* lisp_special_form_let(lisp_State* state, lisp_Value* input, l
     lisp_Value* value = lisp_State_eval(state, lisp_List_get(state, &input->list, 2), let_scope);
     lisp_Scope_delete(let_scope);
 
+    return value;
+}
+
+static lisp_Value* lisp_special_form_eval(lisp_State* state, lisp_Value* input, lisp_Scope* scope) {
+    lisp_Value* new_list = lisp_List_shift(state, &input->list);
+    lisp_Value* value = lisp_State_eval(state, new_list, scope);
+    lisp_Value_deref(state, new_list);
     return value;
 }
 

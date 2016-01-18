@@ -16,12 +16,12 @@ static lisp_Macro* lisp_Macro_constructor(
 }
 
 static void lisp_Macro_destructor(lisp_State* state, lisp_Macro* fn) {
-    lisp_Value_deref(state, fn->name);
-    lisp_Value_deref(state, fn->params);
-    lisp_Value_deref(state, fn->body);
-
     if (fn->symbol != NULL) {
         lisp_Value_deref(state, fn->symbol);
+    } else {
+        lisp_Value_deref(state, fn->name);
+        lisp_Value_deref(state, fn->params);
+        lisp_Value_deref(state, fn->body);
     }
 }
 
@@ -36,7 +36,10 @@ static lisp_Value* lisp_Macro_call(lisp_State* state, lisp_Macro* fn, lisp_Value
             lisp_Value* param = lisp_Vector_get(state, &fn->params->vector, i);
 
             if (rest) {
-                /* fixme */
+                lisp_Value* new_list = lisp_List_after(state, &values->list, i - 1);
+                lisp_Value* new_vector = lisp_Vector_from_list(state, &new_list->list);
+                lisp_Scope_def(fn_scope, param, lisp_State_eval(state, new_vector, scope));
+                break;
             } else {
                 lisp_u8* cstring = lisp_String_to_cstring(&param->symbol.string->string);
 

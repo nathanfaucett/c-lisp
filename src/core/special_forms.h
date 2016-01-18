@@ -10,6 +10,7 @@ static struct lisp_Value* lisp_special_form_fn(struct lisp_State*, struct lisp_V
 static struct lisp_Value* lisp_special_form_macro(struct lisp_State*, struct lisp_Value*, lisp_Scope*);
 static struct lisp_Value* lisp_special_form_do(struct lisp_State*, struct lisp_Value*, lisp_Scope*);
 static struct lisp_Value* lisp_special_form_let(struct lisp_State*, struct lisp_Value*, lisp_Scope*);
+static struct lisp_Value* lisp_special_form_eval(struct lisp_State*, struct lisp_Value*, lisp_Scope*);
 
 
 #endif

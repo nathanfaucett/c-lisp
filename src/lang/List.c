@@ -46,6 +46,18 @@ static void lisp_ListNode_deref(lisp_State* state, lisp_ListNode* node) {
     }
 }
 
+static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode* node, lisp_u32 index) {
+    lisp_u32 i = 0;
+
+    while (node != NULL && i != index) {
+        node = node->next;
+        i += 1;
+    }
+
+    return node;
+}
+
+
 static lisp_List* lisp_List_constructor(lisp_List* list, lisp_ListNode* root, lisp_ListNode* tail, lisp_u32 size) {
     list->root = root;
     list->tail = tail;
@@ -91,24 +103,13 @@ static lisp_u32 lisp_List_size(lisp_List* list) {
     return list->size;
 }
 
-static lisp_ListNode* lisp_List_get_node(lisp_ListNode* node, lisp_u32 index) {
-    lisp_u32 i = 0;
-
-    while (node != NULL && i != index) {
-        node = node->next;
-        i += 1;
-    }
-
-    return node;
-}
-
 static lisp_ListNode* lisp_List_find_node(lisp_List* list, lisp_u32 index) {
     if (index == 0) {
         return list->root;
     } else if (index == list->size - 1) {
         return list->tail;
     } else {
-        return lisp_List_get_node(list->root, index);
+        return lisp_ListNode_find_node(list->root, index);
     }
 }
 
@@ -205,6 +206,19 @@ static lisp_Value* lisp_List_shift(lisp_State* state, lisp_List* list) {
     }
 }
 
+static struct lisp_Value* lisp_List_after(lisp_State* state, lisp_List* list, lisp_u32 index) {
+    lisp_ListNode* node = lisp_List_find_node(list, index);
+
+    if (node != NULL) {
+        lisp_Value* new_value = lisp_List_internal_new(state);
+        lisp_ListNode_ref(node);
+        lisp_List_constructor(&new_value->list, node, list->tail, list->size);
+        return new_value;
+    } else {
+        return lisp_Value_list(state);
+    }
+}
+
 static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode* from, lisp_ListNode* to, lisp_ListNode* new_node) {
     if (from != to) {
         return lisp_ListNode_new(lisp_List_copy_from_to(from->next, to, new_node), from->value);
@@ -216,7 +230,7 @@ static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode* from, lisp_ListNode*
 static lisp_Value* lisp_List_remove_index(lisp_State* state, lisp_List* list, lisp_u32 index) {
     lisp_Value* new_value = lisp_List_internal_new(state);
 
-    lisp_ListNode* removed_node = lisp_List_get_node(list->root, index);
+    lisp_ListNode* removed_node = lisp_ListNode_find_node(list->root, index);
     lisp_ListNode* new_root = lisp_List_copy_from_to(list->root, removed_node, removed_node->next);
     lisp_List_constructor(&new_value->list, new_root, list->tail, list->size - 1);
 

@@ -209,6 +209,28 @@ static lisp_Value* lisp_Vector_from_mut_list(lisp_State* state, lisp_MutList* mu
     }
 }
 
+static struct lisp_Value* lisp_Vector_from_list(lisp_State* state, lisp_List* list) {
+    lisp_u32 size = lisp_List_size(list);
+
+    if (size == 0) {
+        return lisp_Value_vector(state);
+    } else {
+        lisp_Value* value = lisp_Vector_internal_new(state);
+        lisp_MutList* mut_list = lisp_MutList_new();
+        lisp_ListNode* node = list->root;
+
+        while (node != NULL) {
+            lisp_MutList_push(mut_list, node->value);
+            node = node->next;
+        }
+
+        lisp_Vector_push_mut_list(state, &value->vector, mut_list);
+        lisp_MutList_delete(mut_list);
+
+        return value;
+    }
+}
+
 static lisp_Value* lisp_Vector_internal_new(lisp_State* state) {
     lisp_Value* value = lisp_State_alloc(state);
     value->type = LISP_TYPE_VECTOR;
@@ -422,7 +444,33 @@ static lisp_Value* lisp_Vector_push(lisp_State* state, lisp_Vector* vector, lisp
 }
 
 static lisp_Value* lisp_Vector_to_string(lisp_State* state, lisp_Vector* vector) {
-    return lisp_Value_string_from_cstring(state, "[Vector]");
+    lisp_Value* value = lisp_Value_string_from_cstring(state, "[");
+
+    for (lisp_u32 i = 0, il = lisp_Vector_size(vector); i < il; i++) {
+        lisp_Value* value_to_string = lisp_Value_to_string(state, lisp_Vector_get(state, vector, i));
+        lisp_Value* tmp;
+
+        if (i != il - 1) {
+            lisp_Value* separator = lisp_Value_string_from_cstring(state, " ");
+            tmp = lisp_String_concat(state, &value_to_string->string, &separator->string);
+            lisp_Value_deref(state, separator);
+        } else {
+            tmp = value_to_string;
+        }
+
+        lisp_Value* new_value = lisp_String_concat(state, &value->string, &tmp->string);
+        lisp_Value_deref(state, value);
+        lisp_Value_deref(state, tmp);
+
+        value = new_value;
+    }
+
+    lisp_Value* end_bracket = lisp_Value_string_from_cstring(state, "]");
+    lisp_Value* new_value = lisp_String_concat(state, &value->string, &end_bracket->string);
+    lisp_Value_deref(state, end_bracket);
+    lisp_Value_deref(state, value);
+
+    return new_value;
 }
 
 static lisp_bool lisp_Vector_equal(lisp_Vector* a, lisp_Vector* b) {

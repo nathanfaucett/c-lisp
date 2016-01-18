@@ -65,8 +65,7 @@ static void lisp_Scope_swap(lisp_Scope* scope, lisp_Value* key, lisp_Value* valu
     if (key_scope != NULL) {
         lisp_MutMap_set(key_scope->map, key, value);
     } else {
-        lisp_Value_ref(key);
-        lisp_MutMap_set(scope->map, key, value);
+        lisp_Scope_def(scope, key, value);
     }
 }
 

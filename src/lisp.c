@@ -50,5 +50,13 @@ static void lisp_cstring_reverse(lisp_u8* cstring) {
     }
 }
 
+static void lisp_print(lisp_State* state, lisp_Value* value) {
+    lisp_Value* string = lisp_Value_to_string(state, value);
+    lisp_u8* cstring = lisp_String_to_cstring(&string->string);
+    puts(cstring);
+    free(cstring);
+    lisp_Value_deref(state, string);
+}
+
 
 #endif

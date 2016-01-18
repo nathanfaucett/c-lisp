@@ -67,6 +67,14 @@ static lisp_Value* lisp_Value_function(lisp_State* state, lisp_Value* name, lisp
     return value;
 }
 
+static lisp_Value* lisp_Value_native_function(lisp_State* state, lisp_Value* symbol, lisp_function_pointer native) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_FUNCTION);
+    value->macro.value = value;
+    value->macro.symbol = symbol;
+    value->macro.native = native;
+    return value;
+}
+
 static lisp_Value* lisp_Value_macro(lisp_State* state, lisp_Value* name, lisp_Value* params, lisp_Value* body) {
     lisp_Value* value = lisp_Value_new(state, LISP_TYPE_MACRO);
     value->macro.value = value;

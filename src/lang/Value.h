@@ -42,11 +42,16 @@ static void lisp_Value_delete(lisp_State*, lisp_Value*);
 
 static lisp_Value* lisp_Value_boolean(lisp_State*, lisp_bool);
 static lisp_Value* lisp_Value_character_from_ch(lisp_State*, lisp_u8);
+
 static lisp_Value* lisp_Value_function(lisp_State*, lisp_Value*, lisp_Value*, lisp_Value*);
+static lisp_Value* lisp_Value_native_function(lisp_State*, lisp_Value*, lisp_function_pointer);
+
 static lisp_Value* lisp_Value_macro(lisp_State*, lisp_Value*, lisp_Value*, lisp_Value*);
 static lisp_Value* lisp_Value_native_macro(lisp_State*, lisp_Value*, lisp_function_pointer);
+
 static lisp_Value* lisp_Value_string_from_cstring(lisp_State*, lisp_u8*);
 static lisp_Value* lisp_Value_symbol_from_cstring(lisp_State*, lisp_u8*);
+
 static lisp_Value* lisp_Value_number_from_i32(lisp_State*, lisp_i32);
 static lisp_Value* lisp_Value_number_from_f64(lisp_State*, lisp_f64);
 

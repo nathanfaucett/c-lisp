@@ -18,6 +18,9 @@ static void lisp_State_destructor(lisp_State*);
 static lisp_State* lisp_State_new(void);
 static void lisp_State_delete(lisp_State*);
 
+static void lisp_State_macro_native(lisp_State*, lisp_u8*, lisp_function_pointer);
+static void lisp_State_native(lisp_State*, lisp_u8*, lisp_function_pointer);
+
 static struct lisp_Value* lisp_State_alloc(lisp_State*);
 static void lisp_State_dealloc(lisp_State*, struct lisp_Value*);
 

@@ -7,6 +7,9 @@ typedef struct lisp_Function {
     struct lisp_Value* name;
     struct lisp_Value* params;
     struct lisp_Value* body;
+
+    struct lisp_Value* symbol;
+    lisp_function_pointer native;
 } lisp_Function;
 
 

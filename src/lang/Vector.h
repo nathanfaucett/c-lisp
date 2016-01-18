@@ -62,6 +62,7 @@ static lisp_Vector* lisp_Vector_constructor(lisp_Vector*, lisp_VectorNode*, lisp
 static void lisp_Vector_destructor(lisp_State*, lisp_Vector*);
 
 static struct lisp_Value* lisp_Vector_from_mut_list(lisp_State*, lisp_MutList*);
+static struct lisp_Value* lisp_Vector_from_list(lisp_State*, lisp_List*);
 static struct lisp_Value* lisp_Vector_internal_new(lisp_State*);
 static struct lisp_Value* lisp_Vector_clone(lisp_State*, lisp_Vector*);
 

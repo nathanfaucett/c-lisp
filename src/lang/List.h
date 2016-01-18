@@ -16,6 +16,8 @@ static void lisp_ListNode_delete(lisp_State*, lisp_ListNode*);
 static void lisp_ListNode_ref(lisp_ListNode*);
 static void lisp_ListNode_deref(lisp_State*, lisp_ListNode*);
 
+static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode*, lisp_u32);
+
 
 typedef struct lisp_List {
     struct lisp_Value* value;
@@ -32,7 +34,6 @@ static struct lisp_Value* lisp_List_internal_new(lisp_State*);
 
 static lisp_u32 lisp_List_size(lisp_List*);
 
-static lisp_ListNode* lisp_List_get_node(lisp_ListNode*, lisp_u32);
 static lisp_ListNode* lisp_List_find_node(lisp_List*, lisp_u32);
 static struct lisp_Value* lisp_List_get(lisp_State*, lisp_List*, lisp_u32);
 
@@ -43,6 +44,7 @@ static struct lisp_Value* lisp_List_unshift(lisp_State*, lisp_List*, struct lisp
 
 static struct lisp_Value* lisp_List_pop(lisp_State*, lisp_List*);
 static struct lisp_Value* lisp_List_shift(lisp_State*, lisp_List*);
+static struct lisp_Value* lisp_List_after(lisp_State*, lisp_List*, lisp_u32);
 
 static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode*, lisp_ListNode*, lisp_ListNode*);
 static struct lisp_Value* lisp_List_remove_index(lisp_State*, lisp_List*, lisp_u32);
