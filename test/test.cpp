@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "../lib.hpp"
 
+extern "C" {
+    #include "./core.c"
+}
 
 char* read_file(char* filename) {
     char *buffer = NULL;
@@ -26,12 +29,18 @@ char* read_file(char* filename) {
     return buffer;
 }
 
-
 int main() {
     lisp_u8* file = read_file("test/test.lisp");
 
     if (file) {
         lisp_State* state = lisp_State_new();
+
+        lisp_State_native(state, "list", list);
+        lisp_State_native(state, "list-get", list_get);
+        lisp_State_native(state, "=", equal);
+        lisp_State_native(state, "*", Number_mul);
+        lisp_State_native(state, "-", Number_sub);
+
         lisp_Value* value = lisp_State_parse(state, file, state->global);
         free(file);
 

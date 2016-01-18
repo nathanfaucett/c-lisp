@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../lib.h"
+#include "./core.c"
 
 
 char* read_file(char* filename) {
@@ -26,16 +27,6 @@ char* read_file(char* filename) {
     return buffer;
 }
 
-static lisp_Value* list(lisp_State* state, lisp_Value* params, lisp_Scope* scope) {
-    return params;
-}
-
-static lisp_Value* list_get(lisp_State* state, lisp_Value* params, lisp_Scope* scope) {
-    lisp_Value* list = lisp_List_get(state, &params->list, 0);
-    lisp_Value* index = lisp_List_get(state, &params->list, 1);
-    return lisp_List_get(state, &list->list, lisp_Number_get_i32(&index->number));
-}
-
 int main() {
     lisp_u8* file = read_file("test/test.lisp");
 
@@ -44,6 +35,9 @@ int main() {
 
         lisp_State_native(state, "list", list);
         lisp_State_native(state, "list-get", list_get);
+        lisp_State_native(state, "=", equal);
+        lisp_State_native(state, "*", Number_mul);
+        lisp_State_native(state, "-", Number_sub);
 
         lisp_Value* value = lisp_State_parse(state, file, state->global);
         free(file);

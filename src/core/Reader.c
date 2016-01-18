@@ -166,7 +166,11 @@ static lisp_Value* lisp_Reader_next(lisp_Reader* reader, lisp_u8 return_on_char)
             return lisp_Reader_read_vector(reader, ch);
         }
 
-        return lisp_Reader_read_token(reader, ch);
+        if (ch == ';') {
+            lisp_Reader_read_comment(reader, ch);
+        } else {
+            return lisp_Reader_read_token(reader, ch);
+        }
     }
 }
 
@@ -230,6 +234,12 @@ static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch) {
     free(cstring);
 
     return value;
+}
+
+static void lisp_Reader_read_comment(lisp_Reader* reader, lisp_u8 ch) {
+    do {
+        ch = lisp_Reader_read(reader);
+    } while (ch != '\0' && ch != '\n' && ch != '\r');
 }
 
 

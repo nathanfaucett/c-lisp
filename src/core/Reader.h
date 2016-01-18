@@ -37,5 +37,7 @@ static struct lisp_Value* lisp_Reader_read_list(lisp_Reader*, lisp_u8);
 static struct lisp_Value* lisp_Reader_read_vector(lisp_Reader*, lisp_u8);
 static struct lisp_Value* lisp_Reader_read_token(lisp_Reader*, lisp_u8);
 
+static void lisp_Reader_read_comment(lisp_Reader*, lisp_u8);
+
 
 #endif

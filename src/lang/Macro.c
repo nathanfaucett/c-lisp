@@ -3,58 +3,42 @@
 
 
 static lisp_Macro* lisp_Macro_constructor(
-    lisp_Macro* fn, lisp_Value* name, lisp_Value* params, lisp_Value* body
+    lisp_Macro* macro, lisp_Value* name, lisp_Value* params, lisp_Value* body
 ) {
-    fn->name = name;
-    fn->params = params;
-    fn->body = body;
+    macro->name = name;
+    macro->params = params;
+    macro->body = body;
 
-    fn->symbol = NULL;
-    fn->native = NULL;
+    macro->symbol = NULL;
+    macro->native = NULL;
 
-    return fn;
+    return macro;
 }
 
-static void lisp_Macro_destructor(lisp_State* state, lisp_Macro* fn) {
-    if (fn->symbol != NULL) {
-        lisp_Value_deref(state, fn->symbol);
+static void lisp_Macro_destructor(lisp_State* state, lisp_Macro* macro) {
+    if (macro->symbol != NULL) {
+        lisp_Value_deref(state, macro->symbol);
     } else {
-        lisp_Value_deref(state, fn->name);
-        lisp_Value_deref(state, fn->params);
-        lisp_Value_deref(state, fn->body);
+        lisp_Value_deref(state, macro->name);
+        lisp_Value_deref(state, macro->params);
+        lisp_Value_deref(state, macro->body);
     }
 }
 
-static lisp_Value* lisp_Macro_call(lisp_State* state, lisp_Macro* fn, lisp_Value* values, lisp_Scope* scope) {
-    if (fn->native != NULL) {
-        return fn->native(state, values, scope);
+static lisp_Value* lisp_Macro_call(lisp_State* state, lisp_Macro* macro, lisp_Value* values, lisp_Scope* scope) {
+    if (macro->native != NULL) {
+        return macro->native(state, values, scope);
     } else {
-        lisp_Scope* fn_scope = lisp_Scope_new(state, scope);
-        lisp_bool rest = LISP_FALSE;
+        lisp_Scope* macro_scope = lisp_Scope_new(state, scope);
 
-        for (lisp_u32 i = 0, il = lisp_Vector_size(&fn->params->vector); i < il; i++) {
-            lisp_Value* param = lisp_Vector_get(state, &fn->params->vector, i);
+        lisp_Scope_def(
+            macro_scope,
+            lisp_Vector_get(state, &macro->params->vector, 0),
+            values
+        );
 
-            if (rest) {
-                lisp_Value* new_list = lisp_List_after(state, &values->list, i - 1);
-                lisp_Value* new_vector = lisp_Vector_from_list(state, &new_list->list);
-                lisp_Scope_def(fn_scope, param, lisp_State_eval(state, new_vector, scope));
-                break;
-            } else {
-                lisp_u8* cstring = lisp_String_to_cstring(&param->symbol.string->string);
-
-                if (lisp_cstring_equal(cstring, "...")) {
-                    rest = LISP_TRUE;
-                } else {
-                    lisp_Scope_def(fn_scope, param, lisp_List_get(state, &values->list, i));
-                }
-
-                free(cstring);
-            }
-        }
-
-        lisp_Value* value = lisp_State_eval(state, fn->body, fn_scope);
-        lisp_Scope_delete(fn_scope);
+        lisp_Value* value = lisp_State_eval(state, macro->body, macro_scope);
+        lisp_Scope_delete(macro_scope);
 
         if (value->type == LISP_TYPE_LIST) {
             return lisp_State_eval(state, value, scope);
@@ -64,11 +48,11 @@ static lisp_Value* lisp_Macro_call(lisp_State* state, lisp_Macro* fn, lisp_Value
     }
 }
 
-static struct lisp_Value* lisp_Macro_to_string(lisp_State* state, lisp_Macro* fn) {
-    if (fn->native != NULL) {
-        return lisp_Value_to_string(state, fn->symbol);
+static struct lisp_Value* lisp_Macro_to_string(lisp_State* state, lisp_Macro* macro) {
+    if (macro->native != NULL) {
+        return lisp_Value_to_string(state, macro->symbol);
     } else {
-        return lisp_Value_to_string(state, fn->name);
+        return lisp_Value_to_string(state, macro->name);
     }
 }
 
