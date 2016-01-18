@@ -19,6 +19,7 @@ static void lisp_Reader_delete(lisp_Reader*);
 static lisp_bool lisp_Reader_is_whitespace(lisp_u8);
 static lisp_bool lisp_Reader_is_numeric(lisp_u8);
 static lisp_bool lisp_Reader_is_marco(lisp_u8);
+static lisp_u8 lisp_Reader_escape(lisp_u8);
 
 static lisp_u8 lisp_Reader_index(lisp_Reader*, lisp_u64);
 static lisp_i64 lisp_Reader_index_of(lisp_u8*, lisp_u8);
@@ -33,8 +34,13 @@ static lisp_u8* lisp_Reader_next_number(lisp_Reader*, lisp_u8);
 static struct lisp_Value* lisp_Reader_next(lisp_Reader*, lisp_u8);
 
 static struct lisp_Value* lisp_Reader_read_number(lisp_Reader*, lisp_u8);
+
 static struct lisp_Value* lisp_Reader_read_list(lisp_Reader*, lisp_u8);
 static struct lisp_Value* lisp_Reader_read_vector(lisp_Reader*, lisp_u8);
+
+static struct lisp_Value* lisp_Reader_read_string(lisp_Reader*, lisp_u8);
+static struct lisp_Value* lisp_Reader_read_character(lisp_Reader*, lisp_u8);
+
 static struct lisp_Value* lisp_Reader_read_token(lisp_Reader*, lisp_u8);
 
 static void lisp_Reader_read_comment(lisp_Reader*, lisp_u8);

@@ -50,6 +50,7 @@ static lisp_Value* lisp_Value_macro(lisp_State*, lisp_Value*, lisp_Value*, lisp_
 static lisp_Value* lisp_Value_native_macro(lisp_State*, lisp_Value*, lisp_function_pointer);
 
 static lisp_Value* lisp_Value_string_from_cstring(lisp_State*, lisp_u8*);
+static lisp_Value* lisp_Value_string_from_mut_list(lisp_State*, lisp_MutList*);
 static lisp_Value* lisp_Value_symbol_from_cstring(lisp_State*, lisp_u8*);
 
 static lisp_Value* lisp_Value_number_from_i32(lisp_State*, lisp_i32);

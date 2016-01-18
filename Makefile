@@ -8,7 +8,7 @@ CPP_FLAGS := -stdlib=libc++ -ansi $(OPT_LVL) -Wall -Wno-c++11-compat-deprecated-
 
 
 test_c:
-	$(COMPILER_C) $(C_FLAGS) ./test/test.c -o ./test/a.out && ./test/a.out
+	$(COMPILER_C) $(C_FLAGS) ./test/main.c -o ./test/test.out && ./test/test.out
 
 test_cpp:
-	$(COMPILER_CPP) $(CPP_FLAGS) ./test/test.cpp -o ./test/a.out && ./test/a.out
+	$(COMPILER_CPP) $(CPP_FLAGS) ./test/main.cpp -o ./test/test.out && ./test/test.out

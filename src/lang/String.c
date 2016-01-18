@@ -28,6 +28,25 @@ static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* str
     return string;
 }
 
+static lisp_String* lisp_String_from_mut_list(lisp_State* state, lisp_String* string, lisp_MutList* mut_list) {
+    lisp_u32 size = lisp_MutList_size(mut_list);
+    lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
+
+    lisp_u32 index = 0;
+    lisp_MutListNode* node = mut_list->root;
+
+    while (node != NULL) {
+        chars[index] = &node->value->character;
+        index += 1;
+        node = node->next;
+    }
+
+    string->chars = chars;
+    string->size = size;
+
+    return string;
+}
+
 static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
     lisp_Value* value = lisp_State_alloc(state);
     lisp_u32 size = a->size + b->size;

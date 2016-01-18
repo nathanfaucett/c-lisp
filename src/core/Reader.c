@@ -54,6 +54,23 @@ static lisp_bool lisp_Reader_is_marco(lisp_u8 ch) {
     );
 }
 
+static lisp_u8 lisp_Reader_escape(lisp_u8 ch) {
+    switch (ch) {
+        case 't':
+            return '\t';
+        case 'r':
+            return '\r';
+        case 'n':
+            return '\n';
+        case 'b':
+            return '\b';
+        case 'f':
+            return '\f';
+        default:
+            return ch;
+    }
+}
+
 static lisp_u8 lisp_Reader_index(lisp_Reader* reader, lisp_u64 index) {
     return reader->cstring[(reader->index + index)];
 }
@@ -165,6 +182,12 @@ static lisp_Value* lisp_Reader_next(lisp_Reader* reader, lisp_u8 return_on_char)
         if (ch == '[') {
             return lisp_Reader_read_vector(reader, ch);
         }
+        if (ch == '"') {
+            return lisp_Reader_read_string(reader, ch);
+        }
+        if (ch == '\'') {
+            return lisp_Reader_read_character(reader, ch);
+        }
 
         if (ch == ';') {
             lisp_Reader_read_comment(reader, ch);
@@ -216,6 +239,47 @@ static lisp_Value* lisp_Reader_read_vector(lisp_Reader* reader, lisp_u8 ch) {
     lisp_MutList_delete(mut_list);
 
     return vector;
+}
+
+static lisp_Value* lisp_Reader_read_string(lisp_Reader* reader, lisp_u8 ch) {
+    /* fixme - parse as utf-8 */
+    lisp_MutList* mut_list = lisp_MutList_new();
+
+    ch = lisp_Reader_read(reader);
+
+    while (ch != '"' && ch != '\0') {
+        if (ch == '\\') {
+            ch = lisp_Reader_read(reader);
+
+            if (ch == '\0') {
+                break;
+            } else {
+                ch = lisp_Reader_escape(ch);
+            }
+        }
+
+        lisp_Value* character = lisp_Value_character_from_ch(reader->state, ch);
+        lisp_MutList_push(mut_list, character);
+
+        ch = lisp_Reader_read(reader);
+    }
+
+    lisp_Value* value = lisp_Value_string_from_mut_list(reader->state, mut_list);
+    lisp_MutList_delete(mut_list);
+
+    return value;
+}
+
+static lisp_Value* lisp_Reader_read_character(lisp_Reader* reader, lisp_u8 ch) {
+    /* fixme */
+    ch = lisp_Reader_read(reader);
+    lisp_u8 value = ch;
+
+    while (ch != '\'' && ch != '\0') {
+        ch = lisp_Reader_read(reader);
+    }
+
+    return lisp_Value_character_from_ch(reader->state, value);
 }
 
 static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u8 ch) {

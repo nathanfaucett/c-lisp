@@ -97,6 +97,13 @@ static lisp_Value* lisp_Value_string_from_cstring(lisp_State* state, lisp_u8* cs
     return value;
 }
 
+static lisp_Value* lisp_Value_string_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    lisp_Value* value = lisp_Value_new(state, LISP_TYPE_STRING);
+    value->string.value = value;
+    lisp_String_from_mut_list(state, &value->string, mut_list);
+    return value;
+}
+
 static lisp_Value* lisp_Value_symbol_from_cstring(lisp_State* state, lisp_u8* cstring) {
     lisp_Value* value = lisp_Value_new(state, LISP_TYPE_SYMBOL);
     value->symbol.value = value;
