@@ -9,7 +9,7 @@
         ((quote fn) (list-get input 1) (list-get input 2) (list-get input 3))))
 
 (defn fac [x]
-    (if (= x 1) x
+    (if (= x 0) 1
         (* x (fac (- x 1)))))
 
 (fac 5)
