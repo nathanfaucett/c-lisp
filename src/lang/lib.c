@@ -2,17 +2,12 @@
 #define __LISP_LANG_LIB_C__
 
 
-#include "./Boolean.c"
-#include "./Character.c"
-#include "./Function.c"
-#include "./Macro.c"
-#include "./List.c"
-#include "./Nil.c"
-#include "./Number.c"
+#include "./Type.c"
+#include "./Value.c"
+#include "./Char.c"
 #include "./String.c"
 #include "./Symbol.c"
-#include "./Vector.c"
-#include "./Value.c"
+#include "./List.c"
 
 
 #endif

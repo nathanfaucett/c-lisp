@@ -1,9 +1,9 @@
-#ifndef __LISP_MUT_LIST_C__
-#define __LISP_MUT_LIST_C__
+#ifndef __LISP_UTILS_MUT_LIST_C__
+#define __LISP_UTILS_MUT_LIST_C__
 
 
 static lisp_MutListNode* lisp_lisp_MutListNode_constructor(
-    lisp_MutListNode* node, lisp_MutListNode* next, struct lisp_Value* value
+    lisp_MutListNode* node, lisp_MutListNode* next, void* value
 ) {
     node->next = next;
     node->value = value;
@@ -16,7 +16,7 @@ static void lisp_MutListNode_destructor(lisp_MutListNode* node) {
     }
 }
 
-static lisp_MutListNode* lisp_MutListNode_new(lisp_MutListNode* next, struct lisp_Value* value) {
+static lisp_MutListNode* lisp_MutListNode_new(lisp_MutListNode* next, void* value) {
     return lisp_lisp_MutListNode_constructor(
         (lisp_MutListNode*) malloc(sizeof(lisp_MutListNode)), next, value
     );
@@ -27,8 +27,8 @@ static void lisp_MutListNode_delete(lisp_MutListNode* node) {
     free(node);
 }
 
-static lisp_MutListNode* lisp_MutListNode_find_node(lisp_MutListNode* node, lisp_u32 index) {
-    lisp_u32 i = 0;
+static lisp_MutListNode* lisp_MutListNode_find_node(lisp_MutListNode* node, lisp_u64 index) {
+    lisp_u64 i = 0;
 
     while (node != NULL && i != index) {
         node = node->next;
@@ -61,26 +61,7 @@ static void lisp_MutList_delete(lisp_MutList* mut_list) {
     free(mut_list);
 }
 
-static lisp_u32 lisp_MutList_size(lisp_MutList* mut_list) {
-    return mut_list->size;
-}
-
-static lisp_i32 lisp_MutList_index_of(lisp_MutList* mut_list, lisp_Value* value) {
-    lisp_MutListNode* node = mut_list->root;
-    lisp_i32 i = 0;
-
-    while (node != NULL) {
-        if (lisp_Value_equal(node->value, value)) {
-            return i;
-        }
-        node = node->next;
-        i = i + 1;
-    }
-
-    return -1;
-}
-
-static lisp_MutListNode* lisp_MutList_find_node(lisp_MutList* mut_list, lisp_u32 index) {
+static lisp_MutListNode* lisp_MutList_find_node(lisp_MutList* mut_list, lisp_u64 index) {
     if (index == 0) {
         return mut_list->root;
     } else if (index == mut_list->size - 1) {
@@ -92,7 +73,7 @@ static lisp_MutListNode* lisp_MutList_find_node(lisp_MutList* mut_list, lisp_u32
     }
 }
 
-static lisp_Value* lisp_MutList_get(lisp_MutList* mut_list, lisp_u32 index) {
+static void* lisp_MutList_get(lisp_MutList* mut_list, lisp_u64 index) {
     lisp_MutListNode* node = lisp_MutList_find_node(mut_list, index);
 
     if (node != NULL) {
@@ -102,7 +83,7 @@ static lisp_Value* lisp_MutList_get(lisp_MutList* mut_list, lisp_u32 index) {
     }
 }
 
-static void lisp_MutList_set(lisp_MutList* mut_list, lisp_u32 index, lisp_Value* value) {
+static void lisp_MutList_set(lisp_MutList* mut_list, lisp_u64 index, void* value) {
     lisp_MutListNode* node = lisp_MutList_find_node(mut_list, index);
 
     if (node != NULL) {
@@ -110,7 +91,7 @@ static void lisp_MutList_set(lisp_MutList* mut_list, lisp_u32 index, lisp_Value*
     }
 }
 
-static void lisp_MutList_push(lisp_MutList* mut_list, lisp_Value* value) {
+static void lisp_MutList_push(lisp_MutList* mut_list, void* value) {
     lisp_MutListNode* node = lisp_MutListNode_new(NULL, value);
 
     if (mut_list->root != NULL) {
@@ -124,7 +105,7 @@ static void lisp_MutList_push(lisp_MutList* mut_list, lisp_Value* value) {
     mut_list->size += 1;
 }
 
-static void lisp_MutList_unshift(lisp_MutList* mut_list, lisp_Value* value) {
+static void lisp_MutList_unshift(lisp_MutList* mut_list, void* value) {
     lisp_MutListNode* node = lisp_MutListNode_new(mut_list->root, value);
 
     if (mut_list->root != NULL) {
@@ -137,8 +118,8 @@ static void lisp_MutList_unshift(lisp_MutList* mut_list, lisp_Value* value) {
     mut_list->size += 1;
 }
 
-static lisp_Value* lisp_MutList_pop(lisp_MutList* mut_list) {
-    lisp_Value* value = NULL;
+static void* lisp_MutList_pop(lisp_MutList* mut_list) {
+    void* value = NULL;
 
     if (mut_list->size > 1) {
         lisp_MutListNode* tail = mut_list->tail;
@@ -160,8 +141,8 @@ static lisp_Value* lisp_MutList_pop(lisp_MutList* mut_list) {
     return value;
 }
 
-static lisp_Value* lisp_MutList_shift(lisp_MutList* mut_list) {
-    lisp_Value* value = NULL;
+static void* lisp_MutList_shift(lisp_MutList* mut_list) {
+    void* value = NULL;
 
     if (mut_list->size > 1) {
         lisp_MutListNode* root = mut_list->root;
@@ -183,7 +164,7 @@ static lisp_Value* lisp_MutList_shift(lisp_MutList* mut_list) {
     return value;
 }
 
-static void lisp_MutList_remove(lisp_MutList* mut_list, lisp_u32 index) {
+static void lisp_MutList_remove(lisp_MutList* mut_list, lisp_u64 index) {
     if (index == 0) {
         lisp_MutList_shift(mut_list);
     } else if (index == mut_list->size - 1) {

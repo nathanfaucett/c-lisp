@@ -1,8 +1,8 @@
-#ifndef __LISP_NUMBERS_C__
-#define __LISP_NUMBERS_C__
+#ifndef __LISP_UTILS_CONVERSIONS_C__
+#define __LISP_UTILS_CONVERSIONS_C__
 
 
-static lisp_i32 lisp_atoi(lisp_u8* cstring) {
+static lisp_i32 lisp_cstring_to_i32(lisp_char* cstring) {
     lisp_i32 result = 0;
     lisp_u32 i = 0;
 
@@ -19,7 +19,7 @@ static lisp_i32 lisp_atoi(lisp_u8* cstring) {
     return result;
 }
 
-static lisp_f64 lisp_atod(lisp_u8* cstring) {
+static lisp_f64 lisp_cstring_to_f64(lisp_char* cstring) {
     if (!cstring || !*cstring) {
         return 0;
     } else {
@@ -60,11 +60,9 @@ static lisp_f64 lisp_atod(lisp_u8* cstring) {
     }
 }
 
-#define LISP_INT_DIGITS 19
-
-static lisp_u8* lisp_itoa(lisp_i32 value) {
-    static lisp_u8 buffer[LISP_INT_DIGITS + 2];
-    lisp_u8* cstring = buffer + LISP_INT_DIGITS + 1;
+static lisp_char* lisp_i32_to_cstring(lisp_i32 value) {
+    static lisp_char buffer[LISP_INT_DIGITS + 2];
+    lisp_char* cstring = buffer + LISP_INT_DIGITS + 1;
 
     if (value >= 0) {
         do {
@@ -83,9 +81,8 @@ static lisp_u8* lisp_itoa(lisp_i32 value) {
     return lisp_cstring_clone(cstring);
 }
 
-static lisp_u8* lisp_dtoa(lisp_f64 value) {
-    /* fixme */
-    return lisp_itoa((lisp_i32) value);
+static lisp_char* lisp_f64_to_cstring(lisp_f64 value) {
+    return lisp_i32_to_cstring((lisp_i32) value);
 }
 
 #endif

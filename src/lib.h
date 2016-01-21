@@ -2,10 +2,13 @@
 #define __LISP_LIB_H__
 
 
-#include "./lisp.h"
-#include "./numbers.h"
-#include "./MutList.h"
-#include "./MutMap.h"
+struct lisp_State;
+struct lisp_Type;
+struct lisp_Value;
+
+
+#include "./types.h"
+#include "./utils/lib.h"
 #include "./core/lib.h"
 #include "./lang/lib.h"
 

@@ -2,17 +2,12 @@
 #define __LISP_LANG_LIB_H__
 
 
-#include "./Boolean.h"
-#include "./Character.h"
-#include "./Function.h"
-#include "./Macro.h"
-#include "./List.h"
-#include "./Nil.h"
-#include "./Number.h"
+#include "./Type.h"
+#include "./Value.h"
+#include "./Char.h"
 #include "./String.h"
 #include "./Symbol.h"
-#include "./Vector.h"
-#include "./Value.h"
+#include "./List.h"
 
 
 #endif

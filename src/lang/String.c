@@ -2,97 +2,67 @@
 #define __LISP_LANG_STRING_C__
 
 
-static void lisp_String_destructor(lisp_State* state, lisp_String* string) {
-    for (lisp_u32 i = 0, il = string->size; i < il; i++) {
-        lisp_Value_deref(state, string->chars[i]->value);
-    }
+static void lisp_String_alloc(lisp_State* state, lisp_Value* value) {
+    lisp_String* string = (lisp_String*) lisp_State_alloc(state, sizeof(lisp_String));
+    value->value = string;
+    string->chars = lisp_MutList_new();
+    string->size = 0;
 }
-
-static lisp_String* lisp_String_from_cstring(lisp_State* state, lisp_String* string, lisp_u8* cstring) {
-    lisp_u32 size = lisp_cstring_size(cstring);
-    lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
-
-    lisp_u32 index = 0;
-    lisp_u8 ch = cstring[index];
-
-    while (ch != '\0') {
-        lisp_Value* value = lisp_Value_character_from_ch(state, ch);
-        chars[index] = &value->character;
-        index += 1;
-        ch = cstring[index];
-    }
-
-    string->chars = chars;
-    string->size = size;
-
-    return string;
-}
-
-static lisp_String* lisp_String_from_mut_list(lisp_State* state, lisp_String* string, lisp_MutList* mut_list) {
-    lisp_u32 size = lisp_MutList_size(mut_list);
-    lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
-
-    lisp_u32 index = 0;
-    lisp_MutListNode* node = mut_list->root;
+static void lisp_String_dealloc(lisp_State* state, lisp_Value* value) {
+    lisp_String* string = (lisp_String*) value->value;
+    lisp_MutListNode* node = string->chars->root;
 
     while (node != NULL) {
-        chars[index] = &node->value->character;
-        index += 1;
+        lisp_Value_deref(state, (lisp_Value*) node->value);
         node = node->next;
     }
 
-    string->chars = chars;
-    string->size = size;
-
-    return string;
+    lisp_MutList_delete(string->chars);
+    lisp_State_dealloc(state, string);
 }
 
-static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
-    lisp_Value* value = lisp_State_alloc(state);
-    lisp_u32 size = a->size + b->size;
-    lisp_Character** chars = (lisp_Character**) malloc(size * sizeof(lisp_Character*));
+static void lisp_String_from_ascii(lisp_State* state, lisp_String* string, lisp_char* cstring, lisp_u64 start) {
+    lisp_u64 i = start;
+    lisp_char c = cstring[i];
 
-    for (lisp_u32 i = 0, il = a->size; i < il; i++) {
-        lisp_Character* ch = a->chars[i];
-        lisp_Value_ref(ch->value);
-        chars[i] = ch;
+    while (c != '\0') {
+        lisp_Value* ch_value = lisp_Value_new(state, state->type_char);
+        lisp_Char_from_ascii((lisp_Char*) ch_value->value, c);
+        lisp_MutList_push(string->chars, ch_value);
+
+        i += 1;
+        c = cstring[i];
     }
-    for (lisp_u32 j = a->size, jl = size, k = 0; j < jl; j++, k++) {
-        lisp_Character* ch = b->chars[k];
-        lisp_Value_ref(ch->value);
-        chars[j] = ch;
+}
+static lisp_u64 lisp_String_from_utf8(lisp_State* state, lisp_String* string, lisp_u32* cstring, lisp_u64 start) {
+    lisp_u64 i = start;
+
+    while (LISP_TRUE) {
+        lisp_Value* ch_value = lisp_Value_new(state, state->type_char);
+        i = lisp_Char_from_utf8((lisp_Char*) ch_value->value, cstring, i);
+        lisp_MutList_push(string->chars, ch_value);
+
+        if (i == 0) {
+            break;
+        }
     }
 
-    value->string.chars = chars;
-    value->string.size = size;
-
-    return value;
+    return i;
 }
 
-static lisp_u8* lisp_String_to_cstring(lisp_String* string) {
-    lisp_u8* cstring = (lisp_u8*) malloc((string->size + 1) * sizeof(lisp_u8));
+static lisp_char* lisp_String_to_cstring(lisp_String* string) {
+    lisp_char* cstring = (lisp_char*) malloc((string->size + 1) * sizeof(lisp_char));
+    lisp_MutListNode* node = string->chars->root;
+    lisp_u64 index = 0;
 
-    for (lisp_u32 i = 0, il = string->size; i < il; i++) {
-        cstring[i] = lisp_Character_to_char(string->chars[i]);
+    while (node != NULL) {
+        cstring[index] = lisp_Char_to_char((lisp_Char*) ((lisp_Value*) node->value)->value);
+        node = node->next;
+        index += 1;
     }
-    cstring[string->size] = '\0';
+    cstring[index] = '\0';
 
     return cstring;
-}
-
-static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
-    if (a == b) {
-        return LISP_TRUE;
-    } else if (a->size != b->size) {
-        return LISP_FALSE;
-    } else {
-        for (lisp_u32 i = 0, il = a->size; i < il; i++) {
-            if (!lisp_Character_equal(a->chars[i], b->chars[i])) {
-                return LISP_FALSE;
-            }
-        }
-        return LISP_TRUE;
-    }
 }
 
 

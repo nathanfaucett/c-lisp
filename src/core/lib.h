@@ -2,10 +2,7 @@
 #define __LISP_CORE_LIB_H__
 
 
-#include "./Memory.h"
-#include "./Scope.h"
-#include "./Reader.h"
-#include "./special_forms.h"
+#include "./Heap.h"
 #include "./State.h"
 
 
