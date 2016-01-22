@@ -58,5 +58,17 @@ static lisp_char lisp_Char_to_char(lisp_Char* ch) {
     return ch->bytes[0];
 }
 
+static lisp_Value* lisp_Char_bootstrap(lisp_State* state) {
+    lisp_Value* value = lisp_Value_new(state, state->type);
+    lisp_Type_constructor(
+        (lisp_Type*) value->value,
+        NULL, NULL, NULL, NULL,
+        state->type_any,
+        lisp_Char_alloc,
+        lisp_Char_dealloc
+    );
+    return value;
+}
+
 
 #endif

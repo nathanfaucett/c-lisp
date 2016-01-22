@@ -4,23 +4,7 @@
 
 static lisp_State* lisp_State_constructor(lisp_State* state) {
     state->heap = lisp_Heap_new();
-
-    state->type_char = (lisp_Type*) malloc(sizeof(lisp_Type));
-    lisp_Type_constructor(
-        state->type_char,
-        NULL, NULL, NULL, NULL, NULL,
-        lisp_Char_alloc,
-        lisp_Char_dealloc
-    );
-
-    state->type_string = (lisp_Type*) malloc(sizeof(lisp_Type));
-    lisp_Type_constructor(
-        state->type_string,
-        NULL, NULL, NULL, NULL, NULL,
-        lisp_String_alloc,
-        lisp_String_dealloc
-    );
-
+    lisp_State_bootstrap(state);
     return state;
 }
 static void lisp_State_destructor(lisp_State* state) {
@@ -40,6 +24,21 @@ static void* lisp_State_alloc(lisp_State* state, size_t size) {
 }
 static void lisp_State_dealloc(lisp_State* state, void* value) {
     lisp_Heap_dealloc(state->heap, value);
+}
+
+static void lisp_State_bootstrap(lisp_State* state) {
+    state->type = lisp_Type_bootstrap(state);
+    state->type_any = lisp_Any_bootstrap(state);
+    state->type_nil = lisp_Nil_bootstrap(state);
+    state->type_char = lisp_Char_bootstrap(state);
+    state->type_string = lisp_String_bootstrap(state);
+    state->type_symbol = lisp_Symbol_bootstrap(state);
+    state->type_list = lisp_List_bootstrap(state);
+
+    state->nil = lisp_Value_new(state, state->type_nil);
+    state->empty_list = lisp_Value_new(state, state->type_list);
+    /* state->empty_vector = lisp_Value_new(state, state->type_vector); */
+    /* state->empty_map = lisp_Value_new(state, state->type_map); */
 }
 
 

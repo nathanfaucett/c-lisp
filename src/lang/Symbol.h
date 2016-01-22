@@ -12,5 +12,7 @@ static lisp_u64 lisp_Symbol_from_utf8(lisp_State* state, lisp_Symbol* symbol, li
 static void lisp_Symbol_alloc(lisp_State* state, struct lisp_Value* value);
 static void lisp_Symbol_dealloc(lisp_State* state, struct lisp_Value* value);
 
+static struct lisp_Value* lisp_Symbol_bootstrap(lisp_State* state);
+
 
 #endif

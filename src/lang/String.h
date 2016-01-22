@@ -18,5 +18,7 @@ static lisp_u64 lisp_String_from_utf8(lisp_State* state, lisp_String* string, li
 
 static lisp_char* lisp_String_to_cstring(lisp_String* string);
 
+static struct lisp_Value* lisp_String_bootstrap(lisp_State* state);
+
 
 #endif

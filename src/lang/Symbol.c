@@ -22,5 +22,17 @@ static void lisp_Symbol_dealloc(lisp_State* state, lisp_Value* value) {
     lisp_State_dealloc(state, value->value);
 }
 
+static lisp_Value* lisp_Symbol_bootstrap(lisp_State* state) {
+    lisp_Value* value = lisp_Value_new(state, state->type);
+    lisp_Type_constructor(
+        (lisp_Type*) value->value,
+        NULL, NULL, NULL, NULL,
+        state->type_any,
+        lisp_Symbol_alloc,
+        lisp_Symbol_dealloc
+    );
+    return value;
+}
+
 
 #endif

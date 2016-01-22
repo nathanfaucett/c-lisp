@@ -65,5 +65,17 @@ static lisp_char* lisp_String_to_cstring(lisp_String* string) {
     return cstring;
 }
 
+static lisp_Value* lisp_String_bootstrap(lisp_State* state) {
+    lisp_Value* value = lisp_Value_new(state, state->type);
+    lisp_Type_constructor(
+        (lisp_Type*) value->value,
+        NULL, NULL, NULL, NULL,
+        state->type_any,
+        lisp_String_alloc,
+        lisp_String_dealloc
+    );
+    return value;
+}
+
 
 #endif

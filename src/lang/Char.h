@@ -19,5 +19,7 @@ static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 s
 static lisp_u32 lisp_Char_to_u32(lisp_Char* ch);
 static lisp_char lisp_Char_to_char(lisp_Char* ch);
 
+static struct lisp_Value* lisp_Char_bootstrap(lisp_State* state);
+
 
 #endif

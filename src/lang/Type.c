@@ -8,7 +8,7 @@ static void lisp_Type_constructor(
     lisp_Value* parameters,
     lisp_Value* types,
     lisp_Value* methods,
-    lisp_Type* super,
+    lisp_Value* super,
     void (*alloc)(lisp_State*, lisp_Value*),
     void (*dealloc)(lisp_State*, lisp_Value*)
 ) {
@@ -21,27 +21,49 @@ static void lisp_Type_constructor(
     if (alloc != NULL) {
         type->alloc = alloc;
     } else {
-        type->alloc = lisp_Type_alloc;
+        type->alloc = lisp_Type_default_alloc;
     }
 
     if (dealloc != NULL) {
         type->dealloc = dealloc;
     } else {
-        type->dealloc = lisp_Type_dealloc;
+        type->dealloc = lisp_Type_default_dealloc;
     }
 }
 
 static void lisp_Type_alloc(lisp_State* state, lisp_Value* value) {
-    value->values = lisp_Value_new(state, state->type_list);
+    lisp_Type* type = (lisp_Type*) lisp_State_alloc(state, sizeof(lisp_Type));
+    value->value = type;
 }
 static void lisp_Type_dealloc(lisp_State* state, lisp_Value* value) {
+    /* nothing to delete */
+}
+
+static void lisp_Type_default_alloc(lisp_State* state, lisp_Value* value) {
+    value->values = lisp_Value_new(state, state->type_list);
+}
+static void lisp_Type_default_dealloc(lisp_State* state, lisp_Value* value) {
     if (value->values != NULL) {
         lisp_Value_delete(state, value->values);
     }
 }
 
-lisp_bool lisp_Type_is(lisp_Value* value, lisp_Type* type) {
-    return value->type == type;
+static lisp_Value* lisp_Type_bootstrap(lisp_State* state) {
+    lisp_Type* type = (lisp_Type*) malloc(sizeof(lisp_Type));
+    lisp_Type_constructor(
+        type,
+        NULL, NULL, NULL, NULL, NULL,
+        lisp_Type_alloc,
+        lisp_Type_dealloc
+    );
+
+    lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
+    value->ref_count = 1;
+    value->type = NULL;
+    value->value = type;
+    value->values = NULL;
+
+    return value;
 }
 
 
