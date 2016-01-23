@@ -23,8 +23,8 @@ static void lisp_ListNode_delete(lisp_State* state, lisp_ListNode* node) {
     free(node);
 }
 
-static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode* node, lisp_u32 index) {
-    lisp_u32 i = 0;
+static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode* node, lisp_u64 index) {
+    lisp_u64 i = 0;
 
     while (node != NULL && i != index) {
         node = node->next;
@@ -32,6 +32,17 @@ static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode* node, lisp_u32 inde
     }
 
     return node;
+}
+
+static lisp_ListNode* lisp_ListNode_push(lisp_ListNode* node, lisp_ListNode* last) {
+    if (node != NULL) {
+        return lisp_ListNode_new(
+            lisp_ListNode_push(node->next, last),
+            node->value
+        );
+    } else {
+        return last;
+    }
 }
 
 static void lisp_ListNode_ref(lisp_ListNode* node) {
@@ -49,6 +60,7 @@ static void lisp_ListNode_deref(lisp_State* state, lisp_ListNode* node) {
 static void lisp_List_alloc(lisp_State* state, lisp_Value* value) {
     lisp_List* list = (lisp_List*) lisp_State_alloc(state, sizeof(lisp_List));
     value->value = list;
+    list->value = value;
     list->root = NULL;
     list->tail = NULL;
     list->size = 0;
@@ -69,13 +81,33 @@ static lisp_List* lisp_List_constructor(lisp_List* list, lisp_ListNode* root, li
     return list;
 }
 
+static lisp_Value* lisp_List_from_mut_list(lisp_State* state, lisp_MutList* mut_list) {
+    if (mut_list->size == 0) {
+        return lisp_Value_ref(state->empty_list);
+    } else {
+        lisp_Value* list_value = lisp_Value_new(state, state->type_list);
+        lisp_u64 i = mut_list->size - 1;
+        lisp_ListNode* tail = lisp_ListNode_new(NULL, lisp_MutList_get(mut_list, i));
+        lisp_ListNode* root = tail;
+
+        while (i--) {
+            root = lisp_ListNode_new(root, lisp_MutList_get(mut_list, i));
+        }
+        lisp_List_constructor((lisp_List*) list_value->value, root, tail, mut_list->size);
+
+        return list_value;
+    }
+}
+
 static lisp_ListNode* lisp_List_find_node(lisp_List* list, lisp_u64 index) {
     if (index == 0) {
         return list->root;
     } else if (index == list->size - 1) {
         return list->tail;
-    } else {
+    } else if (index < list->size) {
         return lisp_ListNode_find_node(list->root, index);
+    } else {
+        return NULL;
     }
 }
 
@@ -83,20 +115,9 @@ static lisp_Value* lisp_List_get(lisp_State* state, lisp_List* list, lisp_u64 in
     lisp_ListNode* node = lisp_List_find_node(list, index);
 
     if (node != NULL) {
-        return node->value;
+        return lisp_Value_ref(node->value);
     } else {
-        return lisp_Value_new(state, state->type_nil);
-    }
-}
-
-static lisp_ListNode* lisp_ListNode_push(lisp_ListNode* node, lisp_ListNode* last) {
-    if (node == NULL) {
-        return last;
-    } else {
-        return lisp_ListNode_new(
-            lisp_ListNode_push(node->next, last),
-            node->value
-        );
+        return lisp_Value_ref(state->nil);
     }
 }
 
@@ -135,7 +156,7 @@ static lisp_Value* lisp_List_unshift(lisp_State* state, lisp_List* list, lisp_Va
 
 static lisp_Value* lisp_List_pop(lisp_State* state, lisp_List* list) {
     if (list->size == 0) {
-        return lisp_Value_ref(state->empty_list);
+        return lisp_Value_ref(list->value);
     } else if (list->size == 1) {
         return lisp_Value_ref(state->empty_list);
     } else {
@@ -162,7 +183,7 @@ static lisp_Value* lisp_List_pop(lisp_State* state, lisp_List* list) {
 
 static lisp_Value* lisp_List_shift(lisp_State* state, lisp_List* list) {
     if (list->size == 0) {
-        return lisp_Value_ref(state->empty_list);
+        return lisp_Value_ref(list->value);
     } else if (list->size == 1) {
         return lisp_Value_ref(state->empty_list);
     } else {
@@ -183,6 +204,10 @@ static struct lisp_Value* lisp_List_after(lisp_State* state, lisp_List* list, li
     } else {
         return lisp_Value_ref(state->empty_list);
     }
+}
+
+static lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_u64 index, lisp_Value* value) {
+    return lisp_Value_ref(list->value);
 }
 
 static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode* from, lisp_ListNode* to, lisp_ListNode* new_node) {
@@ -207,18 +232,6 @@ static lisp_Value* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_u64
 
         return new_value;
     }
-}
-
-static lisp_Value* lisp_List_bootstrap(lisp_State* state) {
-    lisp_Value* value = lisp_Value_new(state, state->type);
-    lisp_Type_constructor(
-        (lisp_Type*) value->value,
-        NULL, NULL, NULL, NULL,
-        state->type_any,
-        lisp_List_alloc,
-        lisp_List_dealloc
-    );
-    return value;
 }
 
 

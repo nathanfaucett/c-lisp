@@ -26,10 +26,11 @@ static void lisp_Type_constructor(
 static void lisp_Type_default_alloc(struct lisp_State* state, struct lisp_Value* value);
 static void lisp_Type_default_dealloc(struct lisp_State* state, struct lisp_Value* value);
 
+static void lisp_Type_empty_alloc(lisp_State* state, struct lisp_Value* value);
+static void lisp_Type_empty_dealloc(lisp_State* state, struct lisp_Value* value);
+
 static void lisp_Type_alloc(struct lisp_State* state, struct lisp_Value* value);
 static void lisp_Type_dealloc(struct lisp_State* state, struct lisp_Value* value);
-
-static struct lisp_Value* lisp_Type_bootstrap(lisp_State* state);
 
 
 #endif

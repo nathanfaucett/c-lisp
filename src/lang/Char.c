@@ -16,7 +16,7 @@ static void lisp_Char_from_ascii(lisp_Char* ch, lisp_char i8) {
     ch->bytes[0] = i8;
     ch->size = 1;
 }
-static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 start) {
+static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u64* cstring, lisp_u64 start) {
     lisp_u8 size = 1;
     lisp_u64 i = start;
 
@@ -47,8 +47,8 @@ static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 s
     }
 }
 
-static lisp_u32 lisp_Char_to_u32(lisp_Char* ch) {
-    lisp_u32 c = 0;
+static lisp_u64 lisp_Char_to_u32(lisp_Char* ch) {
+    lisp_u64 c = 0;
     for (lisp_u8 i = 0, il = ch->size; i < il; i++) {
         c += ch->bytes[i];
     }
@@ -56,18 +56,6 @@ static lisp_u32 lisp_Char_to_u32(lisp_Char* ch) {
 }
 static lisp_char lisp_Char_to_char(lisp_Char* ch) {
     return ch->bytes[0];
-}
-
-static lisp_Value* lisp_Char_bootstrap(lisp_State* state) {
-    lisp_Value* value = lisp_Value_new(state, state->type);
-    lisp_Type_constructor(
-        (lisp_Type*) value->value,
-        NULL, NULL, NULL, NULL,
-        state->type_any,
-        lisp_Char_alloc,
-        lisp_Char_dealloc
-    );
-    return value;
 }
 
 

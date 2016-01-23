@@ -4,7 +4,7 @@
 
 static lisp_i32 lisp_cstring_to_i32(lisp_char* cstring) {
     lisp_i32 result = 0;
-    lisp_u32 i = 0;
+    lisp_u64 i = 0;
 
     if (*cstring == '-') {
         result = -1;

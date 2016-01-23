@@ -5,12 +5,12 @@
 static void lisp_Symbol_from_ascii(lisp_State* state, lisp_Symbol* symbol, lisp_char* cstring, lisp_u64 start) {
     lisp_Value* value = lisp_Value_new(state, state->type_string);
     symbol->value = value;
-    lisp_String_from_ascii(state, (lisp_String*) symbol->value, cstring, start);
+    lisp_String_from_ascii(state, (lisp_String*) value->value, cstring, start);
 }
-static lisp_u64 lisp_Symbol_from_utf8(lisp_State* state, lisp_Symbol* symbol, lisp_u32* cstring, lisp_u64 start) {
+static lisp_u64 lisp_Symbol_from_utf8(lisp_State* state, lisp_Symbol* symbol, lisp_u64* cstring, lisp_u64 start) {
     lisp_Value* value = lisp_Value_new(state, state->type_string);
     symbol->value = value;
-    return lisp_String_from_utf8(state, (lisp_String*) symbol->value, cstring, start);
+    return lisp_String_from_utf8(state, (lisp_String*) value->value, cstring, start);
 }
 
 static void lisp_Symbol_alloc(lisp_State* state, lisp_Value* value) {
@@ -19,19 +19,9 @@ static void lisp_Symbol_alloc(lisp_State* state, lisp_Value* value) {
     symbol->value = NULL;
 }
 static void lisp_Symbol_dealloc(lisp_State* state, lisp_Value* value) {
-    lisp_State_dealloc(state, value->value);
-}
-
-static lisp_Value* lisp_Symbol_bootstrap(lisp_State* state) {
-    lisp_Value* value = lisp_Value_new(state, state->type);
-    lisp_Type_constructor(
-        (lisp_Type*) value->value,
-        NULL, NULL, NULL, NULL,
-        state->type_any,
-        lisp_Symbol_alloc,
-        lisp_Symbol_dealloc
-    );
-    return value;
+    lisp_Symbol* symbol = (lisp_Symbol*) value->value;
+    lisp_Value_deref(state, symbol->value);
+    lisp_State_dealloc(state, symbol);
 }
 
 

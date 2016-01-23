@@ -3,7 +3,9 @@
 
 
 #include "./Heap.h"
+#include "./Scope.h"
 #include "./State.h"
+#include "./bootstrap.h"
 
 
 #endif

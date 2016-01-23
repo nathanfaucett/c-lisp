@@ -39,6 +39,13 @@ static void lisp_Type_dealloc(lisp_State* state, lisp_Value* value) {
     /* nothing to delete */
 }
 
+static void lisp_Type_empty_alloc(lisp_State* state, struct lisp_Value* value) {
+    /* empty */
+}
+static void lisp_Type_empty_dealloc(lisp_State* state, struct lisp_Value* value) {
+    /* empty */
+}
+
 static void lisp_Type_default_alloc(lisp_State* state, lisp_Value* value) {
     value->values = lisp_Value_new(state, state->type_list);
 }
@@ -46,24 +53,6 @@ static void lisp_Type_default_dealloc(lisp_State* state, lisp_Value* value) {
     if (value->values != NULL) {
         lisp_Value_delete(state, value->values);
     }
-}
-
-static lisp_Value* lisp_Type_bootstrap(lisp_State* state) {
-    lisp_Type* type = (lisp_Type*) malloc(sizeof(lisp_Type));
-    lisp_Type_constructor(
-        type,
-        NULL, NULL, NULL, NULL, NULL,
-        lisp_Type_alloc,
-        lisp_Type_dealloc
-    );
-
-    lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
-    value->ref_count = 1;
-    value->type = NULL;
-    value->value = type;
-    value->values = NULL;
-
-    return value;
 }
 
 

@@ -7,12 +7,10 @@ typedef struct lisp_Symbol {
 } lisp_Symbol;
 
 static void lisp_Symbol_from_ascii(lisp_State* state, lisp_Symbol* symbol, lisp_char* cstring, lisp_u64 start);
-static lisp_u64 lisp_Symbol_from_utf8(lisp_State* state, lisp_Symbol* symbol, lisp_u32* cstring, lisp_u64 start);
+static lisp_u64 lisp_Symbol_from_utf8(lisp_State* state, lisp_Symbol* symbol, lisp_u64* cstring, lisp_u64 start);
 
 static void lisp_Symbol_alloc(lisp_State* state, struct lisp_Value* value);
 static void lisp_Symbol_dealloc(lisp_State* state, struct lisp_Value* value);
-
-static struct lisp_Value* lisp_Symbol_bootstrap(lisp_State* state);
 
 
 #endif

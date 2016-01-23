@@ -5,6 +5,7 @@
 #include "./cstring.h"
 #include "./conversions.h"
 #include "./MutList.h"
+#include "./MutMap.h"
 
 
 #endif

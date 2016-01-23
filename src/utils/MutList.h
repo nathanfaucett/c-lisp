@@ -29,6 +29,8 @@ static void lisp_MutList_destructor(lisp_MutList* mut_list);
 static lisp_MutList* lisp_MutList_new(void);
 static void lisp_MutList_delete(lisp_MutList* mut_list);
 
+static lisp_u64 lisp_MutList_index_of(lisp_MutList* mut_list, void* value);
+
 static void* lisp_MutList_get(lisp_MutList* mut_list, lisp_u64 index);
 static void lisp_MutList_set(lisp_MutList* mut_list, lisp_u64 index, void* value);
 

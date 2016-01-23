@@ -4,7 +4,7 @@
 
 static lisp_State* lisp_State_constructor(lisp_State* state) {
     state->heap = lisp_Heap_new();
-    lisp_State_bootstrap(state);
+    lisp_bootstrap(state);
     return state;
 }
 static void lisp_State_destructor(lisp_State* state) {
@@ -26,19 +26,46 @@ static void lisp_State_dealloc(lisp_State* state, void* value) {
     lisp_Heap_dealloc(state->heap, value);
 }
 
-static void lisp_State_bootstrap(lisp_State* state) {
-    state->type = lisp_Type_bootstrap(state);
-    state->type_any = lisp_Any_bootstrap(state);
-    state->type_nil = lisp_Nil_bootstrap(state);
-    state->type_char = lisp_Char_bootstrap(state);
-    state->type_string = lisp_String_bootstrap(state);
-    state->type_symbol = lisp_Symbol_bootstrap(state);
-    state->type_list = lisp_List_bootstrap(state);
+static lisp_Value* lisp_State_eval_list(lisp_State* state, lisp_Value* input, lisp_Scope* scope) {
+    lisp_ListNode* node = ((lisp_List*) input->value)->root;
 
-    state->nil = lisp_Value_new(state, state->type_nil);
-    state->empty_list = lisp_Value_new(state, state->type_list);
-    /* state->empty_vector = lisp_Value_new(state, state->type_vector); */
-    /* state->empty_map = lisp_Value_new(state, state->type_map); */
+    if (node != NULL) {
+        lisp_Value* first = lisp_State_eval(state, node->value, scope);
+
+        /*
+        if (first->type == state->type_marco) {
+            return lisp_Macro_call(state, &first->macro, input, scope);
+        }
+        */
+
+        lisp_MutList* mut_list = lisp_MutList_new();
+
+        while (node != NULL) {
+            lisp_MutList_push(mut_list, lisp_State_eval(state, node->value, scope));
+            node = node->next;
+        }
+
+        lisp_Value* list = lisp_List_from_mut_list(state, mut_list);
+        lisp_MutList_delete(mut_list);
+
+        if (first->type == state->type_function) {
+            return lisp_Function_call(state, (lisp_Function*) first->value, lisp_List_shift(state, (lisp_List*) list->value), scope);
+        } else {
+            return list;
+        }
+    } else {
+        return lisp_Value_ref(state->nil);
+    }
+}
+
+static lisp_Value* lisp_State_eval(lisp_State* state, lisp_Value* input, lisp_Scope* scope) {
+    if (input->type == state->type_list) {
+        return lisp_State_eval_list(state, input, scope);
+    } else if (input->type == state->type_symbol) {
+        return lisp_Scope_get(scope, input);
+    } else {
+        return input;
+    }
 }
 
 

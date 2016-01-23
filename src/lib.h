@@ -3,6 +3,7 @@
 
 
 struct lisp_State;
+struct lisp_Scope;
 struct lisp_Type;
 struct lisp_Value;
 

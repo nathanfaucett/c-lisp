@@ -73,6 +73,21 @@ static lisp_MutListNode* lisp_MutList_find_node(lisp_MutList* mut_list, lisp_u64
     }
 }
 
+static lisp_u64 lisp_MutList_index_of(lisp_MutList* mut_list, void* value) {
+    lisp_MutListNode* node = mut_list->root;
+    lisp_u64 index = 0;
+
+    while (node != NULL) {
+        if (node->value == value) {
+            return index + 1;
+        }
+        node = node->next;
+        index += 1;
+    }
+
+    return 0;
+}
+
 static void* lisp_MutList_get(lisp_MutList* mut_list, lisp_u64 index) {
     lisp_MutListNode* node = lisp_MutList_find_node(mut_list, index);
 

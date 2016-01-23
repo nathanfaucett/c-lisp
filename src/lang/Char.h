@@ -14,12 +14,10 @@ static void lisp_Char_alloc(lisp_State* state, lisp_Value* value);
 static void lisp_Char_dealloc(lisp_State* state, lisp_Value* value);
 
 static void lisp_Char_from_ascii(lisp_Char* ch, lisp_char i8);
-static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 start);
+static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u64* cstring, lisp_u64 start);
 
-static lisp_u32 lisp_Char_to_u32(lisp_Char* ch);
+static lisp_u64 lisp_Char_to_u32(lisp_Char* ch);
 static lisp_char lisp_Char_to_char(lisp_Char* ch);
-
-static struct lisp_Value* lisp_Char_bootstrap(lisp_State* state);
 
 
 #endif
