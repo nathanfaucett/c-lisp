@@ -37,20 +37,24 @@ static lisp_List* lisp_List_constructor(lisp_List* list, lisp_ListNode* root, li
 
 static struct lisp_Value* lisp_List_from_mut_list(lisp_State* state, lisp_MutList* mut_list);
 
-static lisp_ListNode* lisp_List_find_node(lisp_List*, lisp_u64);
-static struct lisp_Value* lisp_List_get(lisp_State*, lisp_List*, lisp_u64);
+static lisp_ListNode* lisp_List_find_node(lisp_List* list, lisp_u64 index);
+static struct lisp_Value* lisp_List_get(lisp_State* state, lisp_List* list, lisp_u64 index);
 
-static struct lisp_Value* lisp_List_push(lisp_State*, lisp_List*, struct lisp_Value*);
-static struct lisp_Value* lisp_List_unshift(lisp_State*, lisp_List*, struct lisp_Value*);
+static struct lisp_Value* lisp_List_push(lisp_State* state, lisp_List* list, struct lisp_Value*);
+static struct lisp_Value* lisp_List_unshift(lisp_State* state, lisp_List* list, struct lisp_Value*);
 
-static struct lisp_Value* lisp_List_pop(lisp_State*, lisp_List*);
-static struct lisp_Value* lisp_List_shift(lisp_State*, lisp_List*);
-static struct lisp_Value* lisp_List_after(lisp_State*, lisp_List*, lisp_u64);
+static struct lisp_Value* lisp_List_pop(lisp_State* state, lisp_List*);
+static struct lisp_Value* lisp_List_shift(lisp_State* state, lisp_List*);
+static struct lisp_Value* lisp_List_after(lisp_State* state, lisp_List* list, lisp_u64 index);
 
-static struct lisp_Value* lisp_List_set(lisp_State*, lisp_List*, lisp_u64 index, struct lisp_Value*);
+static struct lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_u64 index, struct lisp_Value*);
 
 static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode*, lisp_ListNode*, lisp_ListNode*);
-static struct lisp_Value* lisp_List_remove(lisp_State*, lisp_List*, lisp_u64);
+static struct lisp_Value* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_u64 index);
+
+static struct lisp_Value* lisp_List_export_get(struct lisp_State*, struct lisp_Value*, struct lisp_Scope*);
+
+static void lisp_List_bootstrap(lisp_State* state);
 
 
 #endif

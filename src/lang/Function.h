@@ -3,11 +3,11 @@
 
 
 typedef struct lisp_Function {
-    lisp_Value* value;
+    struct lisp_Value* value;
 
-    lisp_Value* name;
-    lisp_Value* params;
-    lisp_Value* body;
+    struct lisp_Value* name;
+    struct lisp_Value* params;
+    struct lisp_Value* body;
 
     struct lisp_Value* (*native)(lisp_State*, struct lisp_Value*, struct lisp_Scope*);
 } lisp_Function;

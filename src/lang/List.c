@@ -234,5 +234,17 @@ static lisp_Value* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_u64
     }
 }
 
+static void lisp_List_bootstrap(lisp_State* state) {
+    lisp_Type* type = (lisp_Type*) state->type_list->value;
+
+    lisp_Value* name = lisp_Value_new(state, state->type_symbol);
+    lisp_Symbol_from_ascii(state, (lisp_Symbol*) name->value, "List", 0);
+    type->name = name;
+
+    lisp_MutList* mut_list = lisp_MutList_new();
+    type->methods = lisp_Map_from_mut_list(state, mut_list);
+    lisp_MutList_delete(mut_list);
+}
+
 
 #endif

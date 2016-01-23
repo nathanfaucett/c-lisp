@@ -10,6 +10,7 @@
 #include "./Char.c"
 #include "./Function.c"
 #include "./List.c"
+#include "./Macro.c"
 #include "./Map.c"
 #include "./Nil.c"
 #include "./String.c"
