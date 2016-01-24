@@ -8,9 +8,9 @@ CPP_FLAGS := -ansi $(OPT_LVL) -Wall -Wno-c++11-compat-deprecated-writable-string
 
 
 build_simple_c:
-	$(COMPILER_C) $(C_FLAGS) ./test/simple.c -o ./test/simple
+	$(COMPILER_C) $(C_FLAGS) ./test/simple.c -o ./test/simple.out
 
 run_simple_c:
-	./test/simple
+	./test/simple.out
 
 simple: build_simple_c run_simple_c

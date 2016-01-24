@@ -18,8 +18,22 @@ typedef struct lisp_State {
     struct lisp_Value* type_symbol;
 
     struct lisp_Value* type_number;
+
+    struct lisp_Value* type_uint;
+    struct lisp_Value* type_uint8;
+    struct lisp_Value* type_uint16;
+    struct lisp_Value* type_uint32;
+    struct lisp_Value* type_uint64;
+
     struct lisp_Value* type_int;
+    struct lisp_Value* type_int8;
+    struct lisp_Value* type_int16;
+    struct lisp_Value* type_int32;
+    struct lisp_Value* type_int64;
+
     struct lisp_Value* type_float;
+    struct lisp_Value* type_float32;
+    struct lisp_Value* type_float64;
 
     struct lisp_Value* type_list;
     struct lisp_Value* type_vector;

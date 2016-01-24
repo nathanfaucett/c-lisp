@@ -27,9 +27,33 @@ static lisp_char* lisp_cstring_clone(lisp_char* cstring) {
     return other;
 }
 
+static lisp_u64 lisp_cstring_index_of(lisp_char* cstring, lisp_char ch) {
+    lisp_u64 index = 0;
+    lisp_char c = cstring[index];
+
+    while (c != '\0') {
+        if (c == ch) {
+            return index + 1;
+        }
+        index = index + 1;
+        c = cstring[index];
+    }
+
+    return 0;
+}
+
 static lisp_bool lisp_cstring_equal(lisp_char* a, lisp_char* b) {
     for (lisp_u64 i = 0, il = lisp_cstring_size(a); i < il; i++) {
         if (a[i] != b[i]) {
+            return LISP_FALSE;
+        }
+    }
+    return LISP_TRUE;
+}
+
+static lisp_bool lisp_u32_char_equal(lisp_u32* a, lisp_char* b) {
+    for (lisp_u64 i = 0, il = lisp_cstring_size(b); i < il; i++) {
+        if (a[i] != (lisp_u32) b[i]) {
             return LISP_FALSE;
         }
     }

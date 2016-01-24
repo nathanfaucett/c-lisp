@@ -2,9 +2,9 @@
 #define __LISP_CORE_BOOTSTRAP_H__
 
 
-static void lisp_bootstrap(lisp_State* state);
+static void lisp_bootstrap(struct lisp_State* state);
 
-static struct lisp_Value* lisp_bootstrap_Type(lisp_State* state);
+static struct lisp_Value* lisp_bootstrap_Type(struct lisp_State* state);
 static struct lisp_Value* lisp_bootstrap_SubType(
     struct lisp_State* state,
     struct lisp_Value* parent,
@@ -13,10 +13,10 @@ static struct lisp_Value* lisp_bootstrap_SubType(
 );
 
 static void lisp_bootstrap_defmethod(
-    lisp_State* state,
+    struct lisp_State* state,
     lisp_MutList* mut_list,
     lisp_char* cstring,
-    struct lisp_Value* (*native)(lisp_State*, struct lisp_Value*, struct lisp_Scope*)
+    struct lisp_Value* (*native)(struct lisp_State*, struct lisp_Value*, struct lisp_Scope*)
 );
 
 

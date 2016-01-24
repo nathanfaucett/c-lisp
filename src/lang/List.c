@@ -207,7 +207,26 @@ static struct lisp_Value* lisp_List_after(lisp_State* state, lisp_List* list, li
 }
 
 static lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_u64 index, lisp_Value* value) {
-    return lisp_Value_ref(list->value);
+    if (index < list->size) {
+        lisp_ListNode* node = lisp_List_find_node(list, index);
+
+        if (node->value == value) {
+            return lisp_Value_ref(list->value);
+        } else {
+            lisp_Value* new_value = lisp_Value_new(state, state->type_list);
+            lisp_List* new_list = (lisp_List*) new_value->value;
+
+            lisp_ListNode* new_node = lisp_ListNode_new(node->next, value);
+
+            new_list->root = lisp_List_copy_from_to(list->root, node, new_node);
+            new_list->tail = node->next == NULL ? new_node : list->tail;
+            new_list->size = list->size;
+
+            return new_value;
+        }
+    } else {
+        return lisp_Value_ref(list->value);
+    }
 }
 
 static lisp_ListNode* lisp_List_copy_from_to(lisp_ListNode* from, lisp_ListNode* to, lisp_ListNode* new_node) {

@@ -2,8 +2,8 @@
 #define __LISP_UTILS_CONVERSIONS_C__
 
 
-static lisp_i32 lisp_cstring_to_i32(lisp_char* cstring) {
-    lisp_i32 result = 0;
+static lisp_i64 lisp_cstring_to_i64(lisp_char* cstring) {
+    lisp_i64 result = 0;
     lisp_u64 i = 0;
 
     if (*cstring == '-') {
@@ -25,8 +25,8 @@ static lisp_f64 lisp_cstring_to_f64(lisp_char* cstring) {
     } else {
         lisp_f64 integer_part = 0;
         lisp_f64 fraction_part = 0;
-        lisp_i32 divisor_for_fraction = 1;
-        lisp_i32 sign = 1;
+        lisp_i64 divisor_for_fraction = 1;
+        lisp_i64 sign = 1;
         lisp_bool in_fraction = LISP_FALSE;
 
         if (*cstring == '-') {
@@ -60,7 +60,7 @@ static lisp_f64 lisp_cstring_to_f64(lisp_char* cstring) {
     }
 }
 
-static lisp_char* lisp_i32_to_cstring(lisp_i32 value) {
+static lisp_char* lisp_i64_to_cstring(lisp_i64 value) {
     static lisp_char buffer[LISP_INT_DIGITS + 2];
     lisp_char* cstring = buffer + LISP_INT_DIGITS + 1;
 
@@ -82,7 +82,7 @@ static lisp_char* lisp_i32_to_cstring(lisp_i32 value) {
 }
 
 static lisp_char* lisp_f64_to_cstring(lisp_f64 value) {
-    return lisp_i32_to_cstring((lisp_i32) value);
+    return lisp_i64_to_cstring((lisp_i64) value);
 }
 
 #endif

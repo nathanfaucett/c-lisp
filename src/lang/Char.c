@@ -16,7 +16,7 @@ static void lisp_Char_from_ascii(lisp_Char* ch, lisp_char i8) {
     ch->bytes[0] = i8;
     ch->size = 1;
 }
-static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u64* cstring, lisp_u64 start) {
+static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 start) {
     lisp_u8 size = 1;
     lisp_u64 i = start;
 

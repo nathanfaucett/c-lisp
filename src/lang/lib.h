@@ -5,6 +5,8 @@
 #include "./Type.h"
 #include "./Value.h"
 
+#include "./Number/lib.h"
+
 #include "./Any.h"
 #include "./Bool.h"
 #include "./Char.h"

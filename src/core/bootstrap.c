@@ -13,6 +13,8 @@ static void lisp_bootstrap(lisp_State* state) {
     state->type_string = lisp_bootstrap_SubType(state, state->type_any, lisp_String_alloc, lisp_String_dealloc);
     state->type_symbol = lisp_bootstrap_SubType(state, state->type_any, lisp_Symbol_alloc, lisp_Symbol_dealloc);
 
+    state->type_int64 = lisp_bootstrap_SubType(state, state->type_number, lisp_Int64_alloc, lisp_Int64_dealloc);
+
     state->type_macro = lisp_bootstrap_SubType(state, state->type_any, lisp_Macro_alloc, lisp_Macro_dealloc);
     state->type_function = lisp_bootstrap_SubType(state, state->type_any, lisp_Function_alloc, lisp_Function_dealloc);
 

@@ -34,7 +34,7 @@ static void lisp_String_from_ascii(lisp_State* state, lisp_String* string, lisp_
         c = cstring[i];
     }
 }
-static lisp_u64 lisp_String_from_utf8(lisp_State* state, lisp_String* string, lisp_u64* cstring, lisp_u64 start) {
+static lisp_u64 lisp_String_from_utf8(lisp_State* state, lisp_String* string, lisp_u32* cstring, lisp_u64 start) {
     lisp_u64 i = start;
 
     while (LISP_TRUE) {
