@@ -5,29 +5,40 @@
 static void lisp_Type_constructor(
     lisp_Type* type,
     lisp_Value* name,
-    lisp_Value* parameters,
+    lisp_Value* attributes,
     lisp_Value* types,
-    lisp_Value* methods,
+    lisp_Value* prototype,
+    lisp_Value* template,
     lisp_Value* super,
     void (*alloc)(lisp_State*, lisp_Value*),
     void (*dealloc)(lisp_State*, lisp_Value*)
 ) {
     type->name = name;
-    type->parameters = parameters;
+    type->attributes = attributes;
     type->types = types;
-    type->methods = methods;
+    type->prototype = prototype;
+    type->template = template;
     type->super = super;
 
     if (alloc != NULL) {
         type->alloc = alloc;
-    } else {
-        type->alloc = lisp_Type_default_alloc;
     }
-
     if (dealloc != NULL) {
         type->dealloc = dealloc;
+    }
+}
+
+static lisp_bool lisp_Type_inherits(lisp_Value* child, lisp_Value* parent) {
+    if (child->type == parent->type) {
+        return LISP_TRUE;
     } else {
-        type->dealloc = lisp_Type_default_dealloc;
+        lisp_Type* type = (lisp_Type*) child->type->value;
+
+        if (type->super == NULL) {
+            return LISP_FALSE;
+        } else {
+            return lisp_Type_inherits(type->super, parent);
+        }
     }
 }
 
@@ -36,22 +47,25 @@ static void lisp_Type_alloc(lisp_State* state, lisp_Value* value) {
     value->value = type;
 }
 static void lisp_Type_dealloc(lisp_State* state, lisp_Value* value) {
-    /* nothing to delete */
-}
+    lisp_Type* type = (lisp_Type*) value->value;
 
-static void lisp_Type_empty_alloc(lisp_State* state, struct lisp_Value* value) {
-    /* empty */
-}
-static void lisp_Type_empty_dealloc(lisp_State* state, struct lisp_Value* value) {
-    /* empty */
-}
-
-static void lisp_Type_default_alloc(lisp_State* state, lisp_Value* value) {
-    value->values = lisp_Value_new(state, state->type_list);
-}
-static void lisp_Type_default_dealloc(lisp_State* state, lisp_Value* value) {
-    if (value->values != NULL) {
-        lisp_Value_delete(state, value->values);
+    if (type->name != NULL) {
+        lisp_Value_deref(state, type->name);
+    }
+    if (type->attributes != NULL) {
+        lisp_Value_deref(state, type->attributes);
+    }
+    if (type->types != NULL) {
+        lisp_Value_deref(state, type->types);
+    }
+    if (type->prototype != NULL) {
+        lisp_Value_deref(state, type->prototype);
+    }
+    if (type->template != NULL) {
+        lisp_Value_deref(state, type->template);
+    }
+    if (type->super != NULL) {
+        lisp_Value_deref(state, type->super);
     }
 }
 

@@ -4,8 +4,8 @@
 
 typedef struct lisp_Scope {
     struct lisp_State* state;
-    lisp_MutMap* map;
     struct lisp_Scope* parent;
+    lisp_MutMap* map;
 } lisp_Scope;
 
 

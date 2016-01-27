@@ -32,26 +32,25 @@ static lisp_Value* lisp_State_eval_list(lisp_State* state, lisp_Value* input, li
     if (node != NULL) {
         lisp_Value* first = lisp_State_eval(state, node->value, scope);
 
-        /*
-        if (first->type == state->type_marco) {
-            return lisp_Macro_call(state, &first->macro, input, scope);
-        }
-        */
-
-        lisp_MutList* mut_list = lisp_MutList_new();
-
-        while (node != NULL) {
-            lisp_MutList_push(mut_list, lisp_State_eval(state, node->value, scope));
-            node = node->next;
-        }
-
-        lisp_Value* list = lisp_List_from_mut_list(state, mut_list);
-        lisp_MutList_delete(mut_list);
-
-        if (first->type == state->type_function) {
-            return lisp_Function_call(state, (lisp_Function*) first->value, lisp_List_shift(state, (lisp_List*) list->value), scope);
+        if (first->type == state->type_macro) {
+            return lisp_Macro_call(state, (lisp_Macro*) first->value, lisp_List_shift(state, (lisp_List*) input->value), scope);
         } else {
-            return list;
+            lisp_MutList* mut_list = lisp_MutList_new();
+            node = node->next;
+
+            while (node != NULL) {
+                lisp_MutList_push(mut_list, lisp_State_eval(state, node->value, scope));
+                node = node->next;
+            }
+
+            lisp_Value* list = lisp_List_from_mut_list(state, mut_list);
+            lisp_MutList_delete(mut_list);
+
+            if (first->type == state->type_function) {
+                return lisp_Function_call(state, (lisp_Function*) first->value, list, scope);
+            } else {
+                return list;
+            }
         }
     } else {
         return lisp_Value_ref(state->nil);

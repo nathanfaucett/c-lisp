@@ -2,8 +2,8 @@
 #define __LISP_LANG_LIB_C__
 
 
-#include "./Type.c"
 #include "./Value.c"
+#include "./Type.c"
 
 #include "./Number/lib.c"
 

@@ -5,15 +5,17 @@
 static void lisp_bootstrap(lisp_State* state) {
     state->type = lisp_bootstrap_Type(state);
 
-    state->type_any = lisp_bootstrap_SubType(state, NULL, lisp_Type_empty_alloc, lisp_Type_empty_dealloc);
-    state->type_nil = lisp_bootstrap_SubType(state, state->type_any, lisp_Type_empty_alloc, lisp_Type_empty_dealloc);
+    state->type_any = lisp_bootstrap_SubType(state, NULL, NULL, NULL);
+    state->type_nil = lisp_bootstrap_SubType(state, state->type_any, NULL, NULL);
 
     state->type_bool = lisp_bootstrap_SubType(state, state->type_any, lisp_Bool_alloc, lisp_Bool_dealloc);
     state->type_char = lisp_bootstrap_SubType(state, state->type_any, lisp_Char_alloc, lisp_Char_dealloc);
     state->type_string = lisp_bootstrap_SubType(state, state->type_any, lisp_String_alloc, lisp_String_dealloc);
     state->type_symbol = lisp_bootstrap_SubType(state, state->type_any, lisp_Symbol_alloc, lisp_Symbol_dealloc);
 
-    state->type_int64 = lisp_bootstrap_SubType(state, state->type_number, lisp_Int64_alloc, lisp_Int64_dealloc);
+    state->type_number = lisp_bootstrap_SubType(state, state->type_any, NULL, NULL);
+    state->type_int = lisp_bootstrap_SubType(state, state->type_number, NULL, NULL);
+    state->type_int64 = lisp_bootstrap_SubType(state, state->type_int, lisp_Int64_alloc, lisp_Int64_dealloc);
 
     state->type_macro = lisp_bootstrap_SubType(state, state->type_any, lisp_Macro_alloc, lisp_Macro_dealloc);
     state->type_function = lisp_bootstrap_SubType(state, state->type_any, lisp_Function_alloc, lisp_Function_dealloc);
@@ -22,10 +24,15 @@ static void lisp_bootstrap(lisp_State* state) {
     state->type_vector = lisp_bootstrap_SubType(state, state->type_any, lisp_Vector_alloc, lisp_Vector_dealloc);
     state->type_map = lisp_bootstrap_SubType(state, state->type_any, lisp_Map_alloc, lisp_Map_dealloc);
 
-    state->nil = lisp_Value_new(state, state->type_nil);
-    state->empty_list = lisp_Value_new(state, state->type_list);
-    state->empty_vector = lisp_Value_new(state, state->type_vector);
-    state->empty_map = lisp_Value_new(state, state->type_map);
+    state->nil = lisp_Value_alloc(state, state->type_nil);
+    state->empty_list = lisp_Value_alloc(state, state->type_list);
+    state->empty_vector = lisp_Value_alloc(state, state->type_vector);
+    state->empty_map = lisp_Value_alloc(state, state->type_map);
+
+    lisp_Any_bootstrap(state);
+    lisp_Nil_bootstrap(state);
+
+    lisp_Bool_bootstrap(state);
 
     lisp_List_bootstrap(state);
 }
@@ -34,7 +41,7 @@ static lisp_Value* lisp_bootstrap_Type(lisp_State* state) {
     lisp_Type* type = (lisp_Type*) malloc(sizeof(lisp_Type));
     lisp_Type_constructor(
         type,
-        NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL, NULL,
         lisp_Type_alloc,
         lisp_Type_dealloc
     );
@@ -53,8 +60,8 @@ static lisp_Value* lisp_bootstrap_SubType(
     void (*alloc)(lisp_State*, lisp_Value*),
     void (*dealloc)(lisp_State*, lisp_Value*)
 ) {
-    lisp_Value* value = lisp_Value_new(state, state->type);
-    lisp_Type_constructor((lisp_Type*) value->value, NULL, NULL, NULL, NULL, state->type_any, alloc, dealloc);
+    lisp_Value* value = lisp_Value_alloc(state, state->type);
+    lisp_Type_constructor((lisp_Type*) value->value, NULL, NULL, NULL, NULL, NULL, state->type_any, alloc, dealloc);
     return value;
 }
 
@@ -64,11 +71,10 @@ static void lisp_bootstrap_defmethod(
     lisp_char* cstring,
     lisp_Value* (*native)(lisp_State*, lisp_Value*, lisp_Scope*)
 ) {
-    lisp_Value* name = lisp_Value_new(state, state->type_symbol);
-    lisp_Symbol_from_ascii(state, (lisp_Symbol*) name->value, "List", 0);
+    lisp_Value* name = lisp_Symbol_new_ascii(state, cstring);
     lisp_MutList_push(mut_list, name);
 
-    lisp_Value* function_value = lisp_Value_new(state, state->type_function);
+    lisp_Value* function_value = lisp_Value_alloc(state, state->type_function);
     lisp_Function* function = (lisp_Function*) function_value->value;
 
     function->name = name;

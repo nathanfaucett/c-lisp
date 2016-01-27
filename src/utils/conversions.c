@@ -18,6 +18,17 @@ static lisp_i64 lisp_cstring_to_i64(lisp_char* cstring) {
 
     return result;
 }
+static lisp_u64 lisp_cstring_to_u64(lisp_char* cstring) {
+    lisp_u64 result = 0;
+    lisp_u64 i = 0;
+
+    while (cstring[i] != '\0') {
+        result = result * 10 + cstring[i] - '0';
+        i += 1;
+    }
+
+    return result;
+}
 
 static lisp_f64 lisp_cstring_to_f64(lisp_char* cstring) {
     if (!cstring || !*cstring) {
@@ -77,6 +88,17 @@ static lisp_char* lisp_i64_to_cstring(lisp_i64 value) {
 
         *--cstring = '-';
     }
+
+    return lisp_cstring_clone(cstring);
+}
+static lisp_char* lisp_u64_to_cstring(lisp_u64 value) {
+    static lisp_char buffer[LISP_INT_DIGITS + 2];
+    lisp_char* cstring = buffer + LISP_INT_DIGITS + 1;
+
+    do {
+        *--cstring = '0' + (value % 10);
+        value /= 10;
+    } while (value != 0);
 
     return lisp_cstring_clone(cstring);
 }

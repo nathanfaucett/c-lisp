@@ -2,6 +2,7 @@
 #define __LISP_LANG_NUMBER_LIB_C__
 
 
+#include "./Int.c"
 #include "./Int64.c"
 
 

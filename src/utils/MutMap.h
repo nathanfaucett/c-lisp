@@ -15,12 +15,12 @@ static void lisp_MutMap_delete(lisp_MutMap* map);
 
 static lisp_u64 lisp_MutMap_size(lisp_MutMap* map);
 
-static lisp_u64 lisp_MutMap_index_of(lisp_MutMap* map, struct lisp_Value* key);
+static lisp_u64 lisp_MutMap_index_of(lisp_MutMap* map, void* key);
 
-static lisp_bool lisp_MutMap_has(lisp_MutMap* map, struct lisp_Value* key);
-static struct lisp_Value* lisp_MutMap_get(lisp_MutMap* map, struct lisp_Value* key);
-static void lisp_MutMap_set(lisp_MutMap* map, struct lisp_Value* key, struct lisp_Value* value);
-static void lisp_MutMap_remove(lisp_MutMap* map, struct lisp_Value* key);
+static lisp_bool lisp_MutMap_has(lisp_MutMap* map, void* key);
+static void* lisp_MutMap_get(lisp_MutMap* map, void* key);
+static void lisp_MutMap_set(lisp_MutMap* map, void* key, void* value);
+static void lisp_MutMap_remove(lisp_MutMap* map, void* key);
 
 
 #endif

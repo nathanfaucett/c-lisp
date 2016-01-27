@@ -47,8 +47,8 @@ static lisp_u64 lisp_Char_from_utf8(lisp_Char* ch, lisp_u32* cstring, lisp_u64 s
     }
 }
 
-static lisp_u64 lisp_Char_to_u32(lisp_Char* ch) {
-    lisp_u64 c = 0;
+static lisp_u32 lisp_Char_to_u32(lisp_Char* ch) {
+    lisp_u32 c = 0;
     for (lisp_u8 i = 0, il = ch->size; i < il; i++) {
         c += ch->bytes[i];
     }
@@ -56,6 +56,19 @@ static lisp_u64 lisp_Char_to_u32(lisp_Char* ch) {
 }
 static lisp_char lisp_Char_to_char(lisp_Char* ch) {
     return ch->bytes[0];
+}
+
+static lisp_bool lisp_Char_equal(lisp_Char* a, lisp_Char* b) {
+    if (a->size != b->size) {
+        return LISP_FALSE;
+    } else {
+        for (lisp_u8 i = 0, il = a->size; i < il; i++) {
+            if (a->bytes[i] != b->bytes[i]) {
+                return LISP_FALSE;
+            }
+        }
+        return LISP_TRUE;
+    }
 }
 
 

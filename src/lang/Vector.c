@@ -51,7 +51,7 @@ static void lisp_VectorArray_deref(lisp_State* state, lisp_VectorArray* array) {
 }
 
 
-static struct lisp_Value** lisp_Vector_alloc_values(void) {
+static lisp_Value** lisp_Vector_alloc_values(void) {
     lisp_Value** values = (lisp_Value**) malloc(LISP_VECTOR_SIZE * sizeof(lisp_Value*));
     for (lisp_u64 i = 0, il = LISP_VECTOR_SIZE; i < il; i++) {
         values[i] = NULL;
@@ -216,17 +216,17 @@ static lisp_Value* lisp_Vector_from_mut_list(lisp_State* state, lisp_MutList* mu
     if (mut_list->size == 0) {
         return lisp_Value_ref(state->empty_vector);
     } else {
-        lisp_Value* value = lisp_Value_new(state, state->type_vector);
+        lisp_Value* value = lisp_Value_alloc(state, state->type_vector);
         lisp_Vector_push_mut_list(state, (lisp_Vector*) value->value, mut_list);
         return value;
     }
 }
 
-static struct lisp_Value* lisp_Vector_from_list(lisp_State* state, lisp_List* list) {
+static lisp_Value* lisp_Vector_from_list(lisp_State* state, lisp_List* list) {
     if (list->size == 0) {
         return lisp_Value_ref(state->empty_list);
     } else {
-        lisp_Value* value = lisp_Value_new(state, state->type_vector);
+        lisp_Value* value = lisp_Value_alloc(state, state->type_vector);
         lisp_MutList* mut_list = lisp_MutList_new();
         lisp_ListNode* node = list->root;
 
@@ -243,7 +243,7 @@ static struct lisp_Value* lisp_Vector_from_list(lisp_State* state, lisp_List* li
 }
 
 static lisp_Value* lisp_Vector_clone(lisp_State* state, lisp_Vector* vector) {
-    lisp_Value* value = lisp_Value_new(state, state->type_vector);
+    lisp_Value* value = lisp_Value_alloc(state, state->type_vector);
     lisp_Vector_constructor((lisp_Vector*) value->value, vector->root, vector->tail, vector->size, vector->shift);
     return value;
 }

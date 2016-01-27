@@ -165,10 +165,10 @@ static lisp_Value* lisp_Reader_read_number(lisp_Reader* reader, lisp_u32 ch) {
 
     if (lisp_cstring_index_of(cstring, '.') != -1) {
         /* fixme */
-        value = lisp_Value_new(reader->state, reader->state->type_int64);
+        value = lisp_Value_alloc(reader->state, reader->state->type_int64);
         ((lisp_Int64*) value->value)->value = lisp_cstring_to_f64(cstring);
     } else {
-        value = lisp_Value_new(reader->state, reader->state->type_int64);
+        value = lisp_Value_alloc(reader->state, reader->state->type_int64);
         ((lisp_Int64*) value->value)->value = lisp_cstring_to_i64(cstring);
     }
     free(cstring);
@@ -223,7 +223,7 @@ static lisp_Value* lisp_Reader_read_map(lisp_Reader* reader, lisp_u32 ch) {
 
 static lisp_Value* lisp_Reader_read_string(lisp_Reader* reader, lisp_u32 ch) {
     /* fixme - parse as utf-8 */
-    lisp_Value* string_value = lisp_Value_new(reader->state, reader->state->type_string);
+    lisp_Value* string_value = lisp_Value_alloc(reader->state, reader->state->type_string);
     lisp_String* string = (lisp_String*) string_value->value;
 
     ch = lisp_Reader_read(reader);
@@ -239,7 +239,7 @@ static lisp_Value* lisp_Reader_read_string(lisp_Reader* reader, lisp_u32 ch) {
             }
         }
 
-        lisp_Value* character = lisp_Value_new(reader->state, reader->state->type_char);
+        lisp_Value* character = lisp_Value_alloc(reader->state, reader->state->type_char);
         lisp_Char_from_ascii((lisp_Char*) character->value, ch);
         lisp_MutList_push(string->chars, character);
 
@@ -258,7 +258,7 @@ static lisp_Value* lisp_Reader_read_character(lisp_Reader* reader, lisp_u32 ch) 
         ch = lisp_Reader_read(reader);
     }
 
-    lisp_Value* character = lisp_Value_new(reader->state, reader->state->type_char);
+    lisp_Value* character = lisp_Value_alloc(reader->state, reader->state->type_char);
     lisp_Char_from_ascii((lisp_Char*) character->value, value);
 
     return character;
@@ -269,15 +269,15 @@ static lisp_Value* lisp_Reader_read_token(lisp_Reader* reader, lisp_u32 ch) {
     lisp_u32* cstring = lisp_Reader_next_token(reader, ch);
 
     if (lisp_u32_char_equal(cstring, "true")) {
-        value = lisp_Value_new(reader->state, reader->state->type_bool);
+        value = lisp_Value_alloc(reader->state, reader->state->type_bool);
         ((lisp_Bool*) value->value)->value = LISP_TRUE;
     } else if (lisp_u32_char_equal(cstring, "false")) {
-        value = lisp_Value_new(reader->state, reader->state->type_bool);
+        value = lisp_Value_alloc(reader->state, reader->state->type_bool);
         ((lisp_Bool*) value->value)->value = LISP_FALSE;
     } else if (lisp_u32_char_equal(cstring, "nil")) {
         value = lisp_Value_ref(reader->state->nil);
     } else {
-        value = lisp_Value_new(reader->state, reader->state->type_symbol);
+        value = lisp_Value_alloc(reader->state, reader->state->type_symbol);
         lisp_Symbol_from_utf8(reader->state, (lisp_Symbol*) value->value, cstring, 0);
     }
     free(cstring);

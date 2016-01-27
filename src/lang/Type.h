@@ -3,34 +3,32 @@
 
 
 typedef struct lisp_Type {
-    struct lisp_Value* name;
-    struct lisp_Value* parameters;
-    struct lisp_Value* types;
-    struct lisp_Value* methods;
-    struct lisp_Value* super;
-    void (*alloc)(lisp_State*, struct lisp_Value*);
-    void (*dealloc)(lisp_State*, struct lisp_Value*);
+    lisp_Value* name;        /* Symbol */
+    lisp_Value* attributes;  /* List<Symbol> */
+    lisp_Value* types;       /* List<Type> */
+    lisp_Value* prototype;   /* Map<Symbol, Function> */
+    lisp_Value* template;    /* Map<Symbol, Type> */
+    lisp_Value* super;       /* Type */
+    void (*alloc)(lisp_State*, lisp_Value*);
+    void (*dealloc)(lisp_State*, lisp_Value*);
 } lisp_Type;
 
 static void lisp_Type_constructor(
     lisp_Type* type,
-    struct lisp_Value* name,
-    struct lisp_Value* parameters,
-    struct lisp_Value* types,
-    struct lisp_Value* methods,
-    struct lisp_Value* super,
-    void (*alloc)(lisp_State*, struct lisp_Value*),
-    void (*dealloc)(lisp_State*, struct lisp_Value*)
+    lisp_Value* name,
+    lisp_Value* attributes,
+    lisp_Value* types,
+    lisp_Value* prototype,
+    lisp_Value* template,
+    lisp_Value* super,
+    void (*alloc)(lisp_State*, lisp_Value*),
+    void (*dealloc)(lisp_State*, lisp_Value*)
 );
 
-static void lisp_Type_default_alloc(struct lisp_State* state, struct lisp_Value* value);
-static void lisp_Type_default_dealloc(struct lisp_State* state, struct lisp_Value* value);
+static lisp_bool lisp_Type_inherits(lisp_Value* child, lisp_Value* parent);
 
-static void lisp_Type_empty_alloc(lisp_State* state, struct lisp_Value* value);
-static void lisp_Type_empty_dealloc(lisp_State* state, struct lisp_Value* value);
-
-static void lisp_Type_alloc(struct lisp_State* state, struct lisp_Value* value);
-static void lisp_Type_dealloc(struct lisp_State* state, struct lisp_Value* value);
+static void lisp_Type_alloc(struct lisp_State* state, lisp_Value* value);
+static void lisp_Type_dealloc(struct lisp_State* state, lisp_Value* value);
 
 
 #endif

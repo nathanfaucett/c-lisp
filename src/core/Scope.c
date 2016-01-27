@@ -4,8 +4,8 @@
 
 static lisp_Scope* lisp_Scope_constructor(lisp_State* state, lisp_Scope* scope, lisp_Scope* parent) {
     scope->state = state;
-    scope->map = lisp_MutMap_new();
     scope->parent = parent;
+    scope->map = lisp_MutMap_new();
     return scope;
 }
 
