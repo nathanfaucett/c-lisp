@@ -11,9 +11,9 @@ static void lisp_boot_core(lisp_State* state) {
     state->Indexed = lisp_boot_create_AbstractType(state, state->Collection, "Indexed");
     state->Keyed = lisp_boot_create_AbstractType(state, state->Collection, "Keyed");
 
-    ((lisp_Type*) state->String->type->data)->super = state->Indexed;
-    ((lisp_Type*) state->Seq->type->data)->super = state->Indexed;
-    ((lisp_Type*) state->Map->type->data)->super = state->Keyed;
+    ((lisp_Type*) state->String->data)->super = state->Indexed;
+    ((lisp_Type*) state->Seq->data)->super = state->Indexed;
+    ((lisp_Type*) state->Map->data)->super = state->Keyed;
 
     state->Number = lisp_boot_create_AbstractType(state, state->Any, "Number");
     state->Real = lisp_boot_create_AbstractType(state, state->Number, "Real");
@@ -22,21 +22,21 @@ static void lisp_boot_core(lisp_State* state) {
     state->Signed = lisp_boot_create_AbstractType(state, state->Integer, "Signed");
     state->Unsigned = lisp_boot_create_AbstractType(state, state->Integer, "Unsigned");
 
-    ((lisp_Type*) state->Bool->type->data)->super = state->Integer;
+    ((lisp_Type*) state->Bool->data)->super = state->Integer;
 
-    state->Float16 = lisp_boot_create_BitsType(state, state->AbstractFloat, 2, "Float16");
-    state->Float32 = lisp_boot_create_BitsType(state, state->AbstractFloat, 4, "Float32");
-    state->Float64 = lisp_boot_create_BitsType(state, state->AbstractFloat, 8, "Float64");
+    state->Float16 = lisp_boot_create_BytesType(state, state->AbstractFloat, 2, "Float16");
+    state->Float32 = lisp_boot_create_BytesType(state, state->AbstractFloat, 4, "Float32");
+    state->Float64 = lisp_boot_create_BytesType(state, state->AbstractFloat, 8, "Float64");
 
-    state->UInt8 = lisp_boot_create_BitsType(state, state->Unsigned, 1, "UInt8");
-    state->UInt16 = lisp_boot_create_BitsType(state, state->Unsigned, 2, "UInt16");
-    state->UInt32 = lisp_boot_create_BitsType(state, state->Unsigned, 4, "UInt32");
-    state->UInt64 = lisp_boot_create_BitsType(state, state->Unsigned, 8, "UInt64");
+    state->UInt8 = lisp_boot_create_BytesType(state, state->Unsigned, 1, "UInt8");
+    state->UInt16 = lisp_boot_create_BytesType(state, state->Unsigned, 2, "UInt16");
+    state->UInt32 = lisp_boot_create_BytesType(state, state->Unsigned, 4, "UInt32");
+    state->UInt64 = lisp_boot_create_BytesType(state, state->Unsigned, 8, "UInt64");
 
-    state->Int8 = lisp_boot_create_BitsType(state, state->Signed, 1, "Int8");
-    state->Int16 = lisp_boot_create_BitsType(state, state->Signed, 2, "Int16");
-    state->Int32 = lisp_boot_create_BitsType(state, state->Signed, 4, "Int32");
-    state->Int64 = lisp_boot_create_BitsType(state, state->Signed, 8, "Int64");
+    state->Int8 = lisp_boot_create_BytesType(state, state->Signed, 1, "Int8");
+    state->Int16 = lisp_boot_create_BytesType(state, state->Signed, 2, "Int16");
+    state->Int32 = lisp_boot_create_BytesType(state, state->Signed, 4, "Int32");
+    state->Int64 = lisp_boot_create_BytesType(state, state->Signed, 8, "Int64");
 
     if (sizeof(lisp_size) == 8) {
         state->UInt = state->UInt64;
@@ -51,7 +51,7 @@ static void lisp_boot_core(lisp_State* state) {
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Type->data)->name, state->Type);
 
-    lisp_Scope_def(state->scope, ((lisp_Type*) state->Any->data)->name, state->Any);
+    lisp_Scope_def(state->scope, ((lisp_Type*) state->Any->data)->name, state->Any);/*
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Nil->data)->name, state->Nil);
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Callable->data)->name, state->Callable);
@@ -95,6 +95,7 @@ static void lisp_boot_core(lisp_State* state) {
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Map->data)->name, state->Map);
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Nil->data)->name, state->nil);
+    */
 }
 
 

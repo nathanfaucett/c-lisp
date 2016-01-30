@@ -35,6 +35,21 @@ static lisp_SeqNode* lisp_Seq_find_node(lisp_Seq* seq, lisp_size index) {
     }
 }
 
+static lisp_size lisp_Seq_index_of(lisp_State* state, lisp_Seq* seq, lisp_Value* key) {
+    lisp_SeqNode* node = seq->root;
+    lisp_size index = 1;
+
+    while (node != NULL) {
+        if (lisp_Value_equal(state, node->value, key)) {
+            return index;
+        }
+        index += 1;
+        node = node->next;
+    }
+
+    return 0;
+}
+
 static lisp_Value* lisp_Seq_get(lisp_State* state, lisp_Seq* seq, lisp_size index) {
     lisp_SeqNode* node = lisp_Seq_find_node(seq, index);
 

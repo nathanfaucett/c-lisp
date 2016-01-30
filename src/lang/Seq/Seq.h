@@ -13,6 +13,8 @@ static void lisp_Seq_alloc(lisp_State* state, lisp_Value* value);
 static void lisp_Seq_dealloc(lisp_State* state, lisp_Value* value);
 static void lisp_Seq_mark(lisp_Value* value);
 
+static lisp_size lisp_Seq_index_of(lisp_State* state, lisp_Seq* seq, lisp_Value* key);
+
 static lisp_Value* lisp_Seq_get(lisp_State* state, lisp_Seq* seq, lisp_size index);
 static void lisp_Seq_set(lisp_Seq* seq, lisp_size index, lisp_Value* value);
 

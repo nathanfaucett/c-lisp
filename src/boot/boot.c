@@ -38,6 +38,10 @@ static lisp_Value* lisp_boot_create_MainType(lisp_State* state) {
     lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
 
     type->size = size;
+    type->super = NULL;
+    type->alloc = NULL;
+    type->dealloc = NULL;
+    type->mark = NULL;
 
     value->type = value;
     value->data = type;
@@ -71,7 +75,7 @@ static void lisp_boot_create_InitType(
     lisp_Value* value,
     lisp_char* ascii,
     lisp_bool abstract,
-    lisp_bool bits
+    lisp_bool bytes
 ) {
     lisp_Type* type = (lisp_Type*) value->data;
 
@@ -82,10 +86,10 @@ static void lisp_boot_create_InitType(
     type->template = lisp_Value_alloc(state, state->Map);
 
     type->abstract = lisp_Value_alloc(state, state->Bool);
-    LISP_SET_BITS(type->abstract, lisp_bool, LISP_FALSE);
+    LISP_SET_DATA(type->abstract, lisp_bool, LISP_FALSE);
 
-    type->bits = lisp_Value_alloc(state, state->Bool);
-    LISP_SET_BITS(type->abstract, lisp_bool, LISP_FALSE);
+    type->bytes = lisp_Value_alloc(state, state->Bool);
+    LISP_SET_DATA(type->abstract, lisp_bool, LISP_FALSE);
 }
 
 static lisp_Value* lisp_boot_create_Type(
@@ -124,7 +128,7 @@ static lisp_Value* lisp_boot_create_AbstractType(lisp_State* state, lisp_Value* 
 
     return value;
 }
-static lisp_Value* lisp_boot_create_BitsType(lisp_State* state, lisp_Value* super, lisp_size size, lisp_char* ascii) {
+static lisp_Value* lisp_boot_create_BytesType(lisp_State* state, lisp_Value* super, lisp_size size, lisp_char* ascii) {
     lisp_Value* value = lisp_Value_alloc(state, state->Type);
     lisp_Type* type = (lisp_Type*) value->data;
 

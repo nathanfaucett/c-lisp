@@ -13,6 +13,7 @@ static void lisp_String_dealloc(lisp_State* state, lisp_Value* value);
 static void lisp_String_mark(lisp_Value* value);
 
 static lisp_Value* lisp_String_new_ascii(lisp_State* state, lisp_char* ascii);
+static lisp_char* lisp_String_to_ascii(lisp_String* string);
 
 static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b);
 

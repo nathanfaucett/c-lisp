@@ -30,7 +30,7 @@ static lisp_Value* lisp_String_new_ascii(lisp_State* state, lisp_char* ascii) {
 
     for (lisp_size i = 0, il = size; i < il; i++) {
         lisp_Value* value = lisp_Value_alloc(state, state->Char);
-        LISP_SET_BITS(value, lisp_u32, ascii[i]);
+        LISP_SET_DATA(value, lisp_u32, ascii[i]);
         chars[i] = value;
     }
 
@@ -38,6 +38,17 @@ static lisp_Value* lisp_String_new_ascii(lisp_State* state, lisp_char* ascii) {
     string->size = size;
 
     return value;
+}
+
+static lisp_char* lisp_String_to_ascii(lisp_String* string) {
+    lisp_char* ascii = (lisp_char*) malloc((string->size + 1) * sizeof(lisp_char));
+
+    for (lisp_size i = 0, il = string->size; i < il; i++) {
+        ascii[i] = (lisp_char) *((lisp_u32*) string->chars[i]->data);
+    }
+    ascii[string->size] = '\0';
+
+    return ascii;
 }
 
 static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
