@@ -4,59 +4,61 @@
 
 typedef struct lisp_State {
     struct lisp_Heap* heap;
+    struct lisp_Scope* scope;
 
-    struct lisp_Value* type;
-    struct lisp_Value* type_any;
-    struct lisp_Value* type_nil;
+    struct lisp_Value* Type;
 
-    struct lisp_Value* type_macro;
-    struct lisp_Value* type_function;
+    struct lisp_Value* Any;
+    struct lisp_Value* Nil;
 
-    struct lisp_Value* type_bool;
-    struct lisp_Value* type_char;
-    struct lisp_Value* type_string;
-    struct lisp_Value* type_symbol;
+    struct lisp_Value* Callable;
+    struct lisp_Value* Macro;
+    struct lisp_Value* Function;
 
-    struct lisp_Value* type_number;
+    struct lisp_Value* Char;
+    struct lisp_Value* String;
+    struct lisp_Value* Symbol;
 
-    struct lisp_Value* type_uint;
-    struct lisp_Value* type_uint8;
-    struct lisp_Value* type_uint16;
-    struct lisp_Value* type_uint32;
-    struct lisp_Value* type_uint64;
+    struct lisp_Value* Number;
+    struct lisp_Value* Real;
+    struct lisp_Value* AbstractFloat;
+    struct lisp_Value* Integer;
+    struct lisp_Value* Signed;
+    struct lisp_Value* Unsigned;
 
-    struct lisp_Value* type_int;
-    struct lisp_Value* type_int8;
-    struct lisp_Value* type_int16;
-    struct lisp_Value* type_int32;
-    struct lisp_Value* type_int64;
+    struct lisp_Value* Float16;
+    struct lisp_Value* Float32;
+    struct lisp_Value* Float64;
 
-    struct lisp_Value* type_float;
-    struct lisp_Value* type_float32;
-    struct lisp_Value* type_float64;
+    struct lisp_Value* UInt;
+    struct lisp_Value* UInt8;
+    struct lisp_Value* UInt16;
+    struct lisp_Value* UInt32;
+    struct lisp_Value* UInt64;
 
-    struct lisp_Value* type_list;
-    struct lisp_Value* type_vector;
-    struct lisp_Value* type_map;
+    struct lisp_Value* Int;
+    struct lisp_Value* Int8;
+    struct lisp_Value* Int16;
+    struct lisp_Value* Int32;
+    struct lisp_Value* Int64;
+
+    struct lisp_Value* Bool;
+
+    struct lisp_Value* Collection;
+    struct lisp_Value* Indexed;
+    struct lisp_Value* Keyed;
+
+    struct lisp_Value* Seq;
+    struct lisp_Value* Map;
 
     struct lisp_Value* nil;
-    struct lisp_Value* empty_list;
-    struct lisp_Value* empty_vector;
-    struct lisp_Value* empty_map;
 } lisp_State;
-
-
-static lisp_State* lisp_State_constructor(lisp_State* state);
-static void lisp_State_destructor(lisp_State* state);
 
 static lisp_State* lisp_State_new(void);
 static void lisp_State_delete(lisp_State* state);
 
-static void* lisp_State_alloc(lisp_State* state, size_t size);
+static void* lisp_State_alloc(lisp_State* state, lisp_size size);
 static void lisp_State_dealloc(lisp_State* state, void* value);
-
-static struct lisp_Value* lisp_State_eval_list(lisp_State*, struct lisp_Value*, lisp_Scope*);
-static struct lisp_Value* lisp_State_eval(lisp_State*, struct lisp_Value*, lisp_Scope*);
 
 
 #endif

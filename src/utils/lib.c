@@ -4,7 +4,7 @@
 
 #include "./char.c"
 #include "./conversions.c"
-#include "./cstring.c"
+#include "./string.c"
 #include "./MutList.c"
 #include "./MutMap.c"
 

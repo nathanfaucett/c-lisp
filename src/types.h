@@ -19,6 +19,8 @@ typedef unsigned long long int lisp_u64;
 typedef float lisp_f32;
 typedef double lisp_f64;
 
+typedef size_t lisp_size;
+
 
 #define LISP_TRUE ((lisp_bool)1)
 #define LISP_FALSE ((lisp_bool)0)

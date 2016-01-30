@@ -5,6 +5,7 @@
 #include "./utils/lib.c"
 #include "./core/lib.c"
 #include "./lang/lib.c"
+#include "./boot/lib.c"
 
 
 #endif

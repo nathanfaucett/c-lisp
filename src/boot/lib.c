@@ -1,0 +1,9 @@
+#ifndef __LISP_BOOT_LIB_C__
+#define __LISP_BOOT_LIB_C__
+
+
+#include "./boot.c"
+#include "./boot_core.c"
+
+
+#endif

@@ -14,6 +14,7 @@ struct lisp_Map;
 #include "./utils/lib.h"
 #include "./core/lib.h"
 #include "./lang/lib.h"
+#include "./boot/lib.h"
 
 
 #endif

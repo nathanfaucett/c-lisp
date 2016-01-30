@@ -20,12 +20,12 @@ static void lisp_MutMap_delete(lisp_MutMap* map) {
     free(map);
 }
 
-static lisp_u64 lisp_MutMap_size(lisp_MutMap* map) {
+static lisp_size lisp_MutMap_size(lisp_MutMap* map) {
     return map->entries->size / 2;
 }
 
-static lisp_u64 lisp_MutMap_index_of(lisp_MutMap* map, void* key) {
-    for (lisp_u64 i = 0, il = map->entries->size; i < il; i += 2) {
+static lisp_size lisp_MutMap_index_of(lisp_MutMap* map, void* key) {
+    for (lisp_size i = 0, il = map->entries->size; i < il; i += 2) {
         if (key == lisp_MutList_get(map->entries, i)) {
             return i + 1;
         }
@@ -38,7 +38,7 @@ static lisp_bool lisp_MutMap_has(lisp_MutMap* map, void* key) {
 }
 
 static void* lisp_MutMap_get(lisp_MutMap* map, void* key) {
-    lisp_u64 index = lisp_MutMap_index_of(map, key);
+    lisp_size index = lisp_MutMap_index_of(map, key);
 
     if (index != 0) {
         return lisp_MutList_get(map->entries, index - 1);
@@ -48,7 +48,7 @@ static void* lisp_MutMap_get(lisp_MutMap* map, void* key) {
 }
 
 static void lisp_MutMap_set(lisp_MutMap* map, void* key, void* value) {
-    lisp_u64 index = lisp_MutMap_index_of(map, key);
+    lisp_size index = lisp_MutMap_index_of(map, key);
 
     if (index != 0) {
         lisp_MutList_set(map->entries, index - 1, key);
@@ -60,7 +60,7 @@ static void lisp_MutMap_set(lisp_MutMap* map, void* key, void* value) {
 }
 
 static void lisp_MutMap_remove(lisp_MutMap* map, void* key) {
-    lisp_u64 index = lisp_MutMap_index_of(map, key);
+    lisp_size index = lisp_MutMap_index_of(map, key);
 
     if (index != 0) {
         lisp_MutList_remove(map->entries, index - 1);

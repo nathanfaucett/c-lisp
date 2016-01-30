@@ -5,19 +5,12 @@
 #include "./Value.c"
 #include "./Type.c"
 
-#include "./Number/lib.c"
-
-#include "./Any.c"
-#include "./Bool.c"
-#include "./Char.c"
-#include "./Function.c"
-#include "./List.c"
-#include "./Macro.c"
+#include "./Seq/lib.c"
 #include "./Map.c"
-#include "./Nil.c"
 #include "./String.c"
 #include "./Symbol.c"
-#include "./Vector.c"
+#include "./Function.c"
+#include "./Macro.c"
 
 
 #endif

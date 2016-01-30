@@ -5,22 +5,18 @@
 typedef struct lisp_Scope {
     struct lisp_State* state;
     struct lisp_Scope* parent;
-    lisp_MutMap* map;
+    struct lisp_Value* map;
 } lisp_Scope;
 
 
-static lisp_Scope* lisp_Scope_constructor(struct lisp_State*, lisp_Scope*, lisp_Scope*);
-static void lisp_Scope_destructor(lisp_Scope*);
+static lisp_Scope* lisp_Scope_alloc(struct lisp_State* state, lisp_Scope*);
+static void lisp_Scope_dealloc(lisp_Scope*);
 
-static lisp_Scope* lisp_Scope_new(struct lisp_State*, lisp_Scope*);
-static void lisp_Scope_delete(lisp_Scope*);
+static lisp_Scope* lisp_Scope_get_scope(lisp_Scope* scope, struct lisp_Value* key);
+static struct lisp_Value* lisp_Scope_get(lisp_Scope* scope, struct lisp_Value* key);
 
-
-static lisp_Scope* lisp_Scope_get_scope(lisp_Scope*, struct lisp_Value*);
-static struct lisp_Value* lisp_Scope_get(lisp_Scope*, struct lisp_Value*);
-
-static void lisp_Scope_def(lisp_Scope*, struct lisp_Value*, struct lisp_Value*);
-static void lisp_Scope_swap(lisp_Scope*, struct lisp_Value*, struct lisp_Value*);
+static void lisp_Scope_def(lisp_Scope* scope, struct lisp_Value* key, struct lisp_Value* value);
+static void lisp_Scope_swap(lisp_Scope* scope, struct lisp_Value* key, struct lisp_Value* value);
 
 
 #endif
