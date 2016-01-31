@@ -6,6 +6,7 @@ static void lisp_boot_core(lisp_State* state) {
     state->Callable = lisp_boot_create_AbstractType(state, state->Any, "Callable");
     state->Function = lisp_boot_create_Type(state, state->Callable, sizeof(lisp_Function), "Function", lisp_Function_alloc, NULL, lisp_Function_mark);
     state->Macro = lisp_boot_create_Type(state, state->Callable, sizeof(lisp_Macro), "Macro", lisp_Macro_alloc, NULL, lisp_Macro_mark);
+    state->Native = lisp_boot_create_Type(state, state->Callable, sizeof(lisp_Native), "Native", lisp_Native_alloc, NULL, lisp_Native_mark);
 
     state->Collection = lisp_boot_create_AbstractType(state, state->Any, "Collection");
     state->Indexed = lisp_boot_create_AbstractType(state, state->Collection, "Indexed");
@@ -48,8 +49,14 @@ static void lisp_boot_core(lisp_State* state) {
         state->Int = state->Int32;
     }
 
+    state->true = lisp_Value_alloc(state, state->Bool);
+    LISP_SET_DATA(state->true, lisp_bool, LISP_TRUE);
+    state->false = lisp_Value_alloc(state, state->Bool);
+    LISP_SET_DATA(state->false, lisp_bool, LISP_FALSE);
+
     state->nil = lisp_Value_alloc(state, state->Nil);
     state->empty_list = lisp_Value_alloc(state, state->List);
+    state->empty_string = lisp_Value_alloc(state, state->String);
 
     state->scope = lisp_Scope_alloc(state, NULL);
 
@@ -100,6 +107,10 @@ static void lisp_boot_core(lisp_State* state) {
     lisp_Scope_def(state->scope, ((lisp_Type*) state->MutableMap->data)->name, state->MutableMap);
 
     lisp_Scope_def(state->scope, lisp_Symbol_new_ascii(state, "nil"), state->nil);
+    lisp_Scope_def(state->scope, lisp_Symbol_new_ascii(state, "true"), state->true);
+    lisp_Scope_def(state->scope, lisp_Symbol_new_ascii(state, "false"), state->false);
+
+    lisp_Scope_def(state->scope, lisp_Symbol_new_ascii(state, "global"), state->scope->map);
 }
 
 

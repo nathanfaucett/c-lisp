@@ -4,6 +4,7 @@
 
 #include "./boot.h"
 #include "./boot_core.h"
+#include "./boot_lang.h"
 
 
 #endif

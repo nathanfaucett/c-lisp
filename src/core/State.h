@@ -14,6 +14,7 @@ typedef struct lisp_State {
     struct lisp_Value* Callable;
     struct lisp_Value* Macro;
     struct lisp_Value* Function;
+    struct lisp_Value* Native;
 
     struct lisp_Value* Char;
     struct lisp_Value* String;
@@ -54,7 +55,10 @@ typedef struct lisp_State {
     struct lisp_Value* MutableMap;
 
     struct lisp_Value* nil;
+    struct lisp_Value* true;
+    struct lisp_Value* false;
     struct lisp_Value* empty_list;
+    struct lisp_Value* empty_string;
 } lisp_State;
 
 static lisp_State* lisp_State_new(void);

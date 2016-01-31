@@ -6,7 +6,6 @@ static void lisp_Macro_alloc(lisp_State* state, lisp_Value* value) {
     lisp_Macro* macro = (lisp_Macro*) value->data;
     macro->name = NULL;
     macro->dispatches = NULL;
-    macro->native = NULL;
 }
 static void lisp_Macro_mark(lisp_Value* value) {
     lisp_Macro* macro = (lisp_Macro*) value->data;
@@ -20,11 +19,7 @@ static void lisp_Macro_mark(lisp_Value* value) {
 }
 
 static lisp_Value* lisp_Macro_call(lisp_State* state, lisp_Macro* macro, lisp_Value* args, lisp_Scope* scope) {
-    if (macro->native != NULL) {
-        return macro->native(state, args);
-    } else {
-        return args;
-    }
+    return args;
 }
 
 

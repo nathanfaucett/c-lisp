@@ -78,23 +78,35 @@ static lisp_Value* lisp_Value_apply(lisp_State* state, lisp_Value* object, lisp_
 
 static lisp_bool lisp_Value_equal(lisp_State* state, lisp_Value* a, lisp_Value* b) {
     if (a->type == b->type) {
-        if (a->type == state->Nil) {
-            return LISP_TRUE;
-        } else if (a->type == state->MutableMap) {
+        lisp_Value* type = a->type;
+
+        if (type == state->Symbol) {
+            return lisp_Symbol_equal((lisp_Symbol*) a->data, (lisp_Symbol*) a->data);
+        } else if (type == state->String) {
+            return lisp_String_equal((lisp_String*) a->data, (lisp_String*) b->data);
+        } else if (type == state->List) {
+            return lisp_List_equal(state, (lisp_List*) a->data, (lisp_List*) b->data);
+        } else if (type == state->MutableMap) {
             return lisp_MutableMap_equal(state, (lisp_MutableMap*) a->data, (lisp_MutableMap*) b->data);
-        } else if (a->type == state->Seq) {
+        } else if (type == state->Seq) {
             return lisp_Seq_equal(state, (lisp_Seq*) a->data, (lisp_Seq*) b->data);
         } else {
             lisp_Value* equal = lisp_Symbol_new_ascii(state, "equal");
             lisp_Value* function = lisp_Value_find(state, a, equal);
             lisp_Value_dealloc(state, equal);
 
-            if (function->type == state->Function) {
+            if (function->type == state->Function || function->type == state->Native) {
                 lisp_Value* args = lisp_Value_alloc(state, state->Seq);
                 lisp_Seq* seq = (lisp_Seq*) args->data;
                 lisp_Seq_push(seq, a);
                 lisp_Seq_push(seq, b);
-                lisp_Value* value = lisp_Function_call(state, (lisp_Function*) function->data, args, NULL);
+
+                lisp_Value* value;
+                if (function->type == state->Function) {
+                    value = lisp_Function_call(state, (lisp_Function*) function->data, lisp_List_from_seq(state, seq), NULL);
+                } else {
+                    value = lisp_Native_call(state, (lisp_Native*) function->data, lisp_List_from_seq(state, seq), NULL);
+                }
                 lisp_Value_dealloc(state, args);
 
                 if (value->type != state->Bool) {
@@ -112,6 +124,33 @@ static lisp_bool lisp_Value_equal(lisp_State* state, lisp_Value* a, lisp_Value* 
         }
     } else {
         return LISP_FALSE;
+    }
+}
+static lisp_Value* lisp_Value_to_string(lisp_State* state, lisp_Value* value) {
+    lisp_Value* to_string = lisp_Symbol_new_ascii(state, "to-string");
+    lisp_Value* function = lisp_Value_find(state, value, to_string);
+    lisp_Value_dealloc(state, to_string);
+
+    if (function->type == state->Function || function->type == state->Native) {
+        lisp_Value* args = lisp_Value_alloc(state, state->Seq);
+        lisp_Seq* seq = (lisp_Seq*) args->data;
+        lisp_Seq_push(seq, value);
+
+        lisp_Value* value;
+        if (function->type == state->Function) {
+            value = lisp_Function_call(state, (lisp_Function*) function->data, lisp_List_from_seq(state, seq), NULL);
+        } else {
+            value = lisp_Native_call(state, (lisp_Native*) function->data, lisp_List_from_seq(state, seq), NULL);
+        }
+        lisp_Value_dealloc(state, args);
+
+        if (value->type != state->String) {
+            return state->empty_string;
+        } else {
+            return value;
+        }
+    } else {
+        return state->empty_string;
     }
 }
 

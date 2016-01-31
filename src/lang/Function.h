@@ -5,7 +5,6 @@
 typedef struct lisp_Function {
     lisp_Value* name;
     lisp_Value* dispatches;
-    lisp_Value* (*native)(lisp_State*, lisp_Value*);
 } lisp_Function;
 
 

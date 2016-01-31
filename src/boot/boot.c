@@ -36,6 +36,7 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_create_InitType(state, state->ListNode, "ListNode", LISP_FALSE, LISP_FALSE);
 
     lisp_boot_core(state);
+    lisp_boot_lang(state);
 }
 
 static lisp_Value* lisp_boot_create_MainType(lisp_State* state) {
@@ -146,6 +147,11 @@ static lisp_Value* lisp_boot_create_BytesType(lisp_State* state, lisp_Value* sup
     type->mark = NULL;
 
     return value;
+}
+
+static void lisp_boot_defmethod(lisp_State* state, lisp_Value* prototype, lisp_char* ascii, lisp_Value* (*function)(lisp_State*, lisp_Value*, lisp_Scope* scope)) {
+    lisp_Value* name = lisp_Symbol_new_ascii(state, ascii);
+    lisp_MutableMap_set(state, (lisp_MutableMap*) prototype->data, name, lisp_Native_new(state, name, function));
 }
 
 

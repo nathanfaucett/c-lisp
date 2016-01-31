@@ -39,4 +39,6 @@ static lisp_Value* lisp_boot_create_Type(
 static lisp_Value* lisp_boot_create_AbstractType(lisp_State* state, lisp_Value* super, lisp_char* ascii);
 static lisp_Value* lisp_boot_create_BytesType(lisp_State* state, lisp_Value* super, lisp_size size, lisp_char* ascii);
 
+static void lisp_boot_defmethod(lisp_State* state, lisp_Value* prototype, lisp_char* ascii, lisp_Value* (*function)(lisp_State*, lisp_Value*, lisp_Scope* scope));
+
 #endif

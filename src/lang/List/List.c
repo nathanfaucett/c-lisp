@@ -17,6 +17,48 @@ static void lisp_List_mark(lisp_Value* value) {
     }
 }
 
+static lisp_Value* lisp_List_from_seq(lisp_State* state, lisp_Seq* seq) {
+    lisp_size size = seq->size;
+
+    if (size != 0) {
+        lisp_Value* new_list_value = lisp_Value_alloc(state, state->List);
+        lisp_List* new_list = (lisp_List*) new_list_value->data;
+
+        lisp_Value* root_value = lisp_Value_alloc(state, state->ListNode);
+        lisp_ListNode* root = (lisp_ListNode*) root_value->data;
+
+        lisp_SeqNode* node = seq->root;
+        root->value = node->value;
+
+        lisp_Value* tail_value = root_value;
+        lisp_ListNode* tail = NULL;
+
+        lisp_Value* tmp_value = NULL;
+        lisp_ListNode* tmp = NULL;
+
+        node = node->next;
+        while (node != NULL) {
+            tmp_value = lisp_Value_alloc(state, state->ListNode);
+            tmp = (lisp_ListNode*) tmp_value->data;
+            tmp->value = node->value;
+
+            tail = (lisp_ListNode*) tail_value->data;
+            tail->next = tmp_value;
+            tail_value = tmp_value;
+
+            node = node->next;
+        }
+
+        new_list->root = root_value;
+        new_list->tail = tail_value;
+        new_list->size = size;
+
+        return new_list_value;
+    } else {
+        return state->empty_list;
+    }
+}
+
 static lisp_Value* lisp_List_find_node(lisp_List* list, lisp_size index) {
     if (index == 0) {
         return list->root;
@@ -63,8 +105,8 @@ static lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size i
         if (lisp_Value_equal(state, node->value, value)) {
             return list->self;
         } else {
-            lisp_Value* new_value = lisp_Value_alloc(state, state->List);
-            lisp_List* new_list = (lisp_List*) new_value->data;
+            lisp_Value* new_list_value = lisp_Value_alloc(state, state->List);
+            lisp_List* new_list = (lisp_List*) new_list_value->data;
 
             lisp_Value* new_node_value = lisp_Value_alloc(state, state->ListNode);
             lisp_ListNode* new_node = (lisp_ListNode*) new_node_value->data;
@@ -76,7 +118,7 @@ static lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size i
             new_list->tail = node->next == NULL ? new_node_value : list->tail;
             new_list->size = list->size;
 
-            return new_value;
+            return new_list_value;
         }
     } else {
         return list->self;

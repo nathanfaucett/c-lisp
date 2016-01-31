@@ -6,7 +6,6 @@ static void lisp_Function_alloc(lisp_State* state, lisp_Value* value) {
     lisp_Function* function = (lisp_Function*) value->data;
     function->name = NULL;
     function->dispatches = NULL;
-    function->native = NULL;
 }
 static void lisp_Function_mark(lisp_Value* value) {
     lisp_Function* function = (lisp_Function*) value->data;
@@ -20,11 +19,7 @@ static void lisp_Function_mark(lisp_Value* value) {
 }
 
 static lisp_Value* lisp_Function_call(lisp_State* state, lisp_Function* function, lisp_Value* args, lisp_Scope* scope) {
-    if (function->native != NULL) {
-        return function->native(state, args);
-    } else {
-        return args;
-    }
+    return args;
 }
 
 
