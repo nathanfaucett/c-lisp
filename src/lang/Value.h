@@ -15,10 +15,6 @@ static void lisp_Value_mark(lisp_Value* value);
 
 static lisp_Value* lisp_Value_find(lisp_State* state, lisp_Value* object, lisp_Value* key);
 
-static lisp_Value* lisp_Value_apply(lisp_State* state, lisp_Value* object, lisp_Value* key, lisp_Value* args);
-static lisp_Value* lisp_Value_call(lisp_State* state, lisp_Value* object, lisp_Value* key);
-static lisp_Value* lisp_Value_call_arg1(lisp_State* state, lisp_Value* object, lisp_Value* key, lisp_Value* a0);
-
 static lisp_bool lisp_Value_equal(lisp_State* state, lisp_Value* a, lisp_Value* b);
 
 

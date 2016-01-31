@@ -13,8 +13,11 @@ static void lisp_boot(lisp_State* state) {
     state->String = lisp_boot_create_BootType(state, NULL, sizeof(lisp_String), lisp_String_alloc, lisp_String_dealloc, lisp_String_mark);
     state->Symbol = lisp_boot_create_BootType(state, state->Any, sizeof(lisp_Symbol), lisp_Symbol_alloc, NULL, lisp_Symbol_mark);
 
-    state->Map = lisp_boot_create_BootType(state, NULL, sizeof(lisp_Map), lisp_Map_alloc, lisp_Map_dealloc, lisp_Map_mark);
+    state->MutableMap = lisp_boot_create_BootType(state, NULL, sizeof(lisp_MutableMap), lisp_MutableMap_alloc, lisp_MutableMap_dealloc, lisp_MutableMap_mark);
     state->Seq = lisp_boot_create_BootType(state, NULL, sizeof(lisp_Seq), lisp_Seq_alloc, lisp_Seq_dealloc, lisp_Seq_mark);
+
+    state->List = lisp_boot_create_BootType(state, NULL, sizeof(lisp_List), lisp_List_alloc, NULL, lisp_List_mark);
+    state->ListNode = lisp_boot_create_BootType(state, NULL, sizeof(lisp_ListNode), lisp_ListNode_alloc, NULL, lisp_ListNode_mark);
 
     lisp_boot_create_InitType(state, state->Type, "Type", LISP_FALSE, LISP_FALSE);
 
@@ -26,8 +29,11 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_create_InitType(state, state->String, "String", LISP_FALSE, LISP_FALSE);
     lisp_boot_create_InitType(state, state->Symbol, "Symbol", LISP_FALSE, LISP_FALSE);
 
-    lisp_boot_create_InitType(state, state->Map, "Map", LISP_FALSE, LISP_FALSE);
+    lisp_boot_create_InitType(state, state->MutableMap, "Map", LISP_FALSE, LISP_FALSE);
     lisp_boot_create_InitType(state, state->Seq, "Seq", LISP_FALSE, LISP_FALSE);
+
+    lisp_boot_create_InitType(state, state->List, "List", LISP_FALSE, LISP_FALSE);
+    lisp_boot_create_InitType(state, state->ListNode, "ListNode", LISP_FALSE, LISP_FALSE);
 
     lisp_boot_core(state);
 }
@@ -82,8 +88,8 @@ static void lisp_boot_create_InitType(
     type->name = lisp_Symbol_new_ascii(state, ascii);
     type->attributes = lisp_Value_alloc(state, state->Seq);
     type->types = lisp_Value_alloc(state, state->Seq);
-    type->prototype = lisp_Value_alloc(state, state->Map);
-    type->template = lisp_Value_alloc(state, state->Map);
+    type->prototype = lisp_Value_alloc(state, state->MutableMap);
+    type->template = lisp_Value_alloc(state, state->MutableMap);
 
     type->abstract = lisp_Value_alloc(state, state->Bool);
     LISP_SET_DATA(type->abstract, lisp_bool, LISP_FALSE);

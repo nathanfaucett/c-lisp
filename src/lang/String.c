@@ -9,7 +9,9 @@ static void lisp_String_alloc(lisp_State* state, lisp_Value* value) {
 }
 static void lisp_String_dealloc(lisp_State* state, lisp_Value* value) {
     lisp_String* string = (lisp_String*) value->data;
-    free(string->chars);
+    if (string->chars != NULL) {
+        free(string->chars);
+    }
 }
 static void lisp_String_mark(lisp_Value* value) {
     lisp_String* string = (lisp_String*) value->data;
@@ -49,6 +51,26 @@ static lisp_char* lisp_String_to_ascii(lisp_String* string) {
     ascii[string->size] = '\0';
 
     return ascii;
+}
+
+static lisp_Value* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
+    lisp_Value* value = lisp_Value_alloc(state, state->String);
+    lisp_String* string = (lisp_String*) value->data;
+
+    lisp_size size =  a->size + b->size;
+    lisp_Value** chars = (lisp_Value**) malloc(size * sizeof(lisp_Value*));
+
+    for (lisp_size i = 0, il = a->size; i < il; i++) {
+        chars[i] = a->chars[i];
+    }
+    for (lisp_size j = a->size, k = 0, jl = size; j < jl; j++, k++) {
+        chars[j] = b->chars[k];
+    }
+
+    string->size = size;
+    string->chars = chars;
+
+    return value;
 }
 
 static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {

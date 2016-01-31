@@ -12,8 +12,10 @@ static void lisp_boot_core(lisp_State* state) {
     state->Keyed = lisp_boot_create_AbstractType(state, state->Collection, "Keyed");
 
     ((lisp_Type*) state->String->data)->super = state->Indexed;
+    ((lisp_Type*) state->List->data)->super = state->Indexed;
+    ((lisp_Type*) state->ListNode->data)->super = state->Any;
     ((lisp_Type*) state->Seq->data)->super = state->Indexed;
-    ((lisp_Type*) state->Map->data)->super = state->Keyed;
+    ((lisp_Type*) state->MutableMap->data)->super = state->Keyed;
 
     state->Number = lisp_boot_create_AbstractType(state, state->Any, "Number");
     state->Real = lisp_boot_create_AbstractType(state, state->Number, "Real");
@@ -47,11 +49,13 @@ static void lisp_boot_core(lisp_State* state) {
     }
 
     state->nil = lisp_Value_alloc(state, state->Nil);
+    state->empty_list = lisp_Value_alloc(state, state->List);
+
     state->scope = lisp_Scope_alloc(state, NULL);
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Type->data)->name, state->Type);
 
-    lisp_Scope_def(state->scope, ((lisp_Type*) state->Any->data)->name, state->Any);/*
+    lisp_Scope_def(state->scope, ((lisp_Type*) state->Any->data)->name, state->Any);
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Nil->data)->name, state->Nil);
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Callable->data)->name, state->Callable);
@@ -92,10 +96,10 @@ static void lisp_boot_core(lisp_State* state) {
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Keyed->data)->name, state->Keyed);
 
     lisp_Scope_def(state->scope, ((lisp_Type*) state->Seq->data)->name, state->Seq);
-    lisp_Scope_def(state->scope, ((lisp_Type*) state->Map->data)->name, state->Map);
+    lisp_Scope_def(state->scope, ((lisp_Type*) state->List->data)->name, state->List);
+    lisp_Scope_def(state->scope, ((lisp_Type*) state->MutableMap->data)->name, state->MutableMap);
 
-    lisp_Scope_def(state->scope, ((lisp_Type*) state->Nil->data)->name, state->nil);
-    */
+    lisp_Scope_def(state->scope, lisp_Symbol_new_ascii(state, "nil"), state->nil);
 }
 
 

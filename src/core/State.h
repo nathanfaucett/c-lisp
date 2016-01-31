@@ -48,10 +48,13 @@ typedef struct lisp_State {
     struct lisp_Value* Indexed;
     struct lisp_Value* Keyed;
 
+    struct lisp_Value* List;
+    struct lisp_Value* ListNode;
     struct lisp_Value* Seq;
-    struct lisp_Value* Map;
+    struct lisp_Value* MutableMap;
 
     struct lisp_Value* nil;
+    struct lisp_Value* empty_list;
 } lisp_State;
 
 static lisp_State* lisp_State_new(void);

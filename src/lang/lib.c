@@ -5,12 +5,13 @@
 #include "./Value.c"
 #include "./Type.c"
 
+#include "./List/lib.c"
 #include "./Seq/lib.c"
-#include "./Map.c"
-#include "./String.c"
-#include "./Symbol.c"
 #include "./Function.c"
 #include "./Macro.c"
+#include "./MutableMap.c"
+#include "./String.c"
+#include "./Symbol.c"
 
 
 #endif
