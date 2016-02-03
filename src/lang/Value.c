@@ -61,6 +61,50 @@ static void lisp_Value_mark(lisp_Value* value) {
     }
 }
 
+static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp_Value* type, lisp_Value* key) {
+    lisp_size index = lisp_Array_index_of(state, (lisp_Array*) type->values->data, key);
+
+    if (index == 0) {
+        lisp_Value* super = lisp_Array_get(state, (lisp_Array*) type->values->data, LISP_IDX_TYPE_SUPER);
+
+        if (super != state->nil) {
+            return lisp_Value_lookup(state, object, super, key);
+        } else {
+            return state->nil;
+        }
+    } else {
+        return lisp_Array_get(state, (lisp_Array*) object->values->data, index);
+    }
+}
+
+static lisp_Value* lisp_Value_call1(lisp_State* state, lisp_Value* object, lisp_Value* key, lisp_Value* a0, lisp_Scope* scope) {
+    lisp_Value* fn = lisp_Value_lookup(state, object, object->type, key);
+
+    if (lisp_Value_inherits(state, fn->type, state->Callable)) {
+        lisp_Value* args = lisp_Value_alloc(state, state->Array);
+        lisp_Array* array = (lisp_Array*) args->data;
+        lisp_Array_push(array, object);
+        lisp_Array_push(array, a0);
+        return lisp_Value_call_function(state, fn, args, scope);
+    } else {
+        return state->nil;
+    }
+}
+
+static lisp_bool lisp_Value_inherits(lisp_State* state, lisp_Value* a, lisp_Value* b) {
+    if (a == b) {
+        return LISP_TRUE;
+    } else {
+        lisp_Value* super = lisp_Array_get(state, (lisp_Array*) a->values->data, LISP_IDX_TYPE_SUPER);
+
+        if (super != state->nil) {
+            return lisp_Value_inherits(state, super, b);
+        } else {
+            return LISP_FALSE;
+        }
+    }
+}
+
 static lisp_bool lisp_Value_equal(lisp_State* state, lisp_Value* a, lisp_Value* b) {
     return a == b;
 }

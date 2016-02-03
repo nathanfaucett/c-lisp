@@ -199,8 +199,69 @@ static lisp_bool lisp_Array_equal(lisp_State* state, lisp_Array* a, lisp_Array* 
     }
 }
 
-static void lisp_Array_boot(lisp_State* state) {
 
+static lisp_Value* lisp_Array_export_index_of(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+
+static lisp_Value* lisp_Array_export_get(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    lisp_Value* self;
+    lisp_Value* index;
+
+    if (args->type == state->Array) {
+        self = lisp_Array_get(state, (lisp_Array*) args->data, 0);
+        index = lisp_Array_get(state, (lisp_Array*) args->data, 1);
+    } else {
+        lisp_Value* get = lisp_Symbol_from_ascii(state, "get");
+        self = lisp_Value_call1(state, args, get, lisp_Number_UInt(state, 0), scope);
+        index = lisp_Value_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
+    }
+
+    return state->false;
+}
+static lisp_Value* lisp_Array_export_set(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+
+static lisp_Value* lisp_Array_export_push(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+static lisp_Value* lisp_Array_export_unshift(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+
+static lisp_Value* lisp_Array_export_pop(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+static lisp_Value* lisp_Array_export_shift(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+static lisp_Value* lisp_Array_export_remove(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return args;
+}
+
+static lisp_Value* lisp_Array_export_to_string(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    return lisp_String_from_ascii(state, "(Array)");
+}
+static lisp_Value* lisp_Array_export_equal(lisp_State* state, lisp_Value* args, lisp_Scope* scope) {
+    lisp_Value* get = lisp_Symbol_from_ascii(state, "get");
+    lisp_Value* self = lisp_Value_call1(state, args, get, lisp_Number_UInt(state, 0), scope);
+    lisp_Value* other = lisp_Value_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
+
+    if (self->type == state->Array && other->type == state->Array) {
+        if (lisp_Array_equal(state, (lisp_Array*) self->data, (lisp_Array*) other->data)) {
+            return state->true;
+        }
+    }
+
+    return state->false;
+}
+
+static void lisp_Array_boot(lisp_State* state) {
+    /*
+    lisp_Value* Array = state->Array;
+    lisp_Map* prototype = (lisp_Map*) lisp_Array_get(state, (lisp_Array*) Array->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
+    */
 }
 
 

@@ -29,6 +29,22 @@ static void lisp_Array_remove(lisp_Array* array, lisp_size index);
 
 static lisp_bool lisp_Array_equal(lisp_State* state, lisp_Array* a, lisp_Array* b);
 
+
+static lisp_Value* lisp_Array_export_index_of(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+
+static lisp_Value* lisp_Array_export_get(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+static lisp_Value* lisp_Array_export_set(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+
+static lisp_Value* lisp_Array_export_push(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+static lisp_Value* lisp_Array_export_unshift(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+
+static lisp_Value* lisp_Array_export_pop(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+static lisp_Value* lisp_Array_export_shift(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+static lisp_Value* lisp_Array_export_remove(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+
+static lisp_Value* lisp_Array_export_to_string(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+static lisp_Value* lisp_Array_export_equal(lisp_State* state, lisp_Value* args, lisp_Scope* scope);
+
 static void lisp_Array_boot(lisp_State* state);
 
 
