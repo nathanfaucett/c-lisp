@@ -24,6 +24,8 @@ static void lisp_Value_mark(lisp_Value* value);
 
 static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp_Value* type, lisp_Value* key);
 
+static lisp_Value* lisp_Value_function_call(lisp_State* state, lisp_Value* fn, lisp_Value* args, lisp_Scope* scope);
+
 static lisp_Value* lisp_Value_call1(lisp_State* state, lisp_Value* object, lisp_Value* key, lisp_Value* a0, lisp_Scope* scope);
 
 static lisp_bool lisp_Value_inherits(lisp_State* state, lisp_Value* a, lisp_Value* b);

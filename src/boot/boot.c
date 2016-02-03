@@ -50,6 +50,7 @@ static void lisp_boot(lisp_State* state) {
 
     lisp_Annotation_boot(state);
     lisp_Symbol_boot(state);
+    lisp_Native_boot(state);
 }
 
 static void lisp_boot_MainType(lisp_State* state) {

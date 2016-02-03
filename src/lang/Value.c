@@ -77,6 +77,20 @@ static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp
     }
 }
 
+static lisp_Value* lisp_Value_function_call(lisp_State* state, lisp_Value* fn, lisp_Value* args, lisp_Scope* scope) {
+    lisp_Value* type = fn->type;
+
+    if (type == state->Function) {
+        return lisp_Function_call(state, fn, args, scope);
+    } else if (type == state->Macro) {
+        return lisp_Macro_call(state, fn, args, scope);
+    } else if (type == state->Native) {
+        return lisp_Native_call(state, fn, args, scope);
+    } else {
+        return lisp_Value_call1(state, fn, lisp_Symbol_from_ascii(state, "call"), args, scope);
+    }
+}
+
 static lisp_Value* lisp_Value_call1(lisp_State* state, lisp_Value* object, lisp_Value* key, lisp_Value* a0, lisp_Scope* scope) {
     lisp_Value* fn = lisp_Value_lookup(state, object, object->type, key);
 
@@ -85,7 +99,7 @@ static lisp_Value* lisp_Value_call1(lisp_State* state, lisp_Value* object, lisp_
         lisp_Array* array = (lisp_Array*) args->data;
         lisp_Array_push(array, object);
         lisp_Array_push(array, a0);
-        return lisp_Value_call_function(state, fn, args, scope);
+        return lisp_Value_function_call(state, fn, args, scope);
     } else {
         return state->nil;
     }

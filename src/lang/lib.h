@@ -5,6 +5,7 @@
 #include "./Value.h"
 
 #include "./Array/lib.h"
+#include "./Function/lib.h"
 #include "./Number/lib.h"
 #include "./Annotation.h"
 #include "./Char.h"

@@ -5,6 +5,7 @@
 #include "./Value.c"
 
 #include "./Array/lib.c"
+#include "./Function/lib.c"
 #include "./Number/lib.c"
 #include "./Annotation.c"
 #include "./Char.c"
