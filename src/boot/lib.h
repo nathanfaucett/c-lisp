@@ -2,9 +2,8 @@
 #define __LISP_BOOT_LIB_H__
 
 
+#include "./special_forms/lib.h"
 #include "./boot.h"
-#include "./boot_core.h"
-#include "./boot_lang.h"
 
 
 #endif

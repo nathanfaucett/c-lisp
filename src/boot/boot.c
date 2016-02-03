@@ -3,156 +3,153 @@
 
 
 static void lisp_boot(lisp_State* state) {
-    state->Type = lisp_boot_create_MainType(state);
+    lisp_boot_MainType(state);
 
-    state->Any = lisp_boot_create_BootType(state, NULL, 0, NULL, NULL, NULL);
-    state->Nil = lisp_boot_create_BootType(state, state->Any, 0, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Any, state->nil, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
 
-    state->Bool = lisp_boot_create_BootType(state, state->Any, 1, NULL, NULL, NULL);
-    state->Char = lisp_boot_create_BootType(state, state->Any, 4, NULL, NULL, NULL);
-    state->String = lisp_boot_create_BootType(state, NULL, sizeof(lisp_String), lisp_String_alloc, lisp_String_dealloc, lisp_String_mark);
-    state->Symbol = lisp_boot_create_BootType(state, state->Any, sizeof(lisp_Symbol), lisp_Symbol_alloc, NULL, lisp_Symbol_mark);
+    lisp_boot_Type(state, state->Nil, state->Any, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Annotation, state->Any, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
 
-    state->MutableMap = lisp_boot_create_BootType(state, NULL, sizeof(lisp_MutableMap), lisp_MutableMap_alloc, lisp_MutableMap_dealloc, lisp_MutableMap_mark);
-    state->Seq = lisp_boot_create_BootType(state, NULL, sizeof(lisp_Seq), lisp_Seq_alloc, lisp_Seq_dealloc, lisp_Seq_mark);
+    lisp_boot_Type(state, state->Collection, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Indexed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Keyed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
 
-    state->List = lisp_boot_create_BootType(state, NULL, sizeof(lisp_List), lisp_List_alloc, NULL, lisp_List_mark);
-    state->ListNode = lisp_boot_create_BootType(state, NULL, sizeof(lisp_ListNode), lisp_ListNode_alloc, NULL, lisp_ListNode_mark);
+    lisp_boot_Type(state, state->Array, state->Indexed, sizeof(lisp_Array), 0, LISP_FALSE, LISP_FALSE, lisp_Array_alloc, lisp_Array_dealloc, lisp_Array_mark);
+    lisp_boot_Type(state, state->Map, state->Keyed, sizeof(lisp_Map), 0, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
 
-    lisp_boot_create_InitType(state, state->Type, "Type", LISP_FALSE, LISP_FALSE);
+    lisp_boot_Type(state, state->Callable, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Native, state->Callable, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Function, state->Callable, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Macro, state->Callable, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
 
-    lisp_boot_create_InitType(state, state->Any, "Any", LISP_TRUE, LISP_FALSE);
-    lisp_boot_create_InitType(state, state->Nil, "Nil", LISP_FALSE, LISP_FALSE);
+    lisp_boot_Type(state, state->Char, state->Any, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->String, state->Indexed, sizeof(lisp_String), 0, LISP_FALSE, LISP_FALSE, lisp_String_alloc, lisp_String_dealloc, lisp_String_mark);
+    lisp_boot_Type(state, state->Symbol, state->Any, 0, 1, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
 
-    lisp_boot_create_InitType(state, state->Bool, "Bool", LISP_FALSE, LISP_TRUE);
-    lisp_boot_create_InitType(state, state->Char, "Char", LISP_FALSE, LISP_TRUE);
-    lisp_boot_create_InitType(state, state->String, "String", LISP_FALSE, LISP_FALSE);
-    lisp_boot_create_InitType(state, state->Symbol, "Symbol", LISP_FALSE, LISP_FALSE);
+    lisp_boot_Type(state, state->Number, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Real, state->Number, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Float, state->Real, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Integer, state->Real, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Signed, state->Integer, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Unsigned, state->Integer, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
 
-    lisp_boot_create_InitType(state, state->MutableMap, "Map", LISP_FALSE, LISP_FALSE);
-    lisp_boot_create_InitType(state, state->Seq, "Seq", LISP_FALSE, LISP_FALSE);
+    lisp_boot_Type(state, state->Float32, state->Float, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Float64, state->Float, 8, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
 
-    lisp_boot_create_InitType(state, state->List, "List", LISP_FALSE, LISP_FALSE);
-    lisp_boot_create_InitType(state, state->ListNode, "ListNode", LISP_FALSE, LISP_FALSE);
+    lisp_boot_Type(state, state->UInt8, state->Unsigned, 1, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->UInt16, state->Unsigned, 2, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->UInt32, state->Unsigned, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->UInt64, state->Unsigned, 8, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
 
-    lisp_boot_core(state);
-    lisp_boot_lang(state);
+    lisp_boot_Type(state, state->Int8, state->Signed, 1, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Int16, state->Signed, 2, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Int32, state->Signed, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->Int64, state->Signed, 8, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+
+    lisp_boot_Type(state, state->Bool, state->Signed, 1, 0, LISP_FALSE, LISP_TRUE, NULL, NULL, NULL);
+
+    lisp_Annotation_boot(state);
+    lisp_Symbol_boot(state);
 }
 
-static lisp_Value* lisp_boot_create_MainType(lisp_State* state) {
-    lisp_size size = sizeof(lisp_Type);
-    lisp_Type* type = (lisp_Type*) malloc(size);
-    lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
+static void lisp_boot_MainType(lisp_State* state) {
+    lisp_Value* Type = state->Type;
+    lisp_Type* data = (lisp_Type*) Type->data;
 
-    type->size = size;
-    type->super = NULL;
-    type->alloc = NULL;
-    type->dealloc = NULL;
-    type->mark = NULL;
+    data->alloc = NULL;
+    data->dealloc = NULL;
+    data->mark = NULL;
 
-    value->type = value;
-    value->data = type;
+    lisp_Value* values = lisp_boot_new_array(state);
+    lisp_Array* values_array = (lisp_Array*) values->data;
+    lisp_Array_set_size(state, values_array, LISP_TYPE_SIZE);
 
-    return value;
+    lisp_Value* size_value = lisp_boot_new_size(state, state->UInt, sizeof(lisp_size));
+    LISP_SET_DATA(size_value, lisp_size, sizeof(lisp_Type));
+    lisp_Array_set(values_array, LISP_IDX_TYPE_SIZE, size_value);
+
+    Type->type = Type;
+    Type->values = values;
 }
 
-static lisp_Value* lisp_boot_create_BootType(
-    lisp_State* state,
-    lisp_Value* super,
-    lisp_size size,
-    void (*alloc)(lisp_State*, lisp_Value*),
-    void (*dealloc)(lisp_State*, lisp_Value*),
-    void (*mark)(lisp_Value*)
-) {
-    lisp_Value* value = lisp_Value_alloc(state, state->Type);
-    lisp_Type* type = (lisp_Type*) value->data;
-
-    type->size = size;
-    type->super = super;
-
-    type->alloc = alloc;
-    type->dealloc = dealloc;
-    type->mark = mark;
-
-    return value;
-}
-
-static void lisp_boot_create_InitType(
+static void lisp_boot_Type (
     lisp_State* state,
     lisp_Value* value,
-    lisp_char* ascii,
-    lisp_bool abstract,
-    lisp_bool bytes
-) {
-    lisp_Type* type = (lisp_Type*) value->data;
-
-    type->name = lisp_Symbol_new_ascii(state, ascii);
-    type->attributes = lisp_Value_alloc(state, state->Seq);
-    type->types = lisp_Value_alloc(state, state->Seq);
-    type->prototype = lisp_Value_alloc(state, state->MutableMap);
-    type->template = lisp_Value_alloc(state, state->MutableMap);
-
-    type->abstract = lisp_Value_alloc(state, state->Bool);
-    LISP_SET_DATA(type->abstract, lisp_bool, LISP_FALSE);
-
-    type->bytes = lisp_Value_alloc(state, state->Bool);
-    LISP_SET_DATA(type->abstract, lisp_bool, LISP_FALSE);
-}
-
-static lisp_Value* lisp_boot_create_Type(
-    lisp_State* state,
     lisp_Value* super,
     lisp_size size,
-    lisp_char* ascii,
+    lisp_size values_size,
+    lisp_bool abstract,
+    lisp_bool bytes,
     void (*alloc)(lisp_State*, lisp_Value*),
     void (*dealloc)(lisp_State*, lisp_Value*),
     void (*mark)(lisp_Value*)
 ) {
-    lisp_Value* value = lisp_Value_alloc(state, state->Type);
-    lisp_Type* type = (lisp_Type*) value->data;
+    lisp_Value* values = lisp_boot_new_array(state);
+    lisp_Array* values_array = (lisp_Array*) values->data;
+    lisp_Array_set_size(state, values_array, LISP_TYPE_SIZE);
 
-    type->size = size;
-    type->super = super;
+    lisp_Value* size_value = lisp_boot_new_size(state, state->UInt, sizeof(lisp_size));
+    LISP_SET_DATA(size_value, lisp_size, size);
 
-    lisp_boot_create_InitType(state, value, ascii, LISP_FALSE, LISP_FALSE);
+    lisp_Value* attributes = lisp_boot_new_array(state);
+    lisp_Array_set_size(state, (lisp_Array*) attributes->data, values_size);
+    lisp_Array_set(values_array, LISP_IDX_TYPE_ATTRIBUTES, attributes);
 
+    lisp_Value* types = lisp_boot_new_array(state);
+    lisp_Array_set_size(state, (lisp_Array*) types->data, values_size);
+    lisp_Array_set(values_array, LISP_IDX_TYPE_TYPES, types);
+
+    lisp_Array_set(values_array, LISP_IDX_TYPE_PROTOTYPE, lisp_boot_new_map(state));
+    lisp_Array_set(values_array, LISP_IDX_TYPE_TEMPLATE, lisp_boot_new_map(state));
+
+    lisp_Array_set(values_array, LISP_IDX_TYPE_SIZE, size_value);
+    lisp_Array_set(values_array, LISP_IDX_TYPE_SUPER, super);
+
+    if (abstract == LISP_TRUE) {
+        lisp_Array_set(values_array, LISP_IDX_TYPE_ABSTRACT, state->true);
+    } else {
+        lisp_Array_set(values_array, LISP_IDX_TYPE_ABSTRACT, state->false);
+    }
+    if (bytes == LISP_TRUE) {
+        lisp_Array_set(values_array, LISP_IDX_TYPE_BYTES, state->true);
+    } else {
+        lisp_Array_set(values_array, LISP_IDX_TYPE_BYTES, state->false);
+    }
+
+    lisp_Type* type = lisp_State_alloc(state, sizeof(lisp_Type));
     type->alloc = alloc;
     type->dealloc = dealloc;
     type->mark = mark;
 
+    value->data = type;
+    value->values = values;
+}
+
+static lisp_Value* lisp_boot_new_value(lisp_State* state, lisp_Value* type) {
+    lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
+    value->marked = LISP_FALSE;
+    value->data = NULL;
+    value->type = type;
+    value->values = NULL;
+    value->template = NULL;
     return value;
 }
-static lisp_Value* lisp_boot_create_AbstractType(lisp_State* state, lisp_Value* super, lisp_char* ascii) {
-    lisp_Value* value = lisp_Value_alloc(state, state->Type);
-    lisp_Type* type = (lisp_Type*) value->data;
-
-    type->size = 0;
-    type->super = super;
-    lisp_boot_create_InitType(state, value, ascii, LISP_TRUE, LISP_FALSE);
-    type->alloc = NULL;
-    type->dealloc = NULL;
-    type->mark = NULL;
-
+static lisp_Value* lisp_boot_new_size(lisp_State* state, lisp_Value* type, lisp_size size) {
+    lisp_Value* value = lisp_boot_new_value(state, type);
+    if (size != 0) {
+        value->data = lisp_State_alloc(state, size);
+    }
     return value;
 }
-static lisp_Value* lisp_boot_create_BytesType(lisp_State* state, lisp_Value* super, lisp_size size, lisp_char* ascii) {
-    lisp_Value* value = lisp_Value_alloc(state, state->Type);
-    lisp_Type* type = (lisp_Type*) value->data;
-
-    type->size = size;
-    type->super = super;
-    lisp_boot_create_InitType(state, value, ascii, LISP_FALSE, LISP_TRUE);
-    type->alloc = NULL;
-    type->dealloc = NULL;
-    type->mark = NULL;
-
+static lisp_Value* lisp_boot_new_array(lisp_State* state) {
+    lisp_Value* value = lisp_boot_new_size(state, state->Array, sizeof(lisp_Array));
+    lisp_Array_alloc(state, value);
     return value;
 }
-
-static void lisp_boot_defmethod(lisp_State* state, lisp_Value* prototype, lisp_char* ascii, lisp_Value* (*function)(lisp_State*, lisp_Value*, lisp_Scope* scope)) {
-    lisp_Value* name = lisp_Symbol_new_ascii(state, ascii);
-    lisp_MutableMap_set(state, (lisp_MutableMap*) prototype->data, name, lisp_Native_new(state, name, function));
+static lisp_Value* lisp_boot_new_map(lisp_State* state) {
+    lisp_Value* value = lisp_boot_new_size(state, state->Map, sizeof(lisp_Map));
+    lisp_Map_alloc(state, value);
+    return value;
 }
-
 
 #endif

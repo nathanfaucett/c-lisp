@@ -10,7 +10,9 @@ static lisp_size lisp_ascii_size(lisp_char* ascii) {
     return size;
 }
 static lisp_char* lisp_ascii_copy(lisp_char* a, lisp_char* b) {
-    for (lisp_size i = 0, il = lisp_ascii_size(b) + 1; i < il; i++) {
+    lisp_size i = 0, il = lisp_ascii_size(b) + 1;
+
+    for (; i < il; i++) {
         a[i] = b[i];
     }
     return a;
@@ -19,7 +21,8 @@ static lisp_char* lisp_ascii_clone(lisp_char* ascii) {
     lisp_size size = lisp_ascii_size(ascii) + 1;
     lisp_char* other = (lisp_char*) malloc(size * sizeof(lisp_char));
 
-    for (lisp_size i = 0, il = size; i < il; i++) {
+    lisp_size i = 0, il = size;
+    for (; i < il; i++) {
         other[i] = ascii[i];
     }
     return other;
@@ -61,7 +64,8 @@ static lisp_size lisp_utf8_size(lisp_u32* utf8) {
     return size;
 }
 static lisp_u32* lisp_utf8_copy(lisp_u32* a, lisp_u32* b) {
-    for (lisp_size i = 0, il = lisp_utf8_size(b) + 1; i < il; i++) {
+    lisp_size i = 0, il = lisp_utf8_size(b) + 1;
+    for (; i < il; i++) {
         a[i] = b[i];
     }
     return a;
@@ -70,7 +74,8 @@ static lisp_u32* lisp_utf8_clone(lisp_u32* utf8) {
     lisp_size size = lisp_utf8_size(utf8) + 1;
     lisp_u32* other = (lisp_u32*) malloc(size * sizeof(lisp_u32));
 
-    for (lisp_size i = 0, il = size; i < il; i++) {
+    lisp_size i = 0, il = size;
+    for (; i < il; i++) {
         other[i] = utf8[i];
     }
     return other;

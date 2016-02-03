@@ -3,14 +3,12 @@
 
 
 #include "./Value.c"
-#include "./Type.c"
 
-#include "./Seq/lib.c"
-#include "./List/lib.c"
-#include "./Function.c"
-#include "./Macro.c"
-#include "./MutableMap.c"
-#include "./Native.c"
+#include "./Array/lib.c"
+#include "./Annotation.c"
+#include "./Any.c"
+#include "./Char.c"
+#include "./Map.c"
 #include "./String.c"
 #include "./Symbol.c"
 
