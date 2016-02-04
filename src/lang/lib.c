@@ -4,7 +4,7 @@
 
 #include "./Value.c"
 
-#include "./Array/lib.c"
+#include "./List/lib.c"
 #include "./Function/lib.c"
 #include "./Number/lib.c"
 #include "./Annotation.c"

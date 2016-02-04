@@ -39,7 +39,8 @@ static void lisp_boot_Type (
 static lisp_Value* lisp_boot_new_value(lisp_State* state, lisp_Value* type);
 static lisp_Value* lisp_boot_new_size(lisp_State* state, lisp_Value* type, lisp_size size);
 static lisp_Value* lisp_boot_new_data(lisp_State* state, lisp_Value* type, void* data);
-static lisp_Value* lisp_boot_new_array(lisp_State* state);
+static lisp_Value* lisp_boot_new_list(lisp_State* state);
+static lisp_Value* lisp_boot_new_list_node(lisp_State* state);
 static lisp_Value* lisp_boot_new_map(lisp_State* state);
 
 #endif

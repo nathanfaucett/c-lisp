@@ -42,7 +42,7 @@ static lisp_Value* lisp_Native_export_equal(lisp_State* state, lisp_Value* args,
 
 static void lisp_Native_boot(lisp_State* state) {
     lisp_Value* Native = state->Native;
-    lisp_Map* prototype = (lisp_Map*) lisp_Array_get(state, (lisp_Array*) Native->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, (lisp_List*) Native->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
 
     lisp_Map_set(state, prototype, lisp_Symbol_from_ascii(state, "call"), lisp_Native_new(state, lisp_Native_export_call));
     lisp_Map_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Native_export_to_string));

@@ -9,7 +9,7 @@ static lisp_Value* lisp_Function_call(lisp_State* state, lisp_Value* fn, lisp_Va
 static void lisp_Function_boot(lisp_State* state) {
     /*
     lisp_Value* Function = state->Function;
-    lisp_Map* prototype = (lisp_Map*) lisp_Array_get(state, (lisp_Array*) Function->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, (lisp_List*) Function->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
     */
 }
 

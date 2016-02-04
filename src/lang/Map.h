@@ -3,7 +3,8 @@
 
 
 typedef struct lisp_Map {
-    lisp_Array* entries;
+    lisp_Value* self;
+    lisp_Value* entries;
 } lisp_Map;
 
 
@@ -17,8 +18,12 @@ static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Value*
 
 static lisp_bool lisp_Map_has(lisp_State* state, lisp_Map* map, lisp_Value* key);
 static lisp_Value* lisp_Map_get(lisp_State* state, lisp_Map* map, lisp_Value* key);
-static void lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value);
-static void lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value* key);
+
+static lisp_Value* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value);
+static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value);
+
+static lisp_Value* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value* key);
+static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Value* key);
 
 static lisp_bool lisp_Map_equal(lisp_State* state, lisp_Map* a, lisp_Map* b);
 

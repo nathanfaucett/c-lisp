@@ -33,13 +33,13 @@ static lisp_Value* lisp_Scope_get(lisp_Scope* scope, lisp_Value* key) {
 }
 
 static void lisp_Scope_def(lisp_Scope* scope, lisp_Value* key, lisp_Value* value) {
-    lisp_Map_set(scope->state, (lisp_Map*) scope->map->data, key, value);
+    lisp_Map_mut_set(scope->state, (lisp_Map*) scope->map->data, key, value);
 }
 static void lisp_Scope_swap(lisp_Scope* scope, lisp_Value* key, lisp_Value* value) {
     lisp_Scope* key_scope = lisp_Scope_get_scope(scope, key);
 
     if (key_scope != NULL) {
-        lisp_Map_set(scope->state, (lisp_Map*) key_scope->map->data, key, value);
+        lisp_Map_mut_set(scope->state, (lisp_Map*) key_scope->map->data, key, value);
     } else {
         lisp_Scope_def(scope, key, value);
     }

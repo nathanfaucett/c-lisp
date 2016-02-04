@@ -4,48 +4,45 @@
 
 static void lisp_Map_alloc(lisp_State* state, lisp_Value* value) {
     lisp_Map* map = (lisp_Map*) value->data;
-    lisp_Array* entries = (lisp_Array*) lisp_State_alloc(state, sizeof(lisp_Array));
-    entries->root = NULL;
-    entries->tail = NULL;
-    entries->size = 0;
-    map->entries = entries;
-}
-static void lisp_Map_dealloc(lisp_State* state, lisp_Value* value) {
-    lisp_Map* map = (lisp_Map*) value->data;
-
-    if (map->entries->root != NULL) {
-        lisp_ArrayNode_dealloc(map->entries->root);
-    }
-    lisp_State_dealloc(state, map->entries);
+    map->entries = NULL;
+    map->self = value;
 }
 static void lisp_Map_mark(lisp_Value* value) {
     lisp_Map* map = (lisp_Map*) value->data;
 
-    if (map->entries->root != NULL) {
-        lisp_ArrayNode_mark(map->entries->root);
+    if (map->entries != NULL) {
+        lisp_Value_mark(map->entries);
     }
 }
 
 static lisp_size lisp_Map_size(lisp_Map* map) {
-    return map->entries->size / 2;
+    if (map->entries != NULL) {
+        return ((lisp_List*) map->entries->data)->size / 2;
+    } else {
+        return 0;
+    }
 }
 
 static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Value* key) {
-    lisp_ArrayNode* node = map->entries->root;
-    lisp_size i = 1;
+    if (map->entries != NULL) {
+        lisp_Value* node_value = ((lisp_List*) map->entries->data)->root;
+        lisp_ListNode* node = NULL;
+        lisp_size i = 1;
 
-    while (node != NULL) {
-        if (lisp_Value_equal(state, key, node->value)) {
-            return i;
-        } else {
-            i += 2;
-            node = node->next;
-            if (node != NULL) {
-                node = node->next;
+        while (node_value != NULL) {
+            node = (lisp_ListNode*) node_value->data;
+
+            if (lisp_Value_equal(state, key, node->value)) {
+                return i;
+            } else {
+                i += 2;
+                node_value = node->next;
+                if (node_value != NULL) {
+                    node_value = ((lisp_ListNode*) node_value->data)->next;
+                }
             }
         }
     }
-
     return 0;
 }
 
@@ -56,36 +53,85 @@ static lisp_Value* lisp_Map_get(lisp_State* state, lisp_Map* map, lisp_Value* ke
     lisp_size index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
-        return lisp_Array_get(state, map->entries, index);
+        return lisp_List_get(state, (lisp_List*) map->entries->data, index);
     } else {
         return state->nil;
     }
 }
-static void lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value) {
+static lisp_Value* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value) {
+    lisp_Value* new_map_value = lisp_Value_alloc(state, state->Map);
+    lisp_Value* entries;
+
     lisp_size index = lisp_Map_index_of(state, map, key);
 
-    if (index != 0) {
-        lisp_Array_set(map->entries, index - 1, key);
-        lisp_Array_set(map->entries, index, value);
+    if (map->entries != NULL) {
+        entries = map->entries;
     } else {
-        lisp_Array_push(map->entries, key);
-        lisp_Array_push(map->entries, value);
+        entries = lisp_Value_alloc(state, state->List);
+    }
+
+    if (index != 0) {
+        entries = lisp_List_set(state, (lisp_List*) entries->data, index - 1, key);
+        entries = lisp_List_set(state, (lisp_List*) entries->data, index, value);
+    } else {
+        entries = lisp_List_push(state, (lisp_List*) entries->data, key);
+        entries = lisp_List_push(state, (lisp_List*) entries->data, value);
+    }
+
+    ((lisp_Map*) new_map_value->data)->entries = entries;
+
+    return new_map_value;
+}
+static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value) {
+    lisp_size index = lisp_Map_index_of(state, map, key);
+
+    if (map->entries == NULL) {
+        map->entries = lisp_Value_alloc(state, state->List);
+    }
+    lisp_List* entries = (lisp_List*) map->entries->data;
+
+    if (index != 0) {
+        lisp_List_mut_set(entries, index - 1, key);
+        lisp_List_mut_set(entries, index, value);
+    } else {
+        lisp_List_mut_push(state, entries, key);
+        lisp_List_mut_push(state, entries, value);
     }
 }
-static void lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value* key) {
+static lisp_Value* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value* key) {
     lisp_size index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
-        lisp_Array_remove(map->entries, index - 1);
-        lisp_Array_remove(map->entries, index);
+        lisp_Value* new_map_value = lisp_Value_alloc(state, state->Map);
+
+        lisp_Value* entries = map->entries;
+        entries = lisp_List_remove(state, (lisp_List*) entries->data, index - 1);
+        entries = lisp_List_remove(state, (lisp_List*) entries->data, index);
+
+        ((lisp_Map*) new_map_value->data)->entries = entries;
+
+        return new_map_value;
+    } else {
+        return map->self;
+    }
+}
+static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Value* key) {
+    lisp_size index = lisp_Map_index_of(state, map, key);
+
+    if (index != 0) {
+        lisp_List* entries = (lisp_List*) map->entries->data;
+        lisp_List_mut_remove(state, entries, index - 1);
+        lisp_List_mut_remove(state, entries, index);
     }
 }
 
 static lisp_bool lisp_Map_equal(lisp_State* state, lisp_Map* a, lisp_Map* b) {
     if (a == b) {
         return LISP_TRUE;
+    } else if (a->entries != NULL && a->entries != NULL) {
+        return lisp_List_equal(state, (lisp_List*) a->entries->data, (lisp_List*) b->entries->data);
     } else {
-        return lisp_Array_equal(state, a->entries, b->entries);
+        return LISP_FALSE;
     }
 }
 

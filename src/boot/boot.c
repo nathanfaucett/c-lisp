@@ -14,8 +14,9 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_Type(state, state->Indexed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
     lisp_boot_Type(state, state->Keyed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
 
-    lisp_boot_Type(state, state->Array, state->Indexed, sizeof(lisp_Array), 0, LISP_FALSE, LISP_FALSE, lisp_Array_alloc, lisp_Array_dealloc, lisp_Array_mark);
-    lisp_boot_Type(state, state->Map, state->Keyed, sizeof(lisp_Map), 0, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
+    lisp_boot_Type(state, state->List, state->Indexed, sizeof(lisp_List), 0, LISP_FALSE, LISP_FALSE, lisp_List_alloc, NULL, lisp_List_mark);
+    lisp_boot_Type(state, state->ListNode, state->Any, sizeof(lisp_ListNode), 0, LISP_FALSE, LISP_FALSE, lisp_ListNode_alloc, NULL, lisp_ListNode_mark);
+    lisp_boot_Type(state, state->Map, state->Keyed, sizeof(lisp_Map), 0, LISP_FALSE, LISP_FALSE, lisp_Map_alloc, NULL, lisp_Map_mark);
 
     lisp_boot_Type(state, state->Callable, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL, NULL);
     lisp_boot_Type(state, state->Native, state->Callable, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL, NULL);
@@ -61,13 +62,13 @@ static void lisp_boot_MainType(lisp_State* state) {
     data->dealloc = NULL;
     data->mark = NULL;
 
-    lisp_Value* values = lisp_boot_new_array(state);
-    lisp_Array* values_array = (lisp_Array*) values->data;
-    lisp_Array_set_size(state, values_array, LISP_TYPE_SIZE);
+    lisp_Value* values = lisp_boot_new_list(state);
+    lisp_List* values_list = (lisp_List*) values->data;
+    lisp_List_set_size(state, values_list, LISP_TYPE_SIZE);
 
     lisp_Value* size_value = lisp_boot_new_size(state, state->UInt, sizeof(lisp_size));
     LISP_SET_DATA(size_value, lisp_size, sizeof(lisp_Type));
-    lisp_Array_set(values_array, LISP_IDX_TYPE_SIZE, size_value);
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_SIZE, size_value);
 
     Type->type = Type;
     Type->values = values;
@@ -85,36 +86,36 @@ static void lisp_boot_Type (
     void (*dealloc)(lisp_State*, lisp_Value*),
     void (*mark)(lisp_Value*)
 ) {
-    lisp_Value* values = lisp_boot_new_array(state);
-    lisp_Array* values_array = (lisp_Array*) values->data;
-    lisp_Array_set_size(state, values_array, LISP_TYPE_SIZE);
+    lisp_Value* values = lisp_boot_new_list(state);
+    lisp_List* values_list = (lisp_List*) values->data;
+    lisp_List_set_size(state, values_list, LISP_TYPE_SIZE);
 
     lisp_Value* size_value = lisp_boot_new_size(state, state->UInt, sizeof(lisp_size));
     LISP_SET_DATA(size_value, lisp_size, size);
 
-    lisp_Value* attributes = lisp_boot_new_array(state);
-    lisp_Array_set_size(state, (lisp_Array*) attributes->data, values_size);
-    lisp_Array_set(values_array, LISP_IDX_TYPE_ATTRIBUTES, attributes);
+    lisp_Value* attributes = lisp_boot_new_list(state);
+    lisp_List_set_size(state, (lisp_List*) attributes->data, values_size);
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_ATTRIBUTES, attributes);
 
-    lisp_Value* types = lisp_boot_new_array(state);
-    lisp_Array_set_size(state, (lisp_Array*) types->data, values_size);
-    lisp_Array_set(values_array, LISP_IDX_TYPE_TYPES, types);
+    lisp_Value* types = lisp_boot_new_list(state);
+    lisp_List_set_size(state, (lisp_List*) types->data, values_size);
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_TYPES, types);
 
-    lisp_Array_set(values_array, LISP_IDX_TYPE_PROTOTYPE, lisp_boot_new_map(state));
-    lisp_Array_set(values_array, LISP_IDX_TYPE_TEMPLATE, lisp_boot_new_map(state));
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_PROTOTYPE, lisp_boot_new_map(state));
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_TEMPLATE, lisp_boot_new_map(state));
 
-    lisp_Array_set(values_array, LISP_IDX_TYPE_SIZE, size_value);
-    lisp_Array_set(values_array, LISP_IDX_TYPE_SUPER, super);
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_SIZE, size_value);
+    lisp_List_mut_set(values_list, LISP_IDX_TYPE_SUPER, super);
 
     if (abstract == LISP_TRUE) {
-        lisp_Array_set(values_array, LISP_IDX_TYPE_ABSTRACT, state->true);
+        lisp_List_mut_set(values_list, LISP_IDX_TYPE_ABSTRACT, state->true);
     } else {
-        lisp_Array_set(values_array, LISP_IDX_TYPE_ABSTRACT, state->false);
+        lisp_List_mut_set(values_list, LISP_IDX_TYPE_ABSTRACT, state->false);
     }
     if (bytes == LISP_TRUE) {
-        lisp_Array_set(values_array, LISP_IDX_TYPE_BYTES, state->true);
+        lisp_List_mut_set(values_list, LISP_IDX_TYPE_BYTES, state->true);
     } else {
-        lisp_Array_set(values_array, LISP_IDX_TYPE_BYTES, state->false);
+        lisp_List_mut_set(values_list, LISP_IDX_TYPE_BYTES, state->false);
     }
 
     lisp_Type* type = lisp_State_alloc(state, sizeof(lisp_Type));
@@ -142,9 +143,14 @@ static lisp_Value* lisp_boot_new_size(lisp_State* state, lisp_Value* type, lisp_
     }
     return value;
 }
-static lisp_Value* lisp_boot_new_array(lisp_State* state) {
-    lisp_Value* value = lisp_boot_new_size(state, state->Array, sizeof(lisp_Array));
-    lisp_Array_alloc(state, value);
+static lisp_Value* lisp_boot_new_list(lisp_State* state) {
+    lisp_Value* value = lisp_boot_new_size(state, state->List, sizeof(lisp_List));
+    lisp_List_alloc(state, value);
+    return value;
+}
+static lisp_Value* lisp_boot_new_list_node(lisp_State* state) {
+    lisp_Value* value = lisp_boot_new_size(state, state->ListNode, sizeof(lisp_ListNode));
+    lisp_ListNode_alloc(state, value);
     return value;
 }
 static lisp_Value* lisp_boot_new_map(lisp_State* state) {

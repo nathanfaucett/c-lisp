@@ -9,7 +9,7 @@ lisp_Value* lisp_Number_UInt(lisp_State* state, lisp_size integer) {
 }
 lisp_size lisp_Number_get_size(lisp_State* state, lisp_Value* index) {
     if (lisp_Value_inherits(state, index->type, state->Number)) {
-        lisp_Value* size_value = lisp_Array_get(state, index->type->values->data, LISP_IDX_TYPE_SIZE);
+        lisp_Value* size_value = lisp_List_get(state, index->type->values->data, LISP_IDX_TYPE_SIZE);
         lisp_size size = LISP_GET_DATA(size_value, lisp_size);
 
         switch (size) {

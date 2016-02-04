@@ -22,7 +22,8 @@ static lisp_Value* lisp_Value_alloc(lisp_State* state, lisp_Value* Type);
 static void lisp_Value_dealloc(lisp_State* state, lisp_Value* value);
 static void lisp_Value_mark(lisp_Value* value);
 
-static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp_Value* type, lisp_Value* key);
+static lisp_Value* lisp_Value_proto_lookup(lisp_State* state, lisp_Value* type, lisp_Value* key);
+static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp_Value* key);
 
 static lisp_Value* lisp_Value_function_call(lisp_State* state, lisp_Value* fn, lisp_Value* args, lisp_Scope* scope);
 
