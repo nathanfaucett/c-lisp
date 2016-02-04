@@ -5,12 +5,12 @@
 static lisp_Value* lisp_Value_alloc(lisp_State* state, lisp_Value* Type) {
     lisp_Value* value = lisp_State_alloc(state, sizeof(lisp_Value));
     lisp_Type* type = (lisp_Type*) Type->data;
-    lisp_List* type_values = (lisp_List*) Type->values->data;
+    lisp_MutableList* type_values = (lisp_MutableList*) Type->values->data;
 
     value->marked = LISP_FALSE;
     value->type = Type;
 
-    lisp_Value* size_value = lisp_List_get(state, type_values, LISP_IDX_TYPE_SIZE);
+    lisp_Value* size_value = lisp_MutableList_get(state, type_values, LISP_IDX_TYPE_SIZE);
     lisp_size size = LISP_GET_DATA(size_value, lisp_size);
     if (size != 0) {
         value->data = lisp_State_alloc(state, size);
@@ -18,9 +18,9 @@ static lisp_Value* lisp_Value_alloc(lisp_State* state, lisp_Value* Type) {
         value->data = NULL;
     }
 
-    lisp_Value* attributes_value = lisp_List_get(state, type_values, LISP_IDX_TYPE_ATTRIBUTES);
+    lisp_Value* attributes_value = lisp_MutableList_get(state, type_values, LISP_IDX_TYPE_ATTRIBUTES);
     lisp_Value* values = lisp_boot_new_list(state);
-    lisp_List_set_size(state, (lisp_List*) values->data, ((lisp_List*) attributes_value->data)->size);
+    lisp_MutableList_set_size(state, (lisp_MutableList*) values->data, ((lisp_MutableList*) attributes_value->data)->size);
     value->values = values;
 
     if (type->alloc != NULL) {
@@ -62,12 +62,12 @@ static void lisp_Value_mark(lisp_Value* value) {
 }
 
 static lisp_Value* lisp_Value_proto_lookup(lisp_State* state, lisp_Value* type, lisp_Value* key) {
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_MutableMap* prototype = (lisp_MutableMap*) lisp_MutableList_get(state, (lisp_MutableList*) type->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    if (lisp_Map_has(state, prototype, key)) {
-        return lisp_Map_get(state, prototype, key);
+    if (lisp_MutableMap_has(state, prototype, key)) {
+        return lisp_MutableMap_get(state, prototype, key);
     } else {
-        lisp_Value* super = lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_SUPER);
+        lisp_Value* super = lisp_MutableList_get(state, (lisp_MutableList*) type->values->data, LISP_IDX_TYPE_SUPER);
 
         if (super != state->nil) {
             return lisp_Value_lookup(state, super, key);
@@ -78,12 +78,12 @@ static lisp_Value* lisp_Value_proto_lookup(lisp_State* state, lisp_Value* type, 
 }
 
 static lisp_Value* lisp_Value_lookup(lisp_State* state, lisp_Value* object, lisp_Value* key) {
-    lisp_size index = lisp_List_index_of(state, (lisp_List*) object->type->values->data, key);
+    lisp_size index = lisp_MutableList_index_of(state, (lisp_MutableList*) object->type->values->data, key);
 
     if (index == 0) {
         return lisp_Value_proto_lookup(state, object->type, key);
     } else {
-        return lisp_List_get(state, (lisp_List*) object->values->data, index - 1);
+        return lisp_MutableList_get(state, (lisp_MutableList*) object->values->data, index - 1);
     }
 }
 
@@ -119,7 +119,7 @@ static lisp_bool lisp_Value_inherits(lisp_State* state, lisp_Value* a, lisp_Valu
     if (a == b) {
         return LISP_TRUE;
     } else {
-        lisp_Value* super = lisp_List_get(state, (lisp_List*) a->values->data, LISP_IDX_TYPE_SUPER);
+        lisp_Value* super = lisp_MutableList_get(state, (lisp_MutableList*) a->values->data, LISP_IDX_TYPE_SUPER);
 
         if (super != state->nil) {
             return lisp_Value_inherits(state, super, b);

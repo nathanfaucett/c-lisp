@@ -12,7 +12,7 @@ static lisp_Value* lisp_Nil_export_equal(lisp_State* state, lisp_Value* args, li
 static void lisp_Nil_boot(lisp_State* state) {
     /*
     lisp_Value* Nil = state->Nil;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, (lisp_List*) Nil->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_MutableMap* prototype = (lisp_MutableMap*) lisp_MutableList_get(state, (lisp_MutableList*) Nil->values->data, LISP_IDX_TYPE_PROTOTYPE)->data;
     */
 }
 

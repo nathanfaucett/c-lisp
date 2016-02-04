@@ -17,6 +17,9 @@ typedef struct lisp_State {
     struct lisp_Value* Indexed;
     struct lisp_Value* Keyed;
 
+    struct lisp_Value* MutableList;
+    struct lisp_Value* MutableMap;
+
     struct lisp_Value* List;
     struct lisp_Value* ListNode;
     struct lisp_Value* Map;

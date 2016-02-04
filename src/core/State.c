@@ -20,6 +20,9 @@ static lisp_State* lisp_State_new(void) {
     state->Indexed = lisp_boot_new_size(state, state->Type, sizeof_Type);
     state->Keyed = lisp_boot_new_size(state, state->Type, sizeof_Type);
 
+    state->MutableList = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->MutableMap = lisp_boot_new_size(state, state->Type, sizeof_Type);
+
     state->List = lisp_boot_new_size(state, state->Type, sizeof_Type);
     state->ListNode = lisp_boot_new_size(state, state->Type, sizeof_Type);
     state->Map = lisp_boot_new_size(state, state->Type, sizeof_Type);

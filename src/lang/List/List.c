@@ -91,29 +91,6 @@ static lisp_size lisp_List_index_of(lisp_State* state, lisp_List* list, lisp_Val
     return 0;
 }
 
-static void lisp_List_set_size(lisp_State* state, lisp_List* list, lisp_size new_size) {
-    lisp_Value* tail_value = list->tail;
-
-    lisp_Value* node_value = NULL;
-    lisp_ListNode* node = NULL;
-
-    lisp_size i = list->size, il = new_size;
-    for (; i < il; i++) {
-        node_value = lisp_boot_new_list_node(state);
-        node = (lisp_ListNode*) node_value->data;
-
-        if (tail_value != NULL) {
-            ((lisp_ListNode*) tail_value->data)->next = node_value;
-        } else {
-            list->root = node_value;
-        }
-        tail_value = node_value;
-    }
-
-    list->tail = tail_value;
-    list->size = new_size;
-}
-
 static lisp_Value* lisp_List_get(lisp_State* state, lisp_List* list, lisp_size index) {
     lisp_Value* node = lisp_List_find_node(list, index);
 
@@ -148,13 +125,6 @@ static lisp_Value* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size i
         }
     } else {
         return list->self;
-    }
-}
-static void lisp_List_mut_set(lisp_List* list, lisp_size index, lisp_Value* value) {
-    if (index < list->size) {
-        lisp_Value* node_value = lisp_List_find_node(list, index);
-        lisp_ListNode* node = (lisp_ListNode*) node_value->data;
-        node->value = value;
     }
 }
 
@@ -298,40 +268,6 @@ static lisp_Value* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_siz
         return new_list_value;
     } else {
         return list->self;
-    }
-}
-
-static void lisp_List_mut_pop(lisp_List* list) {
-    if (list->size > 1) {
-        list->tail = lisp_List_find_node(list, list->size - 2);
-        list->size -= 1;
-    } else if (list->size == 1) {
-        list->root = NULL;
-        list->tail = NULL;
-        list->size = 0;
-    }
-}
-static void lisp_List_mut_shift(lisp_List* list) {
-    if (list->size > 1) {
-        list->root = ((lisp_ListNode*) list->root->data)->next;
-        list->size -= 1;
-    } else if (list->size == 1) {
-        list->root = NULL;
-        list->tail = NULL;
-        list->size = 0;
-    }
-}
-static void lisp_List_mut_remove(lisp_State* state, lisp_List* list, lisp_size index) {
-    if (index == 0) {
-        lisp_List_mut_shift(list);
-    } else if (index == list->size - 1) {
-        lisp_List_mut_pop(list);
-    } else if (index < list->size) {
-        lisp_Value* node_value = lisp_List_find_node(list, index - 1);
-        lisp_ListNode* node = (lisp_ListNode*) node_value->data;
-        lisp_ListNode* removed_node = (lisp_ListNode*) node->next->data;
-        node->next = removed_node->next;
-        list->size -= 1;
     }
 }
 

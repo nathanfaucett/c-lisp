@@ -2,10 +2,9 @@
 #define __LISP_LIB_H__
 
 
-struct lisp_State;
-struct lisp_Scope;
-struct lisp_Type;
-struct lisp_Value;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 #include "./types.h"
@@ -14,6 +13,11 @@ struct lisp_Value;
 #include "./core/lib.h"
 #include "./lang/lib.h"
 #include "./boot/lib.h"
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

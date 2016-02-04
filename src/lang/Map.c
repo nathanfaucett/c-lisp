@@ -82,22 +82,6 @@ static lisp_Value* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Value* ke
 
     return new_map_value;
 }
-static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Value* key, lisp_Value* value) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
-
-    if (map->entries == NULL) {
-        map->entries = lisp_Value_alloc(state, state->List);
-    }
-    lisp_List* entries = (lisp_List*) map->entries->data;
-
-    if (index != 0) {
-        lisp_List_mut_set(entries, index - 1, key);
-        lisp_List_mut_set(entries, index, value);
-    } else {
-        lisp_List_mut_push(state, entries, key);
-        lisp_List_mut_push(state, entries, value);
-    }
-}
 static lisp_Value* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value* key) {
     lisp_size index = lisp_Map_index_of(state, map, key);
 
@@ -113,15 +97,6 @@ static lisp_Value* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Value*
         return new_map_value;
     } else {
         return map->self;
-    }
-}
-static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Value* key) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
-
-    if (index != 0) {
-        lisp_List* entries = (lisp_List*) map->entries->data;
-        lisp_List_mut_remove(state, entries, index - 1);
-        lisp_List_mut_remove(state, entries, index);
     }
 }
 
