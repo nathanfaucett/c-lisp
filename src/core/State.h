@@ -3,72 +3,67 @@
 
 
 typedef struct lisp_State {
-    struct lisp_Heap* heap;
-    struct lisp_Scope* scope;
+    struct lisp_GC* gc;
 
-    struct lisp_Value* Type;
+    struct lisp_Object* Type;
 
-    struct lisp_Value* Any;
+    struct lisp_Object* Any;
 
-    struct lisp_Value* Annotation;
-    struct lisp_Value* Nil;
+    struct lisp_Object* Annotation;
+    struct lisp_Object* Nil;
 
-    struct lisp_Value* Collection;
-    struct lisp_Value* Indexed;
-    struct lisp_Value* Keyed;
+    struct lisp_Object* Collection;
+    struct lisp_Object* Indexed;
+    struct lisp_Object* Keyed;
 
-    struct lisp_Value* MutableList;
-    struct lisp_Value* MutableMap;
+    struct lisp_Object* MutableList;
+    struct lisp_Object* MutableMap;
 
-    struct lisp_Value* List;
-    struct lisp_Value* ListNode;
-    struct lisp_Value* Map;
+    struct lisp_Object* Callable;
+    struct lisp_Object* Native;
+    struct lisp_Object* Function;
+    struct lisp_Object* Macro;
 
-    struct lisp_Value* Callable;
-    struct lisp_Value* Native;
-    struct lisp_Value* Function;
-    struct lisp_Value* Macro;
+    struct lisp_Object* Char;
+    struct lisp_Object* String;
+    struct lisp_Object* Symbol;
 
-    struct lisp_Value* Char;
-    struct lisp_Value* String;
-    struct lisp_Value* Symbol;
+    struct lisp_Object* Number;
+    struct lisp_Object* Real;
+    struct lisp_Object* Float;
+    struct lisp_Object* Integer;
+    struct lisp_Object* Signed;
+    struct lisp_Object* Unsigned;
 
-    struct lisp_Value* Number;
-    struct lisp_Value* Real;
-    struct lisp_Value* Float;
-    struct lisp_Value* Integer;
-    struct lisp_Value* Signed;
-    struct lisp_Value* Unsigned;
+    struct lisp_Object* Float32;
+    struct lisp_Object* Float64;
 
-    struct lisp_Value* Float32;
-    struct lisp_Value* Float64;
+    struct lisp_Object* UInt;
+    struct lisp_Object* UInt8;
+    struct lisp_Object* UInt16;
+    struct lisp_Object* UInt32;
+    struct lisp_Object* UInt64;
 
-    struct lisp_Value* UInt;
-    struct lisp_Value* UInt8;
-    struct lisp_Value* UInt16;
-    struct lisp_Value* UInt32;
-    struct lisp_Value* UInt64;
+    struct lisp_Object* Int;
+    struct lisp_Object* Int8;
+    struct lisp_Object* Int16;
+    struct lisp_Object* Int32;
+    struct lisp_Object* Int64;
 
-    struct lisp_Value* Int;
-    struct lisp_Value* Int8;
-    struct lisp_Value* Int16;
-    struct lisp_Value* Int32;
-    struct lisp_Value* Int64;
+    struct lisp_Object* Bool;
 
-    struct lisp_Value* Bool;
-
-    struct lisp_Value* nil;
-    struct lisp_Value* true;
-    struct lisp_Value* false;
-    struct lisp_Value* empty_list;
-    struct lisp_Value* empty_map;
+    struct lisp_Object* nil;
 } lisp_State;
 
 static lisp_State* lisp_State_new(void);
 static void lisp_State_delete(lisp_State* state);
 
-static void* lisp_State_alloc(lisp_State* state, lisp_size size);
-static void lisp_State_dealloc(lisp_State* state, void* value);
+static lisp_GCNode* lisp_State_static_alloc(lisp_State* state, lisp_size size);
+static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_size size);
+static void lisp_State_dealloc(lisp_State* state, void* object);
+
+static void* lisp_State_assoc(lisp_State* state, lisp_GCNode* gc_node, lisp_size size);
+static void lisp_State_dissoc(lisp_State* state, lisp_GCNode* gc_node, void* object);
 
 
 #endif

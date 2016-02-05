@@ -8,9 +8,9 @@ extern "C" {
 
 
 #include "./utils/lib.c"
+#include "./gc/lib.c"
 #include "./core/lib.c"
 #include "./lang/lib.c"
-#include "./boot/lib.c"
 
 
 #ifdef __cplusplus

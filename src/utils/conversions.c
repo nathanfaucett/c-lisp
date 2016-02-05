@@ -71,40 +71,40 @@ static lisp_f64 lisp_ascii_to_f64(lisp_char* ascii) {
     }
 }
 
-static lisp_char* lisp_i64_to_ascii(lisp_i64 value) {
+static lisp_char* lisp_i64_to_ascii(lisp_i64 object) {
     static lisp_char buffer[LISP_INT_DIGITS + 2];
     lisp_char* ascii = buffer + LISP_INT_DIGITS + 1;
 
-    if (value >= 0) {
+    if (object >= 0) {
         do {
-            *--ascii = '0' + (value % 10);
-            value /= 10;
-        } while (value != 0);
+            *--ascii = '0' + (object % 10);
+            object /= 10;
+        } while (object != 0);
     } else {
         do {
-            *--ascii = '0' - (value % 10);
-            value /= 10;
-        } while (value != 0);
+            *--ascii = '0' - (object % 10);
+            object /= 10;
+        } while (object != 0);
 
         *--ascii = '-';
     }
 
     return lisp_ascii_clone(ascii);
 }
-static lisp_char* lisp_size_to_ascii(lisp_size value) {
+static lisp_char* lisp_size_to_ascii(lisp_size object) {
     static lisp_char buffer[LISP_INT_DIGITS + 2];
     lisp_char* ascii = buffer + LISP_INT_DIGITS + 1;
 
     do {
-        *--ascii = '0' + (value % 10);
-        value /= 10;
-    } while (value != 0);
+        *--ascii = '0' + (object % 10);
+        object /= 10;
+    } while (object != 0);
 
     return lisp_ascii_clone(ascii);
 }
 
-static lisp_char* lisp_f64_to_ascii(lisp_f64 value) {
-    return lisp_i64_to_ascii((lisp_i64) value);
+static lisp_char* lisp_f64_to_ascii(lisp_f64 object) {
+    return lisp_i64_to_ascii((lisp_i64) object);
 }
 
 #endif
