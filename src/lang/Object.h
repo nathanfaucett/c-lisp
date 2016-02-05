@@ -29,12 +29,12 @@ typedef struct lisp_Type {
 typedef struct lisp_Object {
     lisp_GCNode* gc_node;
     void* data;
-    struct lisp_MutableList* values;
+    struct lisp_Object* values;
     struct lisp_Object* type;
 } lisp_Object;
 
 
-static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* Type);
+static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type);
 static void lisp_Object_mark(lisp_Object* value);
 
 static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Object* b);

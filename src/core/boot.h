@@ -17,11 +17,12 @@ static void lisp_boot_Type (
     void (*mark)(struct lisp_Object*)
 );
 
-static struct lisp_Object* lisp_boot_alloc_object(lisp_State* state, struct lisp_Object* type, lisp_bool is_static);
+static struct lisp_Object* lisp_boot_alloc_object(lisp_State* state, struct lisp_Object* type);
 static struct lisp_Object* lisp_boot_init_object(struct lisp_Object* object, lisp_GCNode* gc_node, struct lisp_Object* type);
-static struct lisp_Object* lisp_boot_new_size(lisp_State* state, struct lisp_Object* type, lisp_size size, lisp_bool is_static);
-static struct lisp_Object* lisp_boot_new_mutable_list(lisp_State* state, lisp_bool is_static);
-static struct lisp_Object* lisp_boot_new_mutable_map(lisp_State* state, lisp_bool is_static);
+static struct lisp_Object* lisp_boot_new_size(lisp_State* state, struct lisp_Object* type, lisp_size size);
+static struct lisp_Object* lisp_boot_new_list(lisp_State* state);
+static struct lisp_Object* lisp_boot_new_list_node(lisp_State* state);
+static struct lisp_Object* lisp_boot_new_map(lisp_State* state);
 static struct lisp_Object* lisp_boot_new_bool(lisp_State* state, lisp_bool value);
 static struct lisp_Object* lisp_boot_assoc_size(lisp_State* state, lisp_GCNode* gc_node, struct lisp_Object* type, lisp_size size);
 

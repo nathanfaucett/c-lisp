@@ -30,12 +30,13 @@ static lisp_Object* lisp_Symbol_export_equal(lisp_State* state, lisp_Object* arg
 
 static void lisp_Symbol_boot(lisp_State* state) {
     lisp_Object* Symbol = state->Symbol;
-    lisp_MutableMap* prototype = (lisp_MutableMap*) lisp_MutableList_get(state, Symbol->values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_List* values = (lisp_List*) Symbol->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_MutableList_set(Symbol->values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Symbol"));
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Symbol"));
 
-    lisp_MutableMap_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Symbol_export_to_string));
-    lisp_MutableMap_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Symbol_export_equal));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Symbol_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Symbol_export_equal));
 }
 
 

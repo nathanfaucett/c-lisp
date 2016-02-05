@@ -5,9 +5,11 @@
 #include "./Object.h"
 
 #include "./Function/lib.h"
-#include "./MutableList/lib.h"
+#include "./List/lib.h"
+#include "./List/lib.h"
 #include "./Number/lib.h"
-#include "./MutableMap.h"
+#include "./Map.h"
+#include "./Map.h"
 #include "./String.h"
 #include "./Symbol.h"
 

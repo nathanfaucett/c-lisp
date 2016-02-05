@@ -3,7 +3,7 @@
 
 
 static lisp_Object* lisp_Native_new(lisp_State* state, lisp_Object* (*fn)(lisp_State*, lisp_Object*, lisp_Object*)) {
-    lisp_Object* object = lisp_boot_alloc_object(state, state->Native, LISP_FALSE);
+    lisp_Object* object = lisp_boot_alloc_object(state, state->Native);
     object->data = fn;
     return object;
 }
@@ -42,13 +42,14 @@ static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* arg
 
 static void lisp_Native_boot(lisp_State* state) {
     lisp_Object* Native = state->Native;
-    lisp_MutableMap* prototype = (lisp_MutableMap*) lisp_MutableList_get(state, Native->values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_List* values = (lisp_List*) Native->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_MutableList_set(Native->values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Native"));
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Native"));
 
-    lisp_MutableMap_set(state, prototype, lisp_Symbol_from_ascii(state, "call"), lisp_Native_new(state, lisp_Native_export_call));
-    lisp_MutableMap_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Native_export_to_string));
-    lisp_MutableMap_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Native_export_equal));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "call"), lisp_Native_new(state, lisp_Native_export_call));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Native_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Native_export_equal));
 }
 
 

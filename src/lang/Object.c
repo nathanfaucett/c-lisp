@@ -2,15 +2,16 @@
 #define __LISP_LANG_OBJECT_C__
 
 
-static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* Type) {
+static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type) {
     lisp_GCNode* gc_node = lisp_State_alloc(state, sizeof(lisp_Object));
     lisp_Object* object = (lisp_Object*) gc_node->object;
-    lisp_MutableList* Type_values = Type->values;
+    lisp_Object* type_values_object = type->values;
+    lisp_List* type_values = (lisp_List*) type_values_object->data;
 
     object->gc_node = gc_node;
-    object->type = Type;
+    object->type = type;
 
-    lisp_Object* size_object = lisp_MutableList_get(state, Type_values, LISP_IDX_TYPE_SIZE);
+    lisp_Object* size_object = lisp_List_get(state, type_values, LISP_IDX_TYPE_SIZE);
     lisp_size size = LISP_GET_DATA(size_object, lisp_size);
 
     if (size != 0) {
@@ -19,22 +20,16 @@ static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* Type) {
         object->data = NULL;
     }
 
-    lisp_MutableList* attributes = (lisp_MutableList*) lisp_MutableList_get(state, Type_values, LISP_IDX_TYPE_ATTRIBUTES)->data;
+    lisp_List* attributes = (lisp_List*) lisp_List_get(state, type_values, LISP_IDX_TYPE_ATTRIBUTES)->data;
     if (attributes->size != 0) {
-        lisp_MutableList* values = (lisp_MutableList*) lisp_State_assoc(state, gc_node, sizeof(lisp_MutableList));
-        values->gc_node = gc_node;
-        values->root = NULL;
-        values->tail = NULL;
-        values->size = 0;
-        lisp_MutableList_set_size(state, values, attributes->size);
-        object->values = values;
+        object->values = lisp_boot_new_list(state);
     } else {
-        object->values = NULL;
+        object->values = state->empty_list;
     }
 
-    lisp_Type* type = (lisp_Type*) Type->data;
-    if (type->alloc != NULL) {
-        type->alloc(state, object);
+    lisp_Type* type_data = (lisp_Type*) type->data;
+    if (type_data->alloc != NULL) {
+        type_data->alloc(state, object);
     }
 
     return object;
@@ -46,10 +41,7 @@ static void lisp_Object_mark(lisp_Object* object) {
         gc_node->marked = LISP_TRUE;
 
         lisp_Object_mark(object->type);
-
-        if (object->values != NULL && object->values->root != NULL) {
-            lisp_MutableListNode_mark(object->values->root);
-        }
+        lisp_Object_mark(object->values);
 
         lisp_Type* type = (lisp_Type*) object->type->data;
         if (type->mark != NULL) {
@@ -62,7 +54,7 @@ static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Ob
     if (a == b) {
         return LISP_TRUE;
     } else {
-        lisp_Object* super = lisp_MutableList_get(state, a->values, LISP_IDX_TYPE_SUPER);
+        lisp_Object* super = lisp_List_get(state, (lisp_List*) a->values->data, LISP_IDX_TYPE_SUPER);
 
         if (super != state->nil) {
             return lisp_Object_inherits(state, super, b);

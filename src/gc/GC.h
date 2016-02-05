@@ -4,7 +4,6 @@
 
 typedef struct lisp_GC {
     lisp_GCNode* root;
-    lisp_GCNode* static_root;
     lisp_size size;
     lisp_size bytes;
 } lisp_GC;
@@ -13,7 +12,6 @@ typedef struct lisp_GC {
 static lisp_GC* lisp_GC_new(void);
 static void lisp_GC_delete(lisp_GC* gc);
 
-static lisp_GCNode* lisp_GC_static_alloc(lisp_GC* gc, lisp_size bytes);
 static lisp_GCNode* lisp_GC_alloc(lisp_GC* gc, lisp_size bytes);
 static void lisp_GC_dealloc(lisp_GC* gc, void* object);
 

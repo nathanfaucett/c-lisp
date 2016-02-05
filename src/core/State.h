@@ -16,8 +16,9 @@ typedef struct lisp_State {
     struct lisp_Object* Indexed;
     struct lisp_Object* Keyed;
 
-    struct lisp_Object* MutableList;
-    struct lisp_Object* MutableMap;
+    struct lisp_Object* List;
+    struct lisp_Object* ListNode;
+    struct lisp_Object* Map;
 
     struct lisp_Object* Callable;
     struct lisp_Object* Native;
@@ -53,12 +54,15 @@ typedef struct lisp_State {
     struct lisp_Object* Bool;
 
     struct lisp_Object* nil;
+    struct lisp_Object* true;
+    struct lisp_Object* false;
+    struct lisp_Object* empty_list;
+    struct lisp_Object* empty_map;
 } lisp_State;
 
 static lisp_State* lisp_State_new(void);
 static void lisp_State_delete(lisp_State* state);
 
-static lisp_GCNode* lisp_State_static_alloc(lisp_State* state, lisp_size size);
 static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_size size);
 static void lisp_State_dealloc(lisp_State* state, void* object);
 
