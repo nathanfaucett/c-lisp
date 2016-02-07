@@ -33,10 +33,10 @@ static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* arg
     lisp_Object* self = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 0), scope);
     lisp_Object* other = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
 
-    if (self->data == other->data) {
-        return lisp_Bool_new(state, LISP_TRUE);
+    if (LISP_GET_DATA(self, lisp_bool) == LISP_GET_DATA(other, lisp_bool)) {
+        return state->true;
     } else {
-        return lisp_Bool_new(state, LISP_FALSE);
+        return state->false;
     }
 }
 

@@ -4,9 +4,11 @@
 
 static void lisp_boot(lisp_State* state) {
     lisp_boot_Type(state, state->Type, state->nil, sizeof(lisp_Type), LISP_TYPE_SIZE, LISP_FALSE, LISP_FALSE, NULL, NULL);
+
     lisp_boot_Type(state, state->Any, state->nil, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
 
     lisp_boot_Type(state, state->Nil, state->Any, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL);
+    lisp_boot_Type(state, state->Scope, state->Any, sizeof(lisp_Scope), 0, LISP_FALSE, LISP_FALSE, lisp_Scope_alloc, lisp_Scope_mark);
     lisp_boot_Type(state, state->Annotation, state->Any, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL);
 
     lisp_boot_Type(state, state->Collection, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
@@ -19,8 +21,8 @@ static void lisp_boot(lisp_State* state) {
 
     lisp_boot_Type(state, state->Callable, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
     lisp_boot_Type(state, state->Native, state->Callable, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL);
-    lisp_boot_Type(state, state->Function, state->Callable, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL);
-    lisp_boot_Type(state, state->Macro, state->Callable, 0, 2, LISP_FALSE, LISP_FALSE, NULL, NULL);
+    lisp_boot_Type(state, state->Function, state->Callable, 0, 3, LISP_FALSE, LISP_FALSE, NULL, NULL);
+    lisp_boot_Type(state, state->Macro, state->Callable, 0, 3, LISP_FALSE, LISP_FALSE, NULL, NULL);
 
     lisp_boot_Type(state, state->Char, state->Any, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL);
     lisp_boot_Type(state, state->String, state->Indexed, sizeof(lisp_String), 0, LISP_FALSE, LISP_FALSE, lisp_String_alloc, lisp_String_mark);
@@ -49,9 +51,10 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_Type(state, state->Bool, state->Unsigned, 1, 0, LISP_FALSE, LISP_TRUE, NULL, NULL);
 
     lisp_Type_boot(state);
+    
     lisp_Native_boot(state);
 
-    state->scope = lisp_Scope_alloc(state, NULL);
+    state->scope = lisp_Scope_new(state, NULL);
 }
 
 static void lisp_boot_Type (

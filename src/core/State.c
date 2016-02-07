@@ -7,9 +7,12 @@ static lisp_State* lisp_State_new(void) {
     state->gc = lisp_GC_new();
 
     lisp_size sizeof_Type = sizeof(lisp_Type);
+
     state->Type = lisp_Object_boot_size(state, NULL, sizeof_Type);
+    state->Type->type = state->Type;
 
     state->Annotation = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Scope = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
     state->Any = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->Nil = lisp_Object_boot_size(state, state->Type, sizeof_Type);

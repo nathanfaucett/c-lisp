@@ -4,11 +4,13 @@
 
 typedef struct lisp_State {
     struct lisp_GC* gc;
-    struct lisp_Scope* scope;
+
+    struct lisp_Object* scope;
 
     struct lisp_Object* Type;
 
     struct lisp_Object* Any;
+    struct lisp_Object* Scope;
 
     struct lisp_Object* Annotation;
     struct lisp_Object* Nil;
