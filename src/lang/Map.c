@@ -15,6 +15,12 @@ static void lisp_Map_mark(lisp_Object* object) {
     }
 }
 
+static lisp_Object* lisp_Map_new(lisp_State* state) {
+    lisp_Object* object = lisp_Object_boot_size(state, state->Map, sizeof(lisp_Map));
+    lisp_Map_alloc(state, object);
+    return object;
+}
+
 static lisp_size lisp_Map_size(lisp_Map* map) {
     if (map->entries != NULL) {
         return ((lisp_List*) map->entries->data)->size / 2;

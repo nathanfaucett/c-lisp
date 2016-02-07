@@ -6,12 +6,13 @@
 
 #include "./Function/lib.h"
 #include "./List/lib.h"
-#include "./List/lib.h"
 #include "./Number/lib.h"
-#include "./Map.h"
+#include "./Annotation.h"
+#include "./Bool.h"
 #include "./Map.h"
 #include "./String.h"
 #include "./Symbol.h"
+#include "./Type.h"
 
 
 #endif

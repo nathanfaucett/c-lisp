@@ -17,6 +17,12 @@ static void lisp_List_mark(lisp_Object* object) {
     }
 }
 
+static lisp_Object* lisp_List_new(lisp_State* state) {
+    lisp_Object* object = lisp_Object_boot_size(state, state->List, sizeof(lisp_List));
+    lisp_List_alloc(state, object);
+    return object;
+}
+
 static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_size index) {
     if (index == 0) {
         return list->root;
@@ -53,7 +59,7 @@ static void lisp_List_mut_set_size(lisp_State* state, lisp_List* list, lisp_size
 
     lisp_size i = 0, il = size;
     for (; i < il; i++) {
-        node_object = lisp_boot_new_list_node(state);
+        node_object = lisp_ListNode_new(state);
         ((lisp_ListNode*) node_object->data)->object = state->nil;
 
         if (tail_object != NULL) {
@@ -88,7 +94,7 @@ static lisp_Object* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size 
             lisp_Object* new_list_object = lisp_Object_alloc(state, state->List);
             lisp_List* new_list = (lisp_List*) new_list_object->data;
 
-            lisp_Object* new_node_object = lisp_boot_new_list_node(state);
+            lisp_Object* new_node_object = lisp_ListNode_new(state);
             lisp_ListNode* new_node = (lisp_ListNode*) new_node_object->data;
 
             new_node->next = node->next;
@@ -116,7 +122,7 @@ static lisp_Object* lisp_List_push(lisp_State* state, lisp_List* list, lisp_Obje
     lisp_Object* new_list_object = lisp_Object_alloc(state, state->List);
     lisp_List* new_list = (lisp_List*) new_list_object->data;
 
-    lisp_Object* node_object = lisp_boot_new_list_node(state);
+    lisp_Object* node_object = lisp_ListNode_new(state);
     lisp_ListNode* node = (lisp_ListNode*) node_object->data;
     node->next = NULL;
     node->object = object;
@@ -134,7 +140,7 @@ static lisp_Object* lisp_List_push(lisp_State* state, lisp_List* list, lisp_Obje
     return new_list_object;
 }
 static void lisp_List_mut_push(lisp_State* state, lisp_List* list, lisp_Object* object) {
-    lisp_Object* node_object = lisp_boot_new_list_node(state);
+    lisp_Object* node_object = lisp_ListNode_new(state);
 
     if (list->root != NULL) {
         ((lisp_ListNode*) list->tail->data)->next = node_object;
@@ -151,7 +157,7 @@ static lisp_Object* lisp_List_unshift(lisp_State* state, lisp_List* list, lisp_O
     lisp_Object* new_list_object = lisp_Object_alloc(state, state->List);
     lisp_List* new_list = (lisp_List*) new_list_object->data;
 
-    lisp_Object* node_object = lisp_boot_new_list_node(state);
+    lisp_Object* node_object = lisp_ListNode_new(state);
     lisp_ListNode* node = (lisp_ListNode*) node_object->data;
     node->object = object;
 
@@ -179,7 +185,7 @@ static lisp_Object* lisp_List_pop(lisp_State* state, lisp_List* list) {
         lisp_Object* root_object = list->root;
         lisp_ListNode* root = (lisp_ListNode*) root_object->data;
 
-        lisp_Object* new_root_object = lisp_boot_new_list_node(state);
+        lisp_Object* new_root_object = lisp_ListNode_new(state);
         lisp_ListNode* new_root = (lisp_ListNode*) new_root_object->data;
         new_root->object = root->object;
 
@@ -197,7 +203,7 @@ static lisp_Object* lisp_List_pop(lisp_State* state, lisp_List* list) {
             } else {
                 root = (lisp_ListNode*) root_object->data;
 
-                tmp_object = lisp_boot_new_list_node(state);
+                tmp_object = lisp_ListNode_new(state);
                 tmp = (lisp_ListNode*) tmp_object->data;
 
                 tmp->object = root->object;

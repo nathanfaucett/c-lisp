@@ -11,6 +11,8 @@ typedef struct lisp_Map {
 static void lisp_Map_alloc(lisp_State* state, lisp_Object* object);
 static void lisp_Map_mark(lisp_Object* object);
 
+static lisp_Object* lisp_Map_new(lisp_State* state);
+
 static lisp_size lisp_Map_size(lisp_Map* map);
 
 static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key);

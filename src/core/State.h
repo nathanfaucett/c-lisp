@@ -4,6 +4,7 @@
 
 typedef struct lisp_State {
     struct lisp_GC* gc;
+    struct lisp_Scope* scope;
 
     struct lisp_Object* Type;
 

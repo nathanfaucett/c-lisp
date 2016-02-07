@@ -3,7 +3,7 @@
 
 
 static lisp_Object* lisp_Native_new(lisp_State* state, lisp_Object* (*fn)(lisp_State*, lisp_Object*, lisp_Object*)) {
-    lisp_Object* object = lisp_boot_alloc_object(state, state->Native);
+    lisp_Object* object = lisp_Object_boot_alloc(state, state->Native);
     object->data = fn;
     return object;
 }
@@ -34,9 +34,9 @@ static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* arg
     lisp_Object* other = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
 
     if (self->data == other->data) {
-        return lisp_boot_new_bool(state, LISP_TRUE);
+        return lisp_Bool_new(state, LISP_TRUE);
     } else {
-        return lisp_boot_new_bool(state, LISP_FALSE);
+        return lisp_Bool_new(state, LISP_FALSE);
     }
 }
 

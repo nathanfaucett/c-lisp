@@ -22,7 +22,7 @@ static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type) {
 
     lisp_List* attributes = (lisp_List*) lisp_List_get(state, type_values, LISP_IDX_TYPE_ATTRIBUTES)->data;
     if (attributes->size != 0) {
-        object->values = lisp_boot_new_list(state);
+        object->values = lisp_List_new(state);
     } else {
         object->values = state->empty_list;
     }
@@ -48,6 +48,25 @@ static void lisp_Object_mark(lisp_Object* object) {
             type->mark(object);
         }
     }
+}
+
+static lisp_Object* lisp_Object_boot_alloc(lisp_State* state, lisp_Object* type) {
+    lisp_GCNode* gc_node = lisp_State_alloc(state, sizeof(lisp_Object));
+    lisp_Object* object = (lisp_Object*) gc_node->object;
+    lisp_Object_boot_init(object, gc_node, type);
+    return object;
+}
+static lisp_Object* lisp_Object_boot_init(lisp_Object* object, lisp_GCNode* gc_node, lisp_Object* type) {
+    object->gc_node = gc_node;
+    object->data = NULL;
+    object->type = type;
+    object->values = NULL;
+    return object;
+}
+static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, lisp_size size) {
+    lisp_Object* object = lisp_Object_boot_alloc(state, type);
+    object->data = lisp_State_assoc(state, object->gc_node, size);
+    return object;
 }
 
 static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Object* b) {

@@ -16,6 +16,12 @@ static void lisp_ListNode_mark(lisp_Object* object) {
     lisp_Object_mark(node->object);
 }
 
+static lisp_Object* lisp_ListNode_new(lisp_State* state) {
+    lisp_Object* object = lisp_Object_boot_size(state, state->ListNode, sizeof(lisp_ListNode));
+    lisp_ListNode_alloc(state, object);
+    return object;
+}
+
 static lisp_Object* lisp_ListNode_find_node(lisp_Object* node, lisp_size index) {
     lisp_size i = 0;
 

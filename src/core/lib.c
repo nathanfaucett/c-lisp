@@ -3,6 +3,7 @@
 
 
 #include "./State.c"
+#include "./Scope.c"
 #include "./boot.c"
 
 

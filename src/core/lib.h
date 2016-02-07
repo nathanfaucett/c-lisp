@@ -3,6 +3,7 @@
 
 
 #include "./State.h"
+#include "./Scope.h"
 #include "./boot.h"
 
 

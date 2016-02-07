@@ -7,49 +7,49 @@ static lisp_State* lisp_State_new(void) {
     state->gc = lisp_GC_new();
 
     lisp_size sizeof_Type = sizeof(lisp_Type);
-    state->Type = lisp_boot_new_size(state, NULL, sizeof_Type);
+    state->Type = lisp_Object_boot_size(state, NULL, sizeof_Type);
 
-    state->Annotation = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Annotation = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Any = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Nil = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Any = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Nil = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Collection = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Indexed = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Keyed = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Collection = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Indexed = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Keyed = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->List = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->ListNode = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Map = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->List = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->ListNode = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Map = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Callable = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Native = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Function = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Macro = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Callable = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Native = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Function = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Macro = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Char = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->String = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Symbol = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Char = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->String = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Symbol = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Number = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Real = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Float = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Integer = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Signed = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Unsigned = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Number = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Real = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Float = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Integer = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Signed = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Unsigned = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Float32 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Float64 = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Float32 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Float64 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->UInt8 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->UInt16 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->UInt32 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->UInt64 = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->UInt8 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->UInt16 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->UInt32 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->UInt64 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->Int8 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Int16 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Int32 = lisp_boot_new_size(state, state->Type, sizeof_Type);
-    state->Int64 = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Int8 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Int16 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Int32 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Int64 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
     if (sizeof(lisp_size) == 8) {
         state->UInt = state->UInt64;
@@ -59,13 +59,13 @@ static lisp_State* lisp_State_new(void) {
         state->Int = state->Int32;
     }
 
-    state->Bool = lisp_boot_new_size(state, state->Type, sizeof_Type);
+    state->Bool = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    state->nil = lisp_boot_new_size(state, state->Nil, 0);
-    state->true = lisp_boot_new_bool(state, LISP_TRUE);
-    state->false = lisp_boot_new_bool(state, LISP_FALSE);
-    state->empty_list = lisp_boot_new_list(state);
-    state->empty_map = lisp_boot_new_map(state);
+    state->nil = lisp_Object_boot_size(state, state->Nil, 0);
+    state->true = lisp_Bool_new(state, LISP_TRUE);
+    state->false = lisp_Bool_new(state, LISP_FALSE);
+    state->empty_list = lisp_List_new(state);
+    state->empty_map = lisp_Map_new(state);
 
     lisp_boot(state);
 

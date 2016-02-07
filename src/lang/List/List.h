@@ -13,6 +13,8 @@ typedef struct lisp_List {
 static void lisp_List_alloc(lisp_State* state, lisp_Object* object);
 static void lisp_List_mark(lisp_Object* object);
 
+static lisp_Object* lisp_List_new(lisp_State* state);
+
 static lisp_Object* lisp_List_from_list(lisp_State* state, lisp_List* list);
 
 static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_size index);
