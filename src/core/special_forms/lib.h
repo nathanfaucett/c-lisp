@@ -17,5 +17,8 @@ static lisp_Object* lisp_boot_special_forms_catch(lisp_State* state, lisp_Object
 static lisp_Object* lisp_boot_special_forms_finally(lisp_State* state, lisp_Object* args, lisp_Scope* scope);
 static lisp_Object* lisp_boot_special_forms_throw(lisp_State* state, lisp_Object* args, lisp_Scope* scope);
 
+static lisp_Object* lisp_boot_special_forms_at(lisp_State* state, lisp_Object* args, lisp_Scope* scope);
+static lisp_Object* lisp_boot_special_forms_dot(lisp_State* state, lisp_Object* args, lisp_Scope* scope);
+
 
 #endif

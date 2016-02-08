@@ -67,8 +67,12 @@ static lisp_State* lisp_State_new(void) {
     state->nil = lisp_Object_boot_size(state, state->Nil, 0);
     state->true = lisp_Bool_new(state, LISP_TRUE);
     state->false = lisp_Bool_new(state, LISP_FALSE);
+    state->empty_string = lisp_Object_boot_size(state, state->String, sizeof(lisp_String));
+    state->empty_char = lisp_Object_boot_size(state, state->Char, 4);
     state->empty_list = lisp_List_new(state);
     state->empty_map = lisp_Map_new(state);
+    
+    LISP_SET_DATA(state->empty_char, lisp_u32, 0);
 
     lisp_boot(state);
 

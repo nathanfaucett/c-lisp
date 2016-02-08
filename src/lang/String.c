@@ -48,6 +48,72 @@ static lisp_char* lisp_String_to_ascii(lisp_String* string) {
 
     return ascii;
 }
+static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
+    if (a == b) {
+        return LISP_TRUE;
+    } else if (a->size == b->size) {
+        lisp_size i = 0, il = a->size;
+        for (; i < il; i++) {
+            if (LISP_GET_DATA(a->chars[i], lisp_u32) != LISP_GET_DATA(b->chars[i], lisp_u32)) {
+                return LISP_FALSE;
+            }
+        }
+        return LISP_TRUE;
+    } else {
+        return LISP_FALSE;
+    }
+}
+
+static lisp_Object* lisp_String_export_char_at(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* index = lisp_List_get(state, list, 1);
+
+    if (self->type == state->String && lisp_Object_inherits(state, index->type, state->Unsigned)) {
+        lisp_String* string = (lisp_String*) self->data;
+        lisp_size i = lisp_Number_get_UInt(state, index);
+
+        if (string->chars != NULL && i < string->size) {
+            return string->chars[lisp_Number_get_UInt(state, index)];
+        } else {
+            return state->empty_char;
+        }
+    } else {
+        return state->empty_char;
+    }
+}
+static lisp_Object* lisp_String_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+
+    if (self->type == state->String) {
+        return self;
+    } else {
+        return lisp_Object_to_string(state, self);
+    }
+}
+static lisp_Object* lisp_String_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* other = lisp_List_get(state, list, 1);
+
+    if (self->type == state->String && other->type == state->String) {
+        return lisp_String_equal((lisp_String*) self->data, (lisp_String*) other->data) ? state->true : state->false;
+    } else {
+        return lisp_Object_equal(state, self, other) ? state->true : state->false;
+    }
+}
+
+static void lisp_String_boot(lisp_State* state) {
+    lisp_Object* String = state->String;
+    lisp_List* values = (lisp_List*) String->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "String"));
+
+    lisp_Map_mut_set(state, prototype, lisp_String_from_ascii(state, "char-at"), lisp_Native_new(state, lisp_String_export_char_at));
+    lisp_Map_mut_set(state, prototype, lisp_String_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_String_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_String_from_ascii(state, "equal"), lisp_Native_new(state, lisp_String_export_equal));
+}
 
 
 #endif

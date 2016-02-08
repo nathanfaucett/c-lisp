@@ -27,6 +27,7 @@ static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Ob
 
 static lisp_Object* lisp_Object_call1(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* a0, lisp_Object* scope);
 
+static lisp_Object* lisp_Object_to_string(lisp_State* state, lisp_Object* object);
 static lisp_bool lisp_Object_equal(lisp_State* state, lisp_Object* a, lisp_Object* b);
 
 

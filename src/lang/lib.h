@@ -10,6 +10,7 @@
 #include "./Annotation.h"
 #include "./Bool.h"
 #include "./Map.h"
+#include "./Nil.h"
 #include "./Scope.h"
 #include "./String.h"
 #include "./Symbol.h"

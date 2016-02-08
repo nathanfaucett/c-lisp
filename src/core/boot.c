@@ -51,8 +51,13 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_Type(state, state->Bool, state->Unsigned, 1, 0, LISP_FALSE, LISP_TRUE, NULL, NULL);
 
     lisp_Type_boot(state);
+
+    lisp_Nil_boot(state);
+
+    lisp_String_boot(state);
+    lisp_Symbol_boot(state);
     
-    lisp_Native_boot(state);
+    lisp_Bool_boot(state);
 
     state->scope = lisp_Scope_new(state, NULL);
 }

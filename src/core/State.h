@@ -59,6 +59,8 @@ typedef struct lisp_State {
     struct lisp_Object* nil;
     struct lisp_Object* true;
     struct lisp_Object* false;
+    struct lisp_Object* empty_string;
+    struct lisp_Object* empty_char;
     struct lisp_Object* empty_list;
     struct lisp_Object* empty_map;
 } lisp_State;

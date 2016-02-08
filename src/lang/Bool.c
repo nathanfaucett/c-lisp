@@ -8,5 +8,48 @@ static lisp_Object* lisp_Bool_new(lisp_State* state, lisp_bool value) {
     return object;
 }
 
+static lisp_Object* lisp_Bool_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+
+    if (self->type == state->Bool) {
+        if (LISP_GET_DATA(self, lisp_bool) != 0) {
+            return lisp_String_from_ascii(state, "true");
+        } else {
+            return lisp_String_from_ascii(state, "false");
+        }
+    } else {
+        return lisp_Object_to_string(state, self);
+    }
+}
+static lisp_Object* lisp_Bool_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* other = lisp_List_get(state, list, 1);
+
+    if (self->type == state->Bool && other->type == state->Bool) {
+        lisp_bool abool = LISP_GET_DATA(self, lisp_bool);
+        lisp_bool bbool = LISP_GET_DATA(other, lisp_bool);
+
+        if ((abool == 0 && bbool == 0) || (abool != 0 && bbool != 0)) {
+            return state->true;
+        } else {
+            return state->false;
+        }
+    } else {
+        return lisp_Object_equal(state, self, other) ? state->true : state->false;
+    }
+}
+
+static void lisp_Bool_boot(lisp_State* state) {
+    lisp_Object* Bool = state->Bool;
+    lisp_List* values = (lisp_List*) Bool->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Bool"));
+
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Bool_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Bool_export_equal));
+}
+
 
 #endif

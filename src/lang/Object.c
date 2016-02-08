@@ -87,6 +87,9 @@ static lisp_Object* lisp_Object_call1(lisp_State* state, lisp_Object* object, li
     return object;
 }
 
+static lisp_Object* lisp_Object_to_string(lisp_State* state, lisp_Object* object) {
+    return lisp_String_from_ascii(state, "ObjectToString");
+}
 static lisp_bool lisp_Object_equal(lisp_State* state, lisp_Object* a, lisp_Object* b) {
     return a == b;
 }
