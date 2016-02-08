@@ -41,5 +41,10 @@ static void lisp_List_mut_remove(lisp_List* list, lisp_size index);
 
 static lisp_bool lisp_List_equal(lisp_State* state, lisp_List* a, lisp_List* b);
 
+static lisp_Object* lisp_List_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_List_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static void lisp_List_boot(lisp_State* state);
+
 
 #endif

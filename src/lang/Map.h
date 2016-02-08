@@ -26,5 +26,15 @@ static lisp_Object* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Objec
 static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Object* key, lisp_Object* object);
 static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Object* key);
 
+static lisp_bool lisp_Map_equal(lisp_State* state, lisp_Map* a, lisp_Map* b);
+
+static lisp_Object* lisp_Map_export_get(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_Map_export_set(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_Map_export_remove(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_Map_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_Map_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static void lisp_Map_boot(lisp_State* state);
+
 
 #endif

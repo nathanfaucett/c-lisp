@@ -141,5 +141,99 @@ static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Object* k
     }
 }
 
+static lisp_bool lisp_Map_equal(lisp_State* state, lisp_Map* a, lisp_Map* b) {
+    if (a == b || a->entries == b->entries) {
+        return LISP_TRUE;
+    } else if (a->entries != NULL && b->entries != NULL) {
+        return lisp_List_equal(state, (lisp_List*) a->entries->data, (lisp_List*) b->entries->data);
+    } else {
+        return LISP_FALSE;
+    }
+}
+
+static lisp_Object* lisp_Map_export_has(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* key = lisp_List_get(state, list, 1);
+
+    if (self->type == state->Map) {
+        return lisp_Map_has(state, (lisp_Map*) self->data, key) ? state->true : state->false;
+    } else {
+        return state->false;
+    }
+}
+static lisp_Object* lisp_Map_export_get(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* key = lisp_List_get(state, list, 1);
+
+    if (self->type == state->Map) {
+        return lisp_Map_get(state, (lisp_Map*) self->data, key);
+    } else {
+        /* fixme - error */
+        return state->nil;
+    }
+}
+static lisp_Object* lisp_Map_export_set(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* key = lisp_List_get(state, list, 1);
+    lisp_Object* value = lisp_List_get(state, list, 2);
+
+    if (self->type == state->Map) {
+        return lisp_Map_set(state, (lisp_Map*) self->data, key, value);
+    } else {
+        /* fixme - error */
+        return state->nil;
+    }
+}
+static lisp_Object* lisp_Map_export_remove(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* key = lisp_List_get(state, list, 1);
+
+    if (self->type == state->Map) {
+        return lisp_Map_remove(state, (lisp_Map*) self->data, key);
+    } else {
+        /* fixme - error */
+        return state->nil;
+    }
+}
+static lisp_Object* lisp_Map_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+
+    if (self->type == state->Map) {
+        return lisp_String_from_ascii(state, "{}");
+    } else {
+        return lisp_Object_to_string(state, self);
+    }
+}
+static lisp_Object* lisp_Map_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* other = lisp_List_get(state, list, 1);
+
+    if (self->type == state->Map && other->type == state->Map) {
+        return lisp_Map_equal(state, (lisp_Map*) self->data, (lisp_Map*) other->data) ? state->true : state->false;
+    } else {
+        return lisp_Object_equal(state, self, other) ? state->true : state->false;
+    }
+}
+
+static void lisp_Map_boot(lisp_State* state) {
+    lisp_Object* Map = state->Map;
+    lisp_List* values = (lisp_List*) Map->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Map"));
+
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "has"), lisp_Native_new(state, lisp_Map_export_has));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "get"), lisp_Native_new(state, lisp_Map_export_get));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "set"), lisp_Native_new(state, lisp_Map_export_set));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "remove"), lisp_Native_new(state, lisp_Map_export_remove));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Map_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Map_export_equal));
+}
+
 
 #endif

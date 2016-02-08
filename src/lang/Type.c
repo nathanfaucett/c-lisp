@@ -26,7 +26,7 @@ static void lisp_Type_boot(lisp_State* state) {
     lisp_List_mut_set(types, LISP_IDX_TYPE_SIZE, lisp_Annotation_new(state, state->UInt));
     lisp_List_mut_set(types, LISP_IDX_TYPE_SUPER, lisp_Annotation_new(state, state->Type));
     lisp_List_mut_set(types, LISP_IDX_TYPE_PROTOTYPE, lisp_Annotation_new(state, state->Map));
-    lisp_List_mut_set(types, LISP_IDX_TYPE_TEMPLATE, lisp_Annotation_new(state, state->List));
+    lisp_List_mut_set(types, LISP_IDX_TYPE_TEMPLATE, lisp_Annotation_new(state, state->Map));
     lisp_List_mut_set(types, LISP_IDX_TYPE_ABSTRACT, lisp_Annotation_new(state, state->Bool));
     lisp_List_mut_set(types, LISP_IDX_TYPE_BYTES, lisp_Annotation_new(state, state->Bool));
 }

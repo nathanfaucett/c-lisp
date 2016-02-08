@@ -56,6 +56,9 @@ static void lisp_boot(lisp_State* state) {
 
     lisp_String_boot(state);
     lisp_Symbol_boot(state);
+
+    lisp_List_boot(state);
+    lisp_Map_boot(state);
     
     lisp_Bool_boot(state);
 

@@ -320,5 +320,37 @@ static lisp_bool lisp_List_equal(lisp_State* state, lisp_List* a, lisp_List* b) 
     }
 }
 
+static lisp_Object* lisp_List_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+
+    if (self->type == state->List) {
+        return lisp_String_from_ascii(state, "()");
+    } else {
+        return lisp_Object_to_string(state, self);
+    }
+}
+static lisp_Object* lisp_List_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* other = lisp_List_get(state, list, 1);
+
+    if (self->type == state->List && other->type == state->List) {
+        return lisp_List_equal(state, (lisp_List*) self->data, (lisp_List*) other->data) ? state->true : state->false;
+    } else {
+        return lisp_Object_equal(state, self, other) ? state->true : state->false;
+    }
+}
+
+static void lisp_List_boot(lisp_State* state) {
+    lisp_Object* List = state->List;
+    lisp_List* values = (lisp_List*) List->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "List"));
+
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_List_export_to_string));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_List_export_equal));
+}
+
 
 #endif
