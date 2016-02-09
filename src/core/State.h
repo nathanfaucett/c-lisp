@@ -21,6 +21,8 @@ typedef struct lisp_State {
 
     struct lisp_Object* List;
     struct lisp_Object* ListNode;
+    struct lisp_Object* Vector;
+    struct lisp_Object* VectorNode;
     struct lisp_Object* Map;
 
     struct lisp_Object* Callable;

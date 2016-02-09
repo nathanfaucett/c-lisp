@@ -23,6 +23,8 @@ static lisp_State* lisp_State_new(void) {
 
     state->List = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->ListNode = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->Vector = lisp_Object_boot_size(state, state->Type, sizeof_Type);
+    state->VectorNode = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->Map = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
     state->Callable = lisp_Object_boot_size(state, state->Type, sizeof_Type);
@@ -71,7 +73,8 @@ static lisp_State* lisp_State_new(void) {
     state->empty_char = lisp_Object_boot_size(state, state->Char, 4);
     state->empty_list = lisp_List_new(state);
     state->empty_map = lisp_Map_new(state);
-    
+
+    lisp_String_alloc(state, state->empty_string);
     LISP_SET_DATA(state->empty_char, lisp_u32, 0);
 
     lisp_boot(state);

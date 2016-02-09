@@ -22,7 +22,7 @@ static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type) {
 
     lisp_List* attributes = (lisp_List*) lisp_List_get(state, type_values, LISP_IDX_TYPE_ATTRIBUTES)->data;
     if (attributes->size != 0) {
-        object->values = lisp_List_new(state);
+        object->values = NULL;
     } else {
         object->values = state->empty_list;
     }
@@ -83,8 +83,60 @@ static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Ob
     }
 }
 
+static lisp_Object* lisp_Object_value_get(lisp_State* state, lisp_Object* object, lisp_Object* key) {
+    lisp_Object* type = object->type;
+    lisp_List* attributes = (lisp_List*) lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_ATTRIBUTES)->data;
+    lisp_size index = lisp_List_index_of(state, attributes, key);
+
+    if (index != 0) {
+        return lisp_List_get(state, (lisp_List*) object->values->data, index);
+    } else {
+        return state->nil;
+    }
+}
+static lisp_Object* lisp_Object_value_set(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* value) {
+    lisp_Object* type = object->type;
+    lisp_List* attributes = (lisp_List*) lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_ATTRIBUTES)->data;
+    lisp_size index = lisp_List_index_of(state, attributes, key);
+
+    if (index != 0) {
+        lisp_Object* new_values = lisp_List_set(state, (lisp_List*) object->values->data, index, value);
+
+        if (new_values != object->values) {
+            lisp_Object* new_object = lisp_Object_alloc(state, type);
+            new_object->values = new_values;
+            return new_object;
+        } else {
+            return object;
+        }
+    } else {
+        return object;
+    }
+}
+static lisp_Object* lisp_Object_func_get(lisp_State* state, lisp_Object* type, lisp_Object* key) {
+    lisp_List* type_values = (lisp_List*) type->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, type_values, LISP_IDX_TYPE_PROTOTYPE)->data;
+
+    if (lisp_Map_has(state, prototype, key)) {
+        return lisp_Map_get(state, prototype, key);
+    } else  {
+        lisp_Object* super = lisp_List_get(state, type_values, LISP_IDX_TYPE_SUPER);
+
+        if (super != state->nil) {
+            return lisp_Object_func_get(state, super, key);
+        } else {
+            return state->nil;
+        }
+    }
+}
+
 static lisp_Object* lisp_Object_call1(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* a0, lisp_Object* scope) {
-    return object;
+    lisp_Object* fn = lisp_Object_func_get(state, object->type, key);
+    lisp_Object* args = lisp_List_new(state);
+    lisp_List* args_list = (lisp_List*) args->data;
+    lisp_List_mut_push(state, args_list, object);
+    lisp_List_mut_push(state, args_list, a0);
+    return lisp_function_call(state, fn, args, scope);
 }
 
 static lisp_Object* lisp_Object_to_string(lisp_State* state, lisp_Object* object) {

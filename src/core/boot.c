@@ -17,12 +17,14 @@ static void lisp_boot(lisp_State* state) {
 
     lisp_boot_Type(state, state->List, state->Indexed, sizeof(lisp_List), 0, LISP_FALSE, LISP_FALSE, lisp_List_alloc, lisp_List_mark);
     lisp_boot_Type(state, state->ListNode, state->Any, sizeof(lisp_ListNode), 0, LISP_FALSE, LISP_FALSE, lisp_ListNode_alloc, lisp_ListNode_mark);
+    lisp_boot_Type(state, state->Vector, state->Indexed, sizeof(lisp_Vector), 0, LISP_FALSE, LISP_FALSE, lisp_Vector_alloc, lisp_Vector_mark);
+    lisp_boot_Type(state, state->VectorNode, state->Any, sizeof(lisp_VectorNode), 0, LISP_FALSE, LISP_FALSE, lisp_VectorNode_alloc, lisp_VectorNode_mark);
     lisp_boot_Type(state, state->Map, state->Keyed, sizeof(lisp_Map), 0, LISP_FALSE, LISP_FALSE, lisp_Map_alloc, lisp_Map_mark);
 
     lisp_boot_Type(state, state->Callable, state->Any, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
     lisp_boot_Type(state, state->Native, state->Callable, 0, 0, LISP_FALSE, LISP_FALSE, NULL, NULL);
-    lisp_boot_Type(state, state->Function, state->Callable, 0, 3, LISP_FALSE, LISP_FALSE, NULL, NULL);
-    lisp_boot_Type(state, state->Macro, state->Callable, 0, 3, LISP_FALSE, LISP_FALSE, NULL, NULL);
+    lisp_boot_Type(state, state->Function, state->Callable, 0, 5, LISP_FALSE, LISP_FALSE, NULL, NULL);
+    lisp_boot_Type(state, state->Macro, state->Callable, 0, 5, LISP_FALSE, LISP_FALSE, NULL, NULL);
 
     lisp_boot_Type(state, state->Char, state->Any, 4, 0, LISP_FALSE, LISP_TRUE, NULL, NULL);
     lisp_boot_Type(state, state->String, state->Indexed, sizeof(lisp_String), 0, LISP_FALSE, LISP_FALSE, lisp_String_alloc, lisp_String_mark);
@@ -59,7 +61,7 @@ static void lisp_boot(lisp_State* state) {
 
     lisp_List_boot(state);
     lisp_Map_boot(state);
-    
+
     lisp_Bool_boot(state);
 
     state->scope = lisp_Scope_new(state, NULL);

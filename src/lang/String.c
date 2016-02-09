@@ -48,6 +48,29 @@ static lisp_char* lisp_String_to_ascii(lisp_String* string) {
 
     return ascii;
 }
+
+static lisp_Object* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_String* b) {
+    lisp_Object* object = lisp_Object_alloc(state, state->String);
+    lisp_String* string = (lisp_String*) object->data;
+
+    lisp_size size = a->size + b->size;
+    lisp_Object** chars = (lisp_Object**) lisp_State_assoc(state, object->gc_node, size * sizeof(lisp_Object*));
+
+    lisp_size i = 0, il = a->size, k = 0;
+    for (; i < il; i++) {
+        chars[i] = a->chars[i];
+    }
+    i = a->size, il = size;
+    for (; i < il; i++, k++) {
+        chars[i] = b->chars[k];
+    }
+
+    string->chars = chars;
+    string->size = size;
+
+    return object;
+}
+
 static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
     if (a == b) {
         return LISP_TRUE;

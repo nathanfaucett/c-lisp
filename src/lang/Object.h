@@ -25,6 +25,10 @@ static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, 
 
 static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Object* b);
 
+static lisp_Object* lisp_Object_value_get(lisp_State* state, lisp_Object* object, lisp_Object* key);
+static lisp_Object* lisp_Object_value_set(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* value);
+static lisp_Object* lisp_Object_func_get(lisp_State* state, lisp_Object* type, lisp_Object* key);
+
 static lisp_Object* lisp_Object_call1(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* a0, lisp_Object* scope);
 
 static lisp_Object* lisp_Object_to_string(lisp_State* state, lisp_Object* object);

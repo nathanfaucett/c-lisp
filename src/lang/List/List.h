@@ -15,10 +15,10 @@ static void lisp_List_mark(lisp_Object* object);
 
 static lisp_Object* lisp_List_new(lisp_State* state);
 
-static lisp_Object* lisp_List_from_list(lisp_State* state, lisp_List* list);
-
 static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_size index);
 static lisp_size lisp_List_index_of(lisp_State* state, lisp_List* list, lisp_Object* key);
+
+static lisp_Object* lisp_List_concat(lisp_State* state, lisp_List* a, lisp_List* b);
 
 static void lisp_List_mut_set_size(lisp_State* state, lisp_List* list, lisp_size new_size);
 
@@ -40,6 +40,21 @@ static void lisp_List_mut_shift(lisp_List* list);
 static void lisp_List_mut_remove(lisp_List* list, lisp_size index);
 
 static lisp_bool lisp_List_equal(lisp_State* state, lisp_List* a, lisp_List* b);
+
+static lisp_Object* lisp_List_export_index_of(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static lisp_Object* lisp_List_export_size(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static lisp_Object* lisp_List_export_get(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_List_export_set(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static lisp_Object* lisp_List_export_push(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static lisp_Object* lisp_List_export_unshift(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+
+static lisp_Object* lisp_List_export_pop(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_List_export_shift(lisp_State* state, lisp_Object* args, lisp_Object* scope);
+static lisp_Object* lisp_List_export_remove(lisp_State* state, lisp_Object* args, lisp_Object* scope);
 
 static lisp_Object* lisp_List_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope);
 static lisp_Object* lisp_List_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope);

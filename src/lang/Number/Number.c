@@ -2,14 +2,20 @@
 #define __LISP_LANG_NUMBER_C__
 
 
-lisp_Object* lisp_Number_UInt(lisp_State* state, lisp_size integer) {
+static lisp_Object* lisp_Number_UInt(lisp_State* state, lisp_usize value) {
     lisp_Object* object = lisp_Object_alloc(state, state->UInt);
-    LISP_SET_DATA(object, lisp_size, integer);
+    LISP_SET_DATA(object, lisp_usize, value);
     return object;
 }
-lisp_size lisp_Number_get_UInt(lisp_State* state, lisp_Object* index) {
-    if (lisp_Object_inherits(state, index->type, state->Number)) {
-        lisp_Object* size_object = lisp_List_get(state, (lisp_List*) index->type->values->data, LISP_IDX_TYPE_SIZE);
+static lisp_Object* lisp_Number_Int(lisp_State* state, lisp_isize value) {
+    lisp_Object* object = lisp_Object_alloc(state, state->Int);
+    LISP_SET_DATA(object, lisp_isize, value);
+    return object;
+}
+
+static lisp_size lisp_Number_get_UInt(lisp_State* state, lisp_Object* value) {
+    if (lisp_Object_inherits(state, value->type, state->Number)) {
+        lisp_Object* size_object = lisp_List_get(state, (lisp_List*) value->type->values->data, LISP_IDX_TYPE_SIZE);
         lisp_size size = LISP_GET_DATA(size_object, lisp_size);
 
         switch (size) {

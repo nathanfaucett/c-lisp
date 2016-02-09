@@ -7,6 +7,7 @@
 #include "./Function/lib.c"
 #include "./List/lib.c"
 #include "./Number/lib.c"
+#include "./Vector/lib.c"
 #include "./Annotation.c"
 #include "./Bool.c"
 #include "./Map.c"

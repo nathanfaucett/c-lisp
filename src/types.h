@@ -6,11 +6,13 @@ typedef unsigned char lisp_byte;
 typedef lisp_byte lisp_bool;
 typedef char lisp_char;
 
+typedef signed long int lisp_isize;
 typedef signed char lisp_i8;
 typedef signed int lisp_i16;
 typedef signed long int lisp_i32;
 typedef signed long long int lisp_i64;
 
+typedef unsigned long int lisp_usize;
 typedef unsigned char lisp_u8;
 typedef unsigned int lisp_u16;
 typedef unsigned long int lisp_u32;

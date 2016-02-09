@@ -14,11 +14,11 @@ static lisp_Object* lisp_Native_call(lisp_State* state, lisp_Object* native, lis
 }
 
 static lisp_Object* lisp_Native_export_call(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* get = lisp_Symbol_from_ascii(state, "get");
-    lisp_Object* self = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 0), scope);
-    lisp_Object* fn_args = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* fn_args = lisp_List_get(state, list, 1);
 
-    if (self->type == state->Native && lisp_Object_inherits(state, fn_args->type, state->Indexed)) {
+    if (self->type == state->Native && fn_args->type == state->List) {
         return lisp_Native_call(state, self, fn_args, scope);
     } else {
         /* throw error */
@@ -26,17 +26,19 @@ static lisp_Object* lisp_Native_export_call(lisp_State* state, lisp_Object* args
     }
 }
 static lisp_Object* lisp_Native_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    return lisp_String_from_ascii(state, "NativeFunction");
+    return lisp_String_from_ascii(state, "(NativeFunction)");
 }
 static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* get = lisp_Symbol_from_ascii(state, "get");
-    lisp_Object* self = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 0), scope);
-    lisp_Object* other = lisp_Object_call1(state, args, get, lisp_Number_UInt(state, 1), scope);
+    lisp_List* list = (lisp_List*) args->data;
+    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Object* other = lisp_List_get(state, list, 1);
 
-    if (LISP_GET_DATA(self, lisp_bool) == LISP_GET_DATA(other, lisp_bool)) {
-        return state->true;
+    if (self->type == state->Native && other->type == state->Native) {
+        lisp_Object* (*afn)(lisp_State*, lisp_Object*, lisp_Object*) = self->data;
+        lisp_Object* (*bfn)(lisp_State*, lisp_Object*, lisp_Object*) = other->data;
+        return afn == bfn ? state->true : state->false;
     } else {
-        return state->false;
+        return lisp_Object_equal(state, self, other) ? state->true : state->false;
     }
 }
 

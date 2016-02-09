@@ -7,4 +7,7 @@
 #include "./Native.h"
 
 
+static lisp_Object* lisp_function_call(lisp_State* state, lisp_Object* fn, lisp_Object* args, lisp_Object* scope);
+
+
 #endif
