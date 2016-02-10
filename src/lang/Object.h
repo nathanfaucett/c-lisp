@@ -21,7 +21,7 @@ static void lisp_Object_mark(lisp_Object* value);
 
 static lisp_Object* lisp_Object_boot_alloc(lisp_State* state, lisp_Object* type);
 static lisp_Object* lisp_Object_boot_init(lisp_Object* object, lisp_GCNode* gc_node, lisp_Object* type);
-static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, lisp_size size);
+static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, lisp_usize size);
 
 static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Object* b);
 

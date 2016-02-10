@@ -21,7 +21,7 @@ static lisp_Object* lisp_Map_new(lisp_State* state) {
     return object;
 }
 
-static lisp_size lisp_Map_size(lisp_Map* map) {
+static lisp_usize lisp_Map_size(lisp_Map* map) {
     if (map->entries != NULL) {
         return ((lisp_Vector*) map->entries->data)->size / 2;
     } else {
@@ -29,10 +29,10 @@ static lisp_size lisp_Map_size(lisp_Map* map) {
     }
 }
 
-static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key) {
+static lisp_usize lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key) {
     if (map->entries != NULL) {
         lisp_Vector* entries = (lisp_Vector*) map->entries->data;
-        lisp_size i = 0, il = entries->size;
+        lisp_usize i = 0, il = entries->size;
         for (; i < il; i++) {
             if (lisp_Object_equal(state, key, lisp_Vector_get(state, entries, i))) {
                 return i + 1;
@@ -48,7 +48,7 @@ static lisp_bool lisp_Map_has(lisp_State* state, lisp_Map* map, lisp_Object* key
     return lisp_Map_index_of(state, map, key) != 0;
 }
 static lisp_Object* lisp_Map_get(lisp_State* state, lisp_Map* map, lisp_Object* key) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
+    lisp_usize index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
         return lisp_Vector_get(state, (lisp_Vector*) map->entries->data, index);
@@ -58,7 +58,7 @@ static lisp_Object* lisp_Map_get(lisp_State* state, lisp_Map* map, lisp_Object* 
 }
 
 static lisp_Object* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Object* key, lisp_Object* object) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
+    lisp_usize index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
         lisp_Object* entries = map->entries;
@@ -85,7 +85,7 @@ static lisp_Object* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Object* 
     }
 }
 static lisp_Object* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Object* key) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
+    lisp_usize index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
         lisp_Object* entries = map->entries;
@@ -105,7 +105,7 @@ static lisp_Object* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Objec
 }
 
 static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Object* key, lisp_Object* object) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
+    lisp_usize index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
         lisp_Vector_mut_set((lisp_Vector*) map->entries->data, index, object);
@@ -120,7 +120,7 @@ static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Object* key,
     }
 }
 static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Object* key) {
-    lisp_size index = lisp_Map_index_of(state, map, key);
+    lisp_usize index = lisp_Map_index_of(state, map, key);
 
     if (index != 0) {
         lisp_Vector* entries = (lisp_Vector*) map->entries->data;

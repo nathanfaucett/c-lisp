@@ -16,7 +16,7 @@ static void lisp_GC_delete(lisp_GC* gc) {
     free(gc);
 }
 
-static lisp_GCNode* lisp_GC_alloc(lisp_GC* gc, lisp_size bytes) {
+static lisp_GCNode* lisp_GC_alloc(lisp_GC* gc, lisp_usize bytes) {
     lisp_GCNode* gc_node = lisp_GCNode_new(gc->root, bytes);
     gc->root = gc_node;
     gc->size += 1;

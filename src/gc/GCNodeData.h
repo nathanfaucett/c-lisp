@@ -4,12 +4,12 @@
 
 typedef struct lisp_GCNodeData {
     struct lisp_GCNodeData* next;
-    lisp_size bytes;
+    lisp_usize bytes;
     void* object;
 } lisp_GCNodeData;
 
 
-static lisp_GCNodeData* lisp_GCNodeData_new(lisp_GCNodeData* next, lisp_size bytes);
+static lisp_GCNodeData* lisp_GCNodeData_new(lisp_GCNodeData* next, lisp_usize bytes);
 static void lisp_GCNodeData_delete(lisp_GCNodeData* gc_node_data);
 
 

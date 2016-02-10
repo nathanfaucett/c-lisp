@@ -6,7 +6,7 @@ static lisp_State* lisp_State_new(void) {
     lisp_State* state = (lisp_State*) malloc(sizeof(lisp_State));
     state->gc = lisp_GC_new();
 
-    lisp_size sizeof_Type = sizeof(lisp_Type);
+    lisp_usize sizeof_Type = sizeof(lisp_Type);
 
     state->Type = lisp_Object_boot_size(state, NULL, sizeof_Type);
     state->Type->type = state->Type;
@@ -57,7 +57,7 @@ static lisp_State* lisp_State_new(void) {
     state->Int32 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->Int64 = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
-    if (sizeof(lisp_size) == 8) {
+    if (sizeof(lisp_usize) == 8) {
         state->UInt = state->UInt64;
         state->Int = state->Int64;
     } else {
@@ -88,14 +88,14 @@ static void lisp_State_delete(lisp_State* state) {
     free(state);
 }
 
-static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_size size) {
+static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_usize size) {
     return lisp_GC_alloc(state->gc, size);
 }
 static void lisp_State_dealloc(lisp_State* state, void* object) {
     lisp_GC_dealloc(state->gc, object);
 }
 
-static void* lisp_State_assoc(lisp_State* state, lisp_GCNode* gc_node, lisp_size size) {
+static void* lisp_State_assoc(lisp_State* state, lisp_GCNode* gc_node, lisp_usize size) {
     return lisp_GCNode_assoc(state->gc, gc_node, size);
 }
 static void lisp_State_dissoc(lisp_State* state, lisp_GCNode* gc_node, void* object) {

@@ -4,7 +4,7 @@
 
 static lisp_i64 lisp_ascii_to_i64(lisp_char* ascii) {
     lisp_i64 result = 0;
-    lisp_size i = 0;
+    lisp_usize i = 0;
 
     if (ascii[0] == '-') {
         result = -1;
@@ -18,9 +18,9 @@ static lisp_i64 lisp_ascii_to_i64(lisp_char* ascii) {
 
     return result;
 }
-static lisp_size lisp_ascii_to_u64(lisp_char* ascii) {
-    lisp_size result = 0;
-    lisp_size i = 0;
+static lisp_usize lisp_ascii_to_u64(lisp_char* ascii) {
+    lisp_usize result = 0;
+    lisp_usize i = 0;
 
     while (ascii[i] != '\0') {
         result = result * 10 + ascii[i] - '0';
@@ -91,7 +91,7 @@ static lisp_char* lisp_i64_to_ascii(lisp_i64 object) {
 
     return lisp_ascii_clone(ascii);
 }
-static lisp_char* lisp_size_to_ascii(lisp_size object) {
+static lisp_char* lisp_usize_to_ascii(lisp_usize object) {
     static lisp_char buffer[LISP_INT_DIGITS + 2];
     lisp_char* ascii = buffer + LISP_INT_DIGITS + 1;
 

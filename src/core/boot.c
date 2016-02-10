@@ -72,8 +72,8 @@ static void lisp_boot_Type (
     lisp_State* state,
     lisp_Object* type,
     lisp_Object* super,
-    lisp_size size,
-    lisp_size values_size,
+    lisp_usize size,
+    lisp_usize values_size,
     lisp_bool abstract,
     lisp_bool bytes,
     void (*alloc)(lisp_State*, lisp_Object*),
@@ -83,8 +83,8 @@ static void lisp_boot_Type (
     lisp_List* values = (lisp_List*) values_object->data;
     lisp_List_mut_set_size(state, values, LISP_TYPE_SIZE);
 
-    lisp_Object* size_object = lisp_Object_boot_size(state, state->UInt, sizeof(lisp_size));
-    LISP_SET_DATA(size_object, lisp_size, size);
+    lisp_Object* size_object = lisp_Object_boot_size(state, state->UInt, sizeof(lisp_usize));
+    LISP_SET_DATA(size_object, lisp_usize, size);
 
     lisp_Object* attributes = lisp_List_new(state);
     lisp_List_mut_set_size(state, (lisp_List*) attributes->data, values_size);

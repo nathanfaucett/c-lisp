@@ -2,7 +2,7 @@
 #define __LISP_GC_NODE_DATA_C__
 
 
-static lisp_GCNodeData* lisp_GCNodeData_new(lisp_GCNodeData* next, lisp_size bytes) {
+static lisp_GCNodeData* lisp_GCNodeData_new(lisp_GCNodeData* next, lisp_usize bytes) {
     lisp_GCNodeData* gc_node_data = (lisp_GCNodeData*) malloc(sizeof(lisp_GCNodeData));
     gc_node_data->next = next;
     gc_node_data->bytes = bytes;

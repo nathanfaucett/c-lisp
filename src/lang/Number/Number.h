@@ -4,7 +4,7 @@
 
 static lisp_Object* lisp_Number_UInt(lisp_State* state, lisp_usize value);
 static lisp_Object* lisp_Number_Int(lisp_State* state, lisp_isize value);
-static lisp_size lisp_Number_get_UInt(lisp_State* state, lisp_Object* value);
+static lisp_usize lisp_Number_get_UInt(lisp_State* state, lisp_Object* value);
 
 
 #endif

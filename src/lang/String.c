@@ -11,7 +11,7 @@ static void lisp_String_mark(lisp_Object* object) {
     lisp_String* string = (lisp_String*) object->data;
 
     if (string->chars != NULL) {
-        lisp_size i = 0, il = string->size;
+        lisp_usize i = 0, il = string->size;
         for (; i < il; i++) {
             lisp_Object_mark(string->chars[i]);
         }
@@ -22,10 +22,10 @@ static lisp_Object* lisp_String_from_ascii(lisp_State* state, lisp_char* ascii) 
     lisp_Object* object = lisp_Object_alloc(state, state->String);
     lisp_String* string = (lisp_String*) object->data;
 
-    lisp_size size = lisp_ascii_size(ascii);
+    lisp_usize size = lisp_ascii_size(ascii);
     lisp_Object** chars = (lisp_Object**) lisp_State_assoc(state, object->gc_node, size * sizeof(lisp_Object*));
 
-    lisp_size i = 0, il = size;
+    lisp_usize i = 0, il = size;
     for (; i < il; i++) {
         lisp_Object* object = lisp_Object_alloc(state, state->Char);
         LISP_SET_DATA(object, lisp_u32, ascii[i]);
@@ -40,7 +40,7 @@ static lisp_Object* lisp_String_from_ascii(lisp_State* state, lisp_char* ascii) 
 static lisp_char* lisp_String_to_ascii(lisp_String* string) {
     lisp_char* ascii = (lisp_char*) malloc((string->size + 1) * sizeof(lisp_char));
 
-    lisp_size i = 0, il = string->size;
+    lisp_usize i = 0, il = string->size;
     for (; i < il; i++) {
         ascii[i] = (lisp_char) *((lisp_u32*) string->chars[i]->data);
     }
@@ -53,10 +53,10 @@ static lisp_Object* lisp_String_concat(lisp_State* state, lisp_String* a, lisp_S
     lisp_Object* object = lisp_Object_alloc(state, state->String);
     lisp_String* string = (lisp_String*) object->data;
 
-    lisp_size size = a->size + b->size;
+    lisp_usize size = a->size + b->size;
     lisp_Object** chars = (lisp_Object**) lisp_State_assoc(state, object->gc_node, size * sizeof(lisp_Object*));
 
-    lisp_size i = 0, il = a->size, k = 0;
+    lisp_usize i = 0, il = a->size, k = 0;
     for (; i < il; i++) {
         chars[i] = a->chars[i];
     }
@@ -75,7 +75,7 @@ static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
     if (a == b) {
         return LISP_TRUE;
     } else if (a->size == b->size) {
-        lisp_size i = 0, il = a->size;
+        lisp_usize i = 0, il = a->size;
         for (; i < il; i++) {
             if (LISP_GET_DATA(a->chars[i], lisp_u32) != LISP_GET_DATA(b->chars[i], lisp_u32)) {
                 return LISP_FALSE;
@@ -94,7 +94,7 @@ static lisp_Object* lisp_String_export_char_at(lisp_State* state, lisp_Object* a
 
     if (self->type == state->String && lisp_Object_inherits(state, index->type, state->Unsigned)) {
         lisp_String* string = (lisp_String*) self->data;
-        lisp_size i = lisp_Number_get_UInt(state, index);
+        lisp_usize i = lisp_Number_get_UInt(state, index);
 
         if (string->chars != NULL && i < string->size) {
             return string->chars[lisp_Number_get_UInt(state, index)];

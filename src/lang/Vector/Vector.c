@@ -34,19 +34,23 @@ static lisp_Object* lisp_Vector_clone(lisp_State* state, lisp_Vector* vector) {
     return object;
 }
 
-static lisp_size lisp_Vector_tail_off(lisp_size size) {
+static void lisp_Vector_mut_set_size(lisp_State* state, lisp_Vector* vector, lisp_usize size) {
+    
+}
+
+static lisp_usize lisp_Vector_tail_off(lisp_usize size) {
     if (size < LISP_VECTOR_SIZE) {
         return 0;
     } else {
         return ((size - 1) >> LISP_VECTOR_SHIFT) << LISP_VECTOR_SHIFT;
     }
 }
-static lisp_Object* lisp_Vector_find_node(lisp_Vector* vector, lisp_size index) {
+static lisp_Object* lisp_Vector_find_node(lisp_Vector* vector, lisp_usize index) {
     if (index >= lisp_Vector_tail_off(vector->size)) {
         return vector->tail;
     } else {
         lisp_Object* node = vector->root;
-        lisp_size level = vector->shift;
+        lisp_usize level = vector->shift;
 
         while (level > 0) {
             node = ((lisp_VectorNode*) node->data)->array[(index >> level) & LISP_VECTOR_MASK];
@@ -56,7 +60,7 @@ static lisp_Object* lisp_Vector_find_node(lisp_Vector* vector, lisp_size index) 
         return node;
     }
 }
-static lisp_Object* lisp_Vector_get(lisp_State* state, lisp_Vector* vector, lisp_size index) {
+static lisp_Object* lisp_Vector_get(lisp_State* state, lisp_Vector* vector, lisp_usize index) {
     if (index < vector->size) {
         return ((lisp_VectorNode*) lisp_Vector_find_node(vector, index)->data)->array[index & LISP_VECTOR_MASK];
     } else {
@@ -65,7 +69,7 @@ static lisp_Object* lisp_Vector_get(lisp_State* state, lisp_Vector* vector, lisp
 }
 
 static lisp_Object* lisp_Vector_new_path_set(
-    lisp_State* state, lisp_Object* node_object, lisp_size size, lisp_size index, lisp_Object* value, lisp_size level
+    lisp_State* state, lisp_Object* node_object, lisp_usize size, lisp_usize index, lisp_Object* value, lisp_usize level
 ) {
     lisp_Object* new_node_object = lisp_VectorNode_clone(state, node_object, ((size - 1) >> level) & LISP_VECTOR_MASK);
     lisp_VectorNode* new_node = (lisp_VectorNode*) new_node_object->data;
@@ -73,7 +77,7 @@ static lisp_Object* lisp_Vector_new_path_set(
     if (level == 0) {
         new_node->array[index & LISP_VECTOR_MASK] = value;
     } else {
-        lisp_size sub_index = (index >> level) & LISP_VECTOR_MASK;
+        lisp_usize sub_index = (index >> level) & LISP_VECTOR_MASK;
         new_node->array[sub_index] = lisp_Vector_new_path_set(
             state, ((lisp_VectorNode*) node_object->data)->array[sub_index], size, index, value, level - LISP_VECTOR_SHIFT
         );
@@ -81,14 +85,14 @@ static lisp_Object* lisp_Vector_new_path_set(
 
     return new_node_object;
 }
-static lisp_Object* lisp_Vector_set(lisp_State* state, lisp_Vector* vector, lisp_size index, lisp_Object* value) {
-    lisp_size size = vector->size;
+static lisp_Object* lisp_Vector_set(lisp_State* state, lisp_Vector* vector, lisp_usize index, lisp_Object* value) {
+    lisp_usize size = vector->size;
 
     if (index < size) {
         if (index >= lisp_Vector_tail_off(size)) {
             lisp_Object* tail_object = vector->tail;
             lisp_VectorNode* tail = (lisp_VectorNode*) tail_object->data;
-            lisp_size masked_index = index & LISP_VECTOR_MASK;
+            lisp_usize masked_index = index & LISP_VECTOR_MASK;
 
             if (lisp_Object_equal(state, tail->array[masked_index], value)) {
                 return vector->self;
@@ -115,7 +119,7 @@ static lisp_Object* lisp_Vector_set(lisp_State* state, lisp_Vector* vector, lisp
         return vector->self;
     }
 }
-static void lisp_Vector_mut_set(lisp_Vector* vector, lisp_size index, lisp_Object* value) {
+static void lisp_Vector_mut_set(lisp_Vector* vector, lisp_usize index, lisp_Object* value) {
     lisp_Object* node_object = lisp_Vector_find_node(vector, index);
 
     if (node_object != NULL) {
@@ -123,7 +127,7 @@ static void lisp_Vector_mut_set(lisp_Vector* vector, lisp_size index, lisp_Objec
     }
 }
 
-static lisp_Object* lisp_Vector_new_path(lisp_State* state, lisp_Object* node_object, lisp_size level) {
+static lisp_Object* lisp_Vector_new_path(lisp_State* state, lisp_Object* node_object, lisp_usize level) {
     if (level == 0) {
         return node_object;
     } else {
@@ -134,9 +138,9 @@ static lisp_Object* lisp_Vector_new_path(lisp_State* state, lisp_Object* node_ob
     }
 }
 static lisp_Object* lisp_Vector_push_tail(
-    lisp_State* state, lisp_Object* parent_object, lisp_Object* tail_object, lisp_size size, lisp_size level
+    lisp_State* state, lisp_Object* parent_object, lisp_Object* tail_object, lisp_usize size, lisp_usize level
 ) {
-    lisp_size sub_index = ((size - 1) >> level) & LISP_VECTOR_MASK;
+    lisp_usize sub_index = ((size - 1) >> level) & LISP_VECTOR_MASK;
     lisp_Object* new_node_object = lisp_VectorNode_new(state);
     lisp_Object* node_to_insert = NULL;
 
@@ -158,8 +162,8 @@ static lisp_Object* lisp_Vector_push_tail(
 }
 static void lisp_Vector_mut_push(lisp_State* state, lisp_Vector* vector, lisp_Object* value) {
     lisp_Object* root = vector->root;
-    lisp_size size = vector->size;
-    lisp_size shift = vector->shift;
+    lisp_usize size = vector->size;
+    lisp_usize shift = vector->shift;
 
     if (size - lisp_Vector_tail_off(size) < LISP_VECTOR_SIZE) {
         if (vector->tail == NULL) {
@@ -169,7 +173,7 @@ static void lisp_Vector_mut_push(lisp_State* state, lisp_Vector* vector, lisp_Ob
     } else {
         lisp_Object* new_root_object = NULL;
         lisp_VectorNode* new_root = NULL;
-        lisp_size new_shift = shift;
+        lisp_usize new_shift = shift;
 
         if ((size >> LISP_VECTOR_SHIFT) > (1 << shift)) {
             new_root_object = lisp_VectorNode_new(state);
@@ -193,7 +197,7 @@ static void lisp_Vector_mut_push(lisp_State* state, lisp_Vector* vector, lisp_Ob
     vector->size = size + 1;
 }
 static lisp_Object* lisp_Vector_push(lisp_State* state, lisp_Vector* vector, lisp_Object* value) {
-    lisp_size size = vector->size;
+    lisp_usize size = vector->size;
     lisp_Object* new_vector_object = lisp_Vector_clone(state, vector);
     lisp_Vector* new_vector = (lisp_Vector*) new_vector_object->data;
 
@@ -208,8 +212,8 @@ static lisp_Object* lisp_Vector_push(lisp_State* state, lisp_Vector* vector, lis
     return new_vector_object;
 }
 
-static lisp_Object* lisp_Vector_pop_tail(lisp_State* state, lisp_Object* node_object, lisp_size size, lisp_size level) {
-    lisp_size sub_index = ((size - 1) >> level) & LISP_VECTOR_MASK;
+static lisp_Object* lisp_Vector_pop_tail(lisp_State* state, lisp_Object* node_object, lisp_usize size, lisp_usize level) {
+    lisp_usize sub_index = ((size - 1) >> level) & LISP_VECTOR_MASK;
 
     if (level > LISP_VECTOR_SHIFT) {
         lisp_Object* new_child_object = lisp_Vector_pop_tail(
@@ -230,7 +234,7 @@ static lisp_Object* lisp_Vector_pop_tail(lisp_State* state, lisp_Object* node_ob
     }
 }
 static lisp_Object* lisp_Vector_pop(lisp_State* state, lisp_Vector* vector) {
-    lisp_size size = vector->size;
+    lisp_usize size = vector->size;
 
     if (size == 0) {
         return vector->self;
@@ -242,7 +246,7 @@ static lisp_Object* lisp_Vector_pop(lisp_State* state, lisp_Vector* vector) {
 
         lisp_Object* new_root_object = NULL;
         lisp_Object* new_tail_object = NULL;
-        lisp_size new_shift;
+        lisp_usize new_shift;
 
         if ((size - lisp_Vector_tail_off(size)) > 1) {
             new_tail_object = lisp_VectorNode_clone(state, vector->tail, (size - 1) & LISP_VECTOR_MASK);
@@ -251,7 +255,7 @@ static lisp_Object* lisp_Vector_pop(lisp_State* state, lisp_Vector* vector) {
         } else {
             new_tail_object = lisp_Vector_find_node(vector, size - 2);
 
-            lisp_size shift = vector->shift;
+            lisp_usize shift = vector->shift;
             new_root_object = lisp_Vector_pop_tail(state, vector->root, size, shift);
             new_shift = shift;
 
@@ -274,15 +278,43 @@ static lisp_Object* lisp_Vector_pop(lisp_State* state, lisp_Vector* vector) {
     }
 }
 
-static lisp_Object* lisp_Vector_remove(lisp_State* state, lisp_Vector* vector, lisp_size index) {
-    lisp_size size = vector->size;
+static lisp_Object* lisp_Vector_unshift(lisp_State* state, lisp_Vector* vector, lisp_Object* value) {
+    lisp_usize size = vector->size;
+
+    if (size != 0) {
+        lisp_Object* array_object = lisp_Array_new(state);
+        lisp_Array* array = (lisp_Array*) array_object->data;
+        lisp_Array_set_size(state, array, size + 1);
+
+        lisp_usize i = 0, il = size, j = 1;
+        for (; i < il; i++, j++) {
+            lisp_Array_set(array, j, lisp_Vector_get(state, vector, j));
+        }
+        lisp_Array_set(array, 0, value);
+
+        lisp_Object* new_vector_object = lisp_Vector_new(state);
+        lisp_Vector* new_vector = (lisp_Vector*) new_vector_object->data;
+
+        for (i = 0, il = size + 1; i < il; i++) {
+            lisp_Vector_mut_push(state, new_vector, lisp_Array_get(state, array, i));
+        }
+        lisp_State_dealloc(state, array_object);
+
+        return new_vector_object;
+    } else {
+        return lisp_Vector_push(state, vector, value);
+    }
+}
+
+static lisp_Object* lisp_Vector_remove(lisp_State* state, lisp_Vector* vector, lisp_usize index) {
+    lisp_usize size = vector->size;
 
     if (index < size) {
         lisp_Object* array_object = lisp_Array_new(state);
         lisp_Array* array = (lisp_Array*) array_object->data;
         lisp_Array_set_size(state, array, size);
 
-        lisp_size i = 0, il = index, j = 0;
+        lisp_usize i = 0, il = index, j = 0;
         for (; i < il; i++, j++) {
             lisp_Array_set(array, j, lisp_Vector_get(state, vector, i));
         }
@@ -303,15 +335,15 @@ static lisp_Object* lisp_Vector_remove(lisp_State* state, lisp_Vector* vector, l
         return vector->self;
     }
 }
-static void lisp_Vector_mut_remove(lisp_State* state, lisp_Vector* vector, lisp_size index) {
-    lisp_size size = vector->size;
+static void lisp_Vector_mut_remove(lisp_State* state, lisp_Vector* vector, lisp_usize index) {
+    lisp_usize size = vector->size;
 
     if (index < size) {
         lisp_Object* array_object = lisp_Array_new(state);
         lisp_Array* array = (lisp_Array*) array_object->data;
         lisp_Array_set_size(state, array, size);
 
-        lisp_size i = 0, il = index, j = 0;
+        lisp_usize i = 0, il = index, j = 0;
         for (; i < il; i++, j++) {
             lisp_Array_set(array, j, lisp_Vector_get(state, vector, i));
         }
@@ -335,7 +367,7 @@ static lisp_bool lisp_Vector_equal(lisp_State* state, lisp_Vector* a, lisp_Vecto
     if (a == b) {
         return LISP_TRUE;
     } else if (a->size == b->size) {
-        lisp_size i = 0, il = a->size;
+        lisp_usize i = 0, il = a->size;
 
         for (; i < il; i++) {
             if (!lisp_Object_equal(state, lisp_Vector_get(state, a, i), lisp_Vector_get(state, b, i))) {

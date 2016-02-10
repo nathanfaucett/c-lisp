@@ -4,7 +4,7 @@
 
 typedef struct lisp_String {
     lisp_Object** chars;
-    lisp_size size;
+    lisp_usize size;
 } lisp_String;
 
 

@@ -13,7 +13,7 @@ static void lisp_Array_mark(lisp_Object* object) {
 
     if (array->objects != NULL) {
         lisp_Object* object = NULL;
-        lisp_size i = 0, il = array->size;
+        lisp_usize i = 0, il = array->size;
         for (; i < il; i++) {
             object = array->objects[i];
             if (object != NULL) {
@@ -29,13 +29,13 @@ static lisp_Object* lisp_Array_new(lisp_State* state) {
     return object;
 }
 
-static void lisp_Array_set_size(lisp_State* state, lisp_Array* array, lisp_size size) {
+static void lisp_Array_set_size(lisp_State* state, lisp_Array* array, lisp_usize size) {
     if (size > 0) {
         if (array->objects != NULL) {
             lisp_State_dissoc(state, array->self->gc_node, array->objects);
         }
         lisp_Object** objects = lisp_State_assoc(state, array->self->gc_node, size * sizeof(lisp_Object*));
-        lisp_size i = 0, il = size;
+        lisp_usize i = 0, il = size;
         for (; i < il; i++) {
             objects[i] = NULL;
         }
@@ -44,7 +44,7 @@ static void lisp_Array_set_size(lisp_State* state, lisp_Array* array, lisp_size 
         array->size = size;
     }
 }
-static lisp_Object* lisp_Array_get(lisp_State* state, lisp_Array* array, lisp_size index) {
+static lisp_Object* lisp_Array_get(lisp_State* state, lisp_Array* array, lisp_usize index) {
     if (index < array->size) {
         lisp_Object* object = array->objects[index];
 
@@ -57,7 +57,7 @@ static lisp_Object* lisp_Array_get(lisp_State* state, lisp_Array* array, lisp_si
         return state->nil;
     }
 }
-static void lisp_Array_set(lisp_Array* array, lisp_size index, lisp_Object* value) {
+static void lisp_Array_set(lisp_Array* array, lisp_usize index, lisp_Object* value) {
     if (index < array->size) {
         array->objects[index] = value;
     }
@@ -67,7 +67,7 @@ static lisp_bool lisp_Array_equal(lisp_State* state, lisp_Array* a, lisp_Array* 
     if (a == b) {
         return LISP_TRUE;
     } else if (a->size == b->size) {
-        lisp_size i = 0, il = a->size;
+        lisp_usize i = 0, il = a->size;
         for (; i < il; i++) {
             if (!lisp_Object_equal(state, lisp_Array_get(state, a, i), lisp_Array_get(state, b, i))) {
                 return LISP_FALSE;

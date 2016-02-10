@@ -13,9 +13,9 @@ static void lisp_Map_mark(lisp_Object* object);
 
 static lisp_Object* lisp_Map_new(lisp_State* state);
 
-static lisp_size lisp_Map_size(lisp_Map* map);
+static lisp_usize lisp_Map_size(lisp_Map* map);
 
-static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key);
+static lisp_usize lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key);
 
 static lisp_bool lisp_Map_has(lisp_State* state, lisp_Map* map, lisp_Object* key);
 static lisp_Object* lisp_Map_get(lisp_State* state, lisp_Map* map, lisp_Object* key);

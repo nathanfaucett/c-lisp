@@ -28,7 +28,7 @@ static lisp_Object* lisp_VectorNode_new(lisp_State* state) {
     return object;
 }
 
-static lisp_Object* lisp_VectorNode_clone(lisp_State* state, lisp_Object* node_object, lisp_size length) {
+static lisp_Object* lisp_VectorNode_clone(lisp_State* state, lisp_Object* node_object, lisp_usize length) {
     lisp_Object* new_node_object = lisp_VectorNode_new(state);
     lisp_VectorNode* new_node = (lisp_VectorNode*) new_node_object->data;
     lisp_VectorNode* node = (lisp_VectorNode*) node_object->data;

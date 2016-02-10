@@ -2,15 +2,15 @@
 #define __LISP_UTILS_CSTRING_C__
 
 
-static lisp_size lisp_ascii_size(lisp_char* ascii) {
-    lisp_size size = 0;
+static lisp_usize lisp_ascii_size(lisp_char* ascii) {
+    lisp_usize size = 0;
     while (ascii[size] != '\0') {
         size += 1;
     }
     return size;
 }
 static lisp_char* lisp_ascii_copy(lisp_char* a, lisp_char* b) {
-    lisp_size i = 0, il = lisp_ascii_size(b) + 1;
+    lisp_usize i = 0, il = lisp_ascii_size(b) + 1;
 
     for (; i < il; i++) {
         a[i] = b[i];
@@ -18,17 +18,17 @@ static lisp_char* lisp_ascii_copy(lisp_char* a, lisp_char* b) {
     return a;
 }
 static lisp_char* lisp_ascii_clone(lisp_char* ascii) {
-    lisp_size size = lisp_ascii_size(ascii) + 1;
+    lisp_usize size = lisp_ascii_size(ascii) + 1;
     lisp_char* other = (lisp_char*) malloc(size * sizeof(lisp_char));
 
-    lisp_size i = 0, il = size;
+    lisp_usize i = 0, il = size;
     for (; i < il; i++) {
         other[i] = ascii[i];
     }
     return other;
 }
-static lisp_size lisp_ascii_index_of(lisp_char* ascii, lisp_char ch) {
-    lisp_size index = 0;
+static lisp_usize lisp_ascii_index_of(lisp_char* ascii, lisp_char ch) {
+    lisp_usize index = 0;
     lisp_char c = ascii[index];
 
     while (c != '\0') {
@@ -42,7 +42,7 @@ static lisp_size lisp_ascii_index_of(lisp_char* ascii, lisp_char ch) {
     return 0;
 }
 static lisp_bool lisp_ascii_equal(lisp_char* a, lisp_char* b) {
-    lisp_size index = 0;
+    lisp_usize index = 0;
     lisp_char ch = a[index];
 
     while (ch != '\0') {
@@ -56,32 +56,32 @@ static lisp_bool lisp_ascii_equal(lisp_char* a, lisp_char* b) {
     return LISP_TRUE;
 }
 
-static lisp_size lisp_utf8_size(lisp_u32* utf8) {
-    lisp_size size = 0;
+static lisp_usize lisp_utf8_size(lisp_u32* utf8) {
+    lisp_usize size = 0;
     while (utf8[size] != '\0') {
         size += 1;
     }
     return size;
 }
 static lisp_u32* lisp_utf8_copy(lisp_u32* a, lisp_u32* b) {
-    lisp_size i = 0, il = lisp_utf8_size(b) + 1;
+    lisp_usize i = 0, il = lisp_utf8_size(b) + 1;
     for (; i < il; i++) {
         a[i] = b[i];
     }
     return a;
 }
 static lisp_u32* lisp_utf8_clone(lisp_u32* utf8) {
-    lisp_size size = lisp_utf8_size(utf8) + 1;
+    lisp_usize size = lisp_utf8_size(utf8) + 1;
     lisp_u32* other = (lisp_u32*) malloc(size * sizeof(lisp_u32));
 
-    lisp_size i = 0, il = size;
+    lisp_usize i = 0, il = size;
     for (; i < il; i++) {
         other[i] = utf8[i];
     }
     return other;
 }
-static lisp_size lisp_utf8_index_of(lisp_u32* utf8, lisp_u32 ch) {
-    lisp_size index = 0;
+static lisp_usize lisp_utf8_index_of(lisp_u32* utf8, lisp_u32 ch) {
+    lisp_usize index = 0;
     lisp_u32 c = utf8[index];
 
     while (c != '\0') {
@@ -95,7 +95,7 @@ static lisp_size lisp_utf8_index_of(lisp_u32* utf8, lisp_u32 ch) {
     return 0;
 }
 static lisp_bool lisp_utf8_equal(lisp_u32* a, lisp_u32* b) {
-    lisp_size index = 0;
+    lisp_usize index = 0;
     lisp_u32 ch = a[index];
 
     while (ch != '\0') {
@@ -110,7 +110,7 @@ static lisp_bool lisp_utf8_equal(lisp_u32* a, lisp_u32* b) {
 }
 
 static lisp_bool lisp_ascii_utf8_equal(lisp_u32* a, lisp_char* b) {
-    lisp_size index = 0;
+    lisp_usize index = 0;
     lisp_u32 ch = a[index];
 
     while (ch != '\0') {

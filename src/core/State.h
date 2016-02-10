@@ -72,10 +72,10 @@ typedef struct lisp_State {
 static lisp_State* lisp_State_new(void);
 static void lisp_State_delete(lisp_State* state);
 
-static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_size size);
+static lisp_GCNode* lisp_State_alloc(lisp_State* state, lisp_usize size);
 static void lisp_State_dealloc(lisp_State* state, void* object);
 
-static void* lisp_State_assoc(lisp_State* state, lisp_GCNode* gc_node, lisp_size size);
+static void* lisp_State_assoc(lisp_State* state, lisp_GCNode* gc_node, lisp_usize size);
 static void lisp_State_dissoc(lisp_State* state, lisp_GCNode* gc_node, void* object);
 
 

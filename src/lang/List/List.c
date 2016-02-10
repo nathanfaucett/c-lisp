@@ -23,7 +23,7 @@ static lisp_Object* lisp_List_new(lisp_State* state) {
     return object;
 }
 
-static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_size index) {
+static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_usize index) {
     if (index == 0) {
         return list->root;
     } else if (index == list->size - 1) {
@@ -34,10 +34,10 @@ static lisp_Object* lisp_List_find_node(lisp_List* list, lisp_size index) {
         return NULL;
     }
 }
-static lisp_size lisp_List_index_of(lisp_State* state, lisp_List* list, lisp_Object* key) {
+static lisp_usize lisp_List_index_of(lisp_State* state, lisp_List* list, lisp_Object* key) {
     lisp_Object* node_object = list->root;
     lisp_ListNode* node = NULL;
-    lisp_size index = 1;
+    lisp_usize index = 1;
 
     while (node_object != NULL) {
         node = (lisp_ListNode*) node_object->data;
@@ -81,11 +81,11 @@ static lisp_Object* lisp_List_concat(lisp_State* state, lisp_List* a, lisp_List*
     }
 }
 
-static void lisp_List_mut_set_size(lisp_State* state, lisp_List* list, lisp_size size) {
+static void lisp_List_mut_set_size(lisp_State* state, lisp_List* list, lisp_usize size) {
     lisp_Object* tail_object = NULL;
     lisp_Object* node_object = NULL;
 
-    lisp_size i = 0, il = size;
+    lisp_usize i = 0, il = size;
     for (; i < il; i++) {
         node_object = lisp_ListNode_new(state);
         ((lisp_ListNode*) node_object->data)->object = state->nil;
@@ -102,7 +102,7 @@ static void lisp_List_mut_set_size(lisp_State* state, lisp_List* list, lisp_size
     list->size = size;
 }
 
-static lisp_Object* lisp_List_get(lisp_State* state, lisp_List* list, lisp_size index) {
+static lisp_Object* lisp_List_get(lisp_State* state, lisp_List* list, lisp_usize index) {
     lisp_Object* node = lisp_List_find_node(list, index);
 
     if (node != NULL) {
@@ -111,7 +111,7 @@ static lisp_Object* lisp_List_get(lisp_State* state, lisp_List* list, lisp_size 
         return state->nil;
     }
 }
-static lisp_Object* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size index, lisp_Object* object) {
+static lisp_Object* lisp_List_set(lisp_State* state, lisp_List* list, lisp_usize index, lisp_Object* object) {
     if (index < list->size) {
         lisp_Object* node_object = lisp_List_find_node(list, index);
         lisp_ListNode* node = (lisp_ListNode*) node_object->data;
@@ -138,7 +138,7 @@ static lisp_Object* lisp_List_set(lisp_State* state, lisp_List* list, lisp_size 
         return list->self;
     }
 }
-static void lisp_List_mut_set(lisp_List* list, lisp_size index, lisp_Object* object) {
+static void lisp_List_mut_set(lisp_List* list, lisp_usize index, lisp_Object* object) {
     if (index < list->size) {
         lisp_Object* node_object = lisp_List_find_node(list, index);
         lisp_ListNode* node = (lisp_ListNode*) node_object->data;
@@ -266,7 +266,7 @@ static lisp_Object* lisp_List_shift(lisp_State* state, lisp_List* list) {
         return state->empty_list;
     }
 }
-static lisp_Object* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_size index) {
+static lisp_Object* lisp_List_remove(lisp_State* state, lisp_List* list, lisp_usize index) {
     if (index == 0) {
         return lisp_List_shift(state, list);
     } else if (index == list->size - 1) {
@@ -308,7 +308,7 @@ static void lisp_List_mut_shift(lisp_List* list) {
         list->size = 0;
     }
 }
-static void lisp_List_mut_remove(lisp_List* list, lisp_size index) {
+static void lisp_List_mut_remove(lisp_List* list, lisp_usize index) {
     if (index == 0) {
         lisp_List_mut_shift(list);
     } else if (index == list->size - 1) {

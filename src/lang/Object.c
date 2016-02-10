@@ -12,7 +12,7 @@ static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type) {
     object->type = type;
 
     lisp_Object* size_object = lisp_List_get(state, type_values, LISP_IDX_TYPE_SIZE);
-    lisp_size size = LISP_GET_DATA(size_object, lisp_size);
+    lisp_usize size = LISP_GET_DATA(size_object, lisp_usize);
 
     if (size != 0) {
         object->data = lisp_State_assoc(state, gc_node, size);
@@ -63,7 +63,7 @@ static lisp_Object* lisp_Object_boot_init(lisp_Object* object, lisp_GCNode* gc_n
     object->values = NULL;
     return object;
 }
-static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, lisp_size size) {
+static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, lisp_usize size) {
     lisp_Object* object = lisp_Object_boot_alloc(state, type);
     object->data = lisp_State_assoc(state, object->gc_node, size);
     return object;
@@ -86,7 +86,7 @@ static lisp_bool lisp_Object_inherits(lisp_State* state, lisp_Object* a, lisp_Ob
 static lisp_Object* lisp_Object_value_get(lisp_State* state, lisp_Object* object, lisp_Object* key) {
     lisp_Object* type = object->type;
     lisp_List* attributes = (lisp_List*) lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_ATTRIBUTES)->data;
-    lisp_size index = lisp_List_index_of(state, attributes, key);
+    lisp_usize index = lisp_List_index_of(state, attributes, key);
 
     if (index != 0) {
         return lisp_List_get(state, (lisp_List*) object->values->data, index);
@@ -97,7 +97,7 @@ static lisp_Object* lisp_Object_value_get(lisp_State* state, lisp_Object* object
 static lisp_Object* lisp_Object_value_set(lisp_State* state, lisp_Object* object, lisp_Object* key, lisp_Object* value) {
     lisp_Object* type = object->type;
     lisp_List* attributes = (lisp_List*) lisp_List_get(state, (lisp_List*) type->values->data, LISP_IDX_TYPE_ATTRIBUTES)->data;
-    lisp_size index = lisp_List_index_of(state, attributes, key);
+    lisp_usize index = lisp_List_index_of(state, attributes, key);
 
     if (index != 0) {
         lisp_Object* new_values = lisp_List_set(state, (lisp_List*) object->values->data, index, value);

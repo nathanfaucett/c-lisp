@@ -2,7 +2,7 @@
 #define __LISP_GC_NODE_C__
 
 
-static lisp_GCNode* lisp_GCNode_new(lisp_GCNode* next, lisp_size bytes) {
+static lisp_GCNode* lisp_GCNode_new(lisp_GCNode* next, lisp_usize bytes) {
     lisp_GCNode* gc_node = (lisp_GCNode*) malloc(sizeof(lisp_GCNode));
     lisp_GCNodeData* root = lisp_GCNodeData_new(NULL, bytes);
     gc_node->marked = LISP_FALSE;
@@ -20,7 +20,7 @@ static void lisp_GCNode_delete(lisp_GCNode* gc_node) {
     free(gc_node);
 }
 
-static void* lisp_GCNode_assoc(lisp_GC* gc, lisp_GCNode* gc_node, lisp_size bytes) {
+static void* lisp_GCNode_assoc(lisp_GC* gc, lisp_GCNode* gc_node, lisp_usize bytes) {
     lisp_GCNodeData* new_gc_node_data = lisp_GCNodeData_new(gc_node->root, bytes);
     gc->bytes += bytes;
     gc_node->bytes += bytes;

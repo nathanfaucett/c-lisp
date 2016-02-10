@@ -22,8 +22,8 @@ static lisp_Object* lisp_ListNode_new(lisp_State* state) {
     return object;
 }
 
-static lisp_Object* lisp_ListNode_find_node(lisp_Object* node, lisp_size index) {
-    lisp_size i = 0;
+static lisp_Object* lisp_ListNode_find_node(lisp_Object* node, lisp_usize index) {
+    lisp_usize i = 0;
 
     while (node != NULL && i != index) {
         node = ((lisp_ListNode*) node->data)->next;
