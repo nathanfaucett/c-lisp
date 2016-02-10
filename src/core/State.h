@@ -19,6 +19,7 @@ typedef struct lisp_State {
     struct lisp_Object* Indexed;
     struct lisp_Object* Keyed;
 
+    struct lisp_Object* Array;
     struct lisp_Object* List;
     struct lisp_Object* ListNode;
     struct lisp_Object* Vector;
@@ -64,6 +65,7 @@ typedef struct lisp_State {
     struct lisp_Object* empty_string;
     struct lisp_Object* empty_char;
     struct lisp_Object* empty_list;
+    struct lisp_Object* empty_vector;
     struct lisp_Object* empty_map;
 } lisp_State;
 

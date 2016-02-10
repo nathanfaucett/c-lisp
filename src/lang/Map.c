@@ -31,23 +31,11 @@ static lisp_size lisp_Map_size(lisp_Map* map) {
 
 static lisp_size lisp_Map_index_of(lisp_State* state, lisp_Map* map, lisp_Object* key) {
     if (map->entries != NULL) {
-        lisp_Object* node_object = ((lisp_Vector*) map->entries->data)->root;
-        lisp_VectorNode* node = NULL;
-        lisp_size i = 1;
-
-        while (node_object != NULL) {
-            node = (lisp_VectorNode*) node_object->data;
-
-            if (lisp_Object_equal(state, key, node->object)) {
-                return i;
-            } else {
-                i += 2;
-                node_object = node->next;
-                if (node_object != NULL) {
-                    node_object = ((lisp_VectorNode*) node_object->data)->next;
-                } else {
-                    break;
-                }
+        lisp_Vector* entries = (lisp_Vector*) map->entries->data;
+        lisp_size i = 0, il = entries->size;
+        for (; i < il; i++) {
+            if (lisp_Object_equal(state, key, lisp_Vector_get(state, entries, i))) {
+                return i + 1;
             }
         }
         return 0;
@@ -77,17 +65,17 @@ static lisp_Object* lisp_Map_set(lisp_State* state, lisp_Map* map, lisp_Object* 
         entries = lisp_Vector_set(state, (lisp_Vector*) entries->data, index, object);
 
         if (entries != map->entries) {
-            lisp_Object* new_map_object = lisp_Object_alloc(state, state->Map);
+            lisp_Object* new_map_object = lisp_Map_new(state);
             ((lisp_Map*) new_map_object->data)->entries = entries;
             return new_map_object;
         } else {
             return map->self;
         }
     } else {
-        lisp_Object* new_map_object = lisp_Object_alloc(state, state->Map);
+        lisp_Object* new_map_object = lisp_Map_new(state);
         lisp_Object* entries = map->entries;
         if (entries == NULL) {
-            entries = state->empty_list;
+            entries = state->empty_vector;
         }
         entries = lisp_Vector_push(state, (lisp_Vector*) entries->data, key);
         entries = lisp_Vector_push(state, (lisp_Vector*) entries->data, object);
@@ -105,7 +93,7 @@ static lisp_Object* lisp_Map_remove(lisp_State* state, lisp_Map* map, lisp_Objec
         entries = lisp_Vector_remove(state, (lisp_Vector*) entries->data, index);
 
         if (((lisp_Vector*) entries->data)->size != 0) {
-            lisp_Object* new_map_object = lisp_Object_alloc(state, state->Map);
+            lisp_Object* new_map_object = lisp_Map_new(state);
             ((lisp_Map*) new_map_object->data)->entries = entries;
             return new_map_object;
         } else {
@@ -124,7 +112,7 @@ static void lisp_Map_mut_set(lisp_State* state, lisp_Map* map, lisp_Object* key,
     } else {
         lisp_Object* entries_object = map->entries;
         if (entries_object == NULL) {
-            entries_object = lisp_Object_alloc(state, state->Vector);
+            entries_object = lisp_Vector_new(state);
         }
         lisp_Vector* entries = (lisp_Vector*) entries_object->data;
         lisp_Vector_mut_push(state, entries, key);
@@ -136,8 +124,8 @@ static void lisp_Map_mut_remove(lisp_State* state, lisp_Map* map, lisp_Object* k
 
     if (index != 0) {
         lisp_Vector* entries = (lisp_Vector*) map->entries->data;
-        lisp_Vector_mut_remove(entries, index - 1);
-        lisp_Vector_mut_remove(entries, index);
+        lisp_Vector_mut_remove(state, entries, index - 1);
+        lisp_Vector_mut_remove(state, entries, index);
     }
 }
 
@@ -222,10 +210,10 @@ static lisp_Object* lisp_Map_export_equal(lisp_State* state, lisp_Object* args, 
 
 static void lisp_Map_boot(lisp_State* state) {
     lisp_Object* Map = state->Map;
-    lisp_Vector* values = (lisp_Vector*) Map->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_List* values = (lisp_List*) Map->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Map"));
+    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Map"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "has"), lisp_Native_new(state, lisp_Map_export_has));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "get"), lisp_Native_new(state, lisp_Map_export_get));

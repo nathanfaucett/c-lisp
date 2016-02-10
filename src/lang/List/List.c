@@ -67,13 +67,13 @@ static lisp_Object* lisp_List_concat(lisp_State* state, lisp_List* a, lisp_List*
 
         while (node_object != NULL) {
             node = (lisp_ListNode*) node_object->data;
-            lisp_List_mut_push(state, node->value);
+            lisp_List_mut_push(state, list, node->object);
             node_object = node->next;
         }
         node_object = b->root;
         while (node_object != NULL) {
             node = (lisp_ListNode*) node_object->data;
-            lisp_List_mut_push(state, node->value);
+            lisp_List_mut_push(state, list, node->object);
             node_object = node->next;
         }
 
@@ -478,7 +478,7 @@ static void lisp_List_boot(lisp_State* state) {
     lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "List"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "index-of"), lisp_Native_new(state, lisp_List_export_index_of));
-    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "size"), lisp_Native_new(state, lisp_List_export_to_size));
+    lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "size"), lisp_Native_new(state, lisp_List_export_size));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "get"), lisp_Native_new(state, lisp_List_export_get));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "set"), lisp_Native_new(state, lisp_List_export_set));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "push"), lisp_Native_new(state, lisp_List_export_push));

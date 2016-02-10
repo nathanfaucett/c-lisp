@@ -15,6 +15,7 @@ static void lisp_boot(lisp_State* state) {
     lisp_boot_Type(state, state->Indexed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
     lisp_boot_Type(state, state->Keyed, state->Collection, 0, 0, LISP_TRUE, LISP_FALSE, NULL, NULL);
 
+    lisp_boot_Type(state, state->Array, state->Indexed, sizeof(lisp_Array), 0, LISP_FALSE, LISP_FALSE, lisp_Array_alloc, lisp_Array_mark);
     lisp_boot_Type(state, state->List, state->Indexed, sizeof(lisp_List), 0, LISP_FALSE, LISP_FALSE, lisp_List_alloc, lisp_List_mark);
     lisp_boot_Type(state, state->ListNode, state->Any, sizeof(lisp_ListNode), 0, LISP_FALSE, LISP_FALSE, lisp_ListNode_alloc, lisp_ListNode_mark);
     lisp_boot_Type(state, state->Vector, state->Indexed, sizeof(lisp_Vector), 0, LISP_FALSE, LISP_FALSE, lisp_Vector_alloc, lisp_Vector_mark);

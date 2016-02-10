@@ -14,11 +14,11 @@ static void lisp_VectorNode_alloc(lisp_State* state, lisp_Object* object) {
 static void lisp_VectorNode_mark(lisp_Object* object) {
     lisp_VectorNode* node = (lisp_VectorNode*) object->data;
     lisp_usize i = 0, il = LISP_VECTOR_SIZE;
-    lisp_Object* object = node->array[i];
-    while (object != NULL && i < il) {
-        lisp_Object_mark(object);
+    lisp_Object* node_object = node->array[i];
+    while (node_object != NULL && i < il) {
+        lisp_Object_mark(node_object);
         i += 1;
-        object = node->array[i];
+        node_object = node->array[i];
     }
 }
 

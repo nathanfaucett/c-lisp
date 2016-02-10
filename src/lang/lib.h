@@ -9,6 +9,7 @@
 #include "./Number/lib.h"
 #include "./Vector/lib.h"
 #include "./Annotation.h"
+#include "./Array.h"
 #include "./Bool.h"
 #include "./Map.h"
 #include "./Nil.h"

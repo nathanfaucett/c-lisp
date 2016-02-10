@@ -21,6 +21,7 @@ static lisp_State* lisp_State_new(void) {
     state->Indexed = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->Keyed = lisp_Object_boot_size(state, state->Type, sizeof_Type);
 
+    state->Array = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->List = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->ListNode = lisp_Object_boot_size(state, state->Type, sizeof_Type);
     state->Vector = lisp_Object_boot_size(state, state->Type, sizeof_Type);
@@ -72,6 +73,7 @@ static lisp_State* lisp_State_new(void) {
     state->empty_string = lisp_Object_boot_size(state, state->String, sizeof(lisp_String));
     state->empty_char = lisp_Object_boot_size(state, state->Char, 4);
     state->empty_list = lisp_List_new(state);
+    state->empty_vector = lisp_Vector_new(state);
     state->empty_map = lisp_Map_new(state);
 
     lisp_String_alloc(state, state->empty_string);

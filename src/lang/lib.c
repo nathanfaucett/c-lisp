@@ -9,6 +9,7 @@
 #include "./Number/lib.c"
 #include "./Vector/lib.c"
 #include "./Annotation.c"
+#include "./Array.c"
 #include "./Bool.c"
 #include "./Map.c"
 #include "./Nil.c"

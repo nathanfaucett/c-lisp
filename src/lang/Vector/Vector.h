@@ -24,12 +24,24 @@ static lisp_Object* lisp_Vector_new_path_set(
     lisp_State* state, lisp_Object* node_object, lisp_size size, lisp_size index, lisp_Object* value, lisp_size level
 );
 static lisp_Object* lisp_Vector_set(lisp_State* state, lisp_Vector* vector, lisp_size index, lisp_Object* value);
+static void lisp_Vector_mut_set(lisp_Vector* vector, lisp_size index, lisp_Object* value);
 
 static lisp_Object* lisp_Vector_new_path(lisp_State* state, lisp_Object* node_object, lisp_size level);
 static lisp_Object* lisp_Vector_push_tail(
-    lisp_State* state, lisp_Object* parent_object, tail_object, lisp_size size, lisp_size level
+    lisp_State* state, lisp_Object* parent_object, lisp_Object* tail_object, lisp_size size, lisp_size level
 );
-static lisp_Object* lisp_Vector_mut_push(lisp_State* state, lisp_Vector* vector, lisp_Object* value);
+static void lisp_Vector_mut_push(lisp_State* state, lisp_Vector* vector, lisp_Object* value);
 static lisp_Object* lisp_Vector_push(lisp_State* state, lisp_Vector* vector, lisp_Object* value);
+
+static lisp_Object* lisp_Vector_pop_tail(lisp_State* state, lisp_Object* node_object, lisp_size size, lisp_size level);
+static lisp_Object* lisp_Vector_pop(lisp_State* state, lisp_Vector* vector);
+
+static lisp_Object* lisp_Vector_shift(lisp_State* state, lisp_Vector* vector, lisp_size index);
+
+static lisp_Object* lisp_Vector_remove(lisp_State* state, lisp_Vector* vector, lisp_size index);
+static void lisp_Vector_mut_remove(lisp_State* state, lisp_Vector* vector, lisp_size index);
+
+static lisp_bool lisp_Vector_equal(lisp_State* state, lisp_Vector* a, lisp_Vector* b);
+
 
 #endif
