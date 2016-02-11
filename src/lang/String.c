@@ -88,9 +88,9 @@ static lisp_bool lisp_String_equal(lisp_String* a, lisp_String* b) {
 }
 
 static lisp_Object* lisp_String_export_char_at(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* index = lisp_List_get(state, list, 1);
+    lisp_Vector* list = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, list, 0);
+    lisp_Object* index = lisp_Vector_get(state, list, 1);
 
     if (self->type == state->String && lisp_Object_inherits(state, index->type, state->Unsigned)) {
         lisp_String* string = (lisp_String*) self->data;
@@ -106,7 +106,7 @@ static lisp_Object* lisp_String_export_char_at(lisp_State* state, lisp_Object* a
     }
 }
 static lisp_Object* lisp_String_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->String) {
         return self;
@@ -115,9 +115,9 @@ static lisp_Object* lisp_String_export_to_string(lisp_State* state, lisp_Object*
     }
 }
 static lisp_Object* lisp_String_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* other = lisp_List_get(state, list, 1);
+    lisp_Vector* list = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, list, 0);
+    lisp_Object* other = lisp_Vector_get(state, list, 1);
 
     if (self->type == state->String && other->type == state->String) {
         return lisp_String_equal((lisp_String*) self->data, (lisp_String*) other->data) ? state->true : state->false;
@@ -128,10 +128,10 @@ static lisp_Object* lisp_String_export_equal(lisp_State* state, lisp_Object* arg
 
 static void lisp_String_boot(lisp_State* state) {
     lisp_Object* String = state->String;
-    lisp_List* values = (lisp_List*) String->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Vector* values = (lisp_Vector*) String->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "String"));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "String"));
 
     lisp_Map_mut_set(state, prototype, lisp_String_from_ascii(state, "char-at"), lisp_Native_new(state, lisp_String_export_char_at));
     lisp_Map_mut_set(state, prototype, lisp_String_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_String_export_to_string));

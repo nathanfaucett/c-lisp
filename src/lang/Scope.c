@@ -19,7 +19,7 @@ static void lisp_Scope_mark(lisp_Object* object) {
 }
 
 static lisp_Object* lisp_Scope_new(lisp_State* state, lisp_Object* parent) {
-    lisp_Object* object = lisp_Object_boot_size(state, state->List, sizeof(lisp_List));
+    lisp_Object* object = lisp_Object_boot_size(state, state->Scope, sizeof(lisp_Scope));
     lisp_Scope* scope = (lisp_Scope*) object->data;
     scope->parent = parent;
     scope->map = NULL;

@@ -349,9 +349,9 @@ static lisp_bool lisp_List_equal(lisp_State* state, lisp_List* a, lisp_List* b) 
 }
 
 static lisp_Object* lisp_List_export_index_of(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* value = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* value = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List) {
         return lisp_Number_Int(state, ((lisp_isize) lisp_List_index_of(state, (lisp_List*) self->data, value)) - 1);
@@ -361,8 +361,8 @@ static lisp_Object* lisp_List_export_index_of(lisp_State* state, lisp_Object* ar
 }
 
 static lisp_Object* lisp_List_export_size(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
 
     if (self->type == state->List) {
         return lisp_Number_UInt(state, ((lisp_List*) self->data)->size);
@@ -372,9 +372,9 @@ static lisp_Object* lisp_List_export_size(lisp_State* state, lisp_Object* args, 
 }
 
 static lisp_Object* lisp_List_export_get(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* index = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* index = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List) {
         return lisp_List_get(state, (lisp_List*) self->data, lisp_Number_get_UInt(state, index));
@@ -383,10 +383,10 @@ static lisp_Object* lisp_List_export_get(lisp_State* state, lisp_Object* args, l
     }
 }
 static lisp_Object* lisp_List_export_set(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* index = lisp_List_get(state, list, 1);
-    lisp_Object* value = lisp_List_get(state, list, 2);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* index = lisp_Vector_get(state, vector, 1);
+    lisp_Object* value = lisp_Vector_get(state, vector, 2);
 
     if (self->type == state->List) {
         return lisp_List_set(state, (lisp_List*) self->data, lisp_Number_get_UInt(state, index), value);
@@ -396,9 +396,9 @@ static lisp_Object* lisp_List_export_set(lisp_State* state, lisp_Object* args, l
 }
 
 static lisp_Object* lisp_List_export_push(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* value = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* value = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List) {
         return lisp_List_push(state, (lisp_List*) self->data, value);
@@ -408,9 +408,9 @@ static lisp_Object* lisp_List_export_push(lisp_State* state, lisp_Object* args, 
 }
 
 static lisp_Object* lisp_List_export_unshift(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* value = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* value = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List) {
         return lisp_List_unshift(state, (lisp_List*) self->data, value);
@@ -420,7 +420,7 @@ static lisp_Object* lisp_List_export_unshift(lisp_State* state, lisp_Object* arg
 }
 
 static lisp_Object* lisp_List_export_pop(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->List) {
         return lisp_List_pop(state, (lisp_List*) self->data);
@@ -429,7 +429,7 @@ static lisp_Object* lisp_List_export_pop(lisp_State* state, lisp_Object* args, l
     }
 }
 static lisp_Object* lisp_List_export_shift(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->List) {
         return lisp_List_shift(state, (lisp_List*) self->data);
@@ -438,9 +438,9 @@ static lisp_Object* lisp_List_export_shift(lisp_State* state, lisp_Object* args,
     }
 }
 static lisp_Object* lisp_List_export_remove(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* index = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* index = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List) {
         return lisp_List_remove(state, (lisp_List*) self->data, lisp_Number_get_UInt(state, index));
@@ -450,7 +450,7 @@ static lisp_Object* lisp_List_export_remove(lisp_State* state, lisp_Object* args
 }
 
 static lisp_Object* lisp_List_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->List) {
         return lisp_String_from_ascii(state, "()");
@@ -459,9 +459,9 @@ static lisp_Object* lisp_List_export_to_string(lisp_State* state, lisp_Object* a
     }
 }
 static lisp_Object* lisp_List_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* other = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* other = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->List && other->type == state->List) {
         return lisp_List_equal(state, (lisp_List*) self->data, (lisp_List*) other->data) ? state->true : state->false;
@@ -472,10 +472,10 @@ static lisp_Object* lisp_List_export_equal(lisp_State* state, lisp_Object* args,
 
 static void lisp_List_boot(lisp_State* state) {
     lisp_Object* List = state->List;
-    lisp_List* values = (lisp_List*) List->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Vector* values = (lisp_Vector*) List->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "List"));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "List"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "index-of"), lisp_Native_new(state, lisp_List_export_index_of));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "size"), lisp_Native_new(state, lisp_List_export_size));

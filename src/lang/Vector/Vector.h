@@ -19,6 +19,8 @@ static lisp_Object* lisp_Vector_clone(lisp_State* state, lisp_Vector* vector);
 
 static void lisp_Vector_mut_set_size(lisp_State* state, lisp_Vector* vector, lisp_usize size);
 
+static lisp_usize lisp_Vector_index_of(lisp_State* state, lisp_Vector* vector, lisp_Object* value);
+
 static lisp_usize lisp_Vector_tail_off(lisp_usize size);
 static lisp_Object* lisp_Vector_find_node(lisp_Vector* vector, lisp_usize size);
 static lisp_Object* lisp_Vector_get(lisp_State* state, lisp_Vector* vector, lisp_usize index);

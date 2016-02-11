@@ -9,7 +9,7 @@ static lisp_Object* lisp_Bool_new(lisp_State* state, lisp_bool value) {
 }
 
 static lisp_Object* lisp_Bool_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->Bool) {
         if (LISP_GET_DATA(self, lisp_bool) != 0) {
@@ -22,9 +22,9 @@ static lisp_Object* lisp_Bool_export_to_string(lisp_State* state, lisp_Object* a
     }
 }
 static lisp_Object* lisp_Bool_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* other = lisp_List_get(state, list, 1);
+    lisp_Vector* list = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, list, 0);
+    lisp_Object* other = lisp_Vector_get(state, list, 1);
 
     if (self->type == state->Bool && other->type == state->Bool) {
         lisp_bool abool = LISP_GET_DATA(self, lisp_bool);
@@ -42,10 +42,10 @@ static lisp_Object* lisp_Bool_export_equal(lisp_State* state, lisp_Object* args,
 
 static void lisp_Bool_boot(lisp_State* state) {
     lisp_Object* Bool = state->Bool;
-    lisp_List* values = (lisp_List*) Bool->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Vector* values = (lisp_Vector*) Bool->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Bool"));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Bool"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Bool_export_to_string));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Bool_export_equal));

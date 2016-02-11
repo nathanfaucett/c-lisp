@@ -79,29 +79,29 @@ static void lisp_boot_Type (
     void (*alloc)(lisp_State*, lisp_Object*),
     void (*mark)(lisp_Object*)
 ) {
-    lisp_Object* values_object = lisp_List_new(state);
-    lisp_List* values = (lisp_List*) values_object->data;
-    lisp_List_mut_set_size(state, values, LISP_TYPE_SIZE);
+    lisp_Object* values_object = lisp_Vector_new(state);
+    lisp_Vector* values = (lisp_Vector*) values_object->data;
+    lisp_Vector_mut_set_size(state, values, LISP_TYPE_SIZE);
 
     lisp_Object* size_object = lisp_Object_boot_size(state, state->UInt, sizeof(lisp_usize));
     LISP_SET_DATA(size_object, lisp_usize, size);
 
-    lisp_Object* attributes = lisp_List_new(state);
-    lisp_List_mut_set_size(state, (lisp_List*) attributes->data, values_size);
-    lisp_List_mut_set(values, LISP_IDX_TYPE_ATTRIBUTES, attributes);
+    lisp_Object* attributes = lisp_Vector_new(state);
+    lisp_Vector_mut_set_size(state, (lisp_Vector*) attributes->data, values_size);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_ATTRIBUTES, attributes);
 
-    lisp_Object* types = lisp_List_new(state);
-    lisp_List_mut_set_size(state, (lisp_List*) types->data, values_size);
-    lisp_List_mut_set(values, LISP_IDX_TYPE_TYPES, types);
+    lisp_Object* types = lisp_Vector_new(state);
+    lisp_Vector_mut_set_size(state, (lisp_Vector*) types->data, values_size);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_TYPES, types);
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_SIZE, size_object);
-    lisp_List_mut_set(values, LISP_IDX_TYPE_SUPER, super);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_SIZE, size_object);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_SUPER, super);
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_PROTOTYPE, lisp_Map_new(state));
-    lisp_List_mut_set(values, LISP_IDX_TYPE_TEMPLATE, lisp_Map_new(state));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_PROTOTYPE, lisp_Map_new(state));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_TEMPLATE, lisp_Map_new(state));
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_ABSTRACT, (abstract == LISP_TRUE) ? state->true : state->false);
-    lisp_List_mut_set(values, LISP_IDX_TYPE_BYTES, (bytes == LISP_TRUE) ? state->true : state->false);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_ABSTRACT, (abstract == LISP_TRUE) ? state->true : state->false);
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_BYTES, (bytes == LISP_TRUE) ? state->true : state->false);
 
     lisp_Type* type_data = lisp_State_assoc(state, type->gc_node, sizeof(lisp_Type));
     type_data->alloc = alloc;

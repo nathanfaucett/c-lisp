@@ -3,7 +3,7 @@
 
 
 static lisp_Object* lisp_Nil_export_to_string(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_Object* self = lisp_List_get(state, (lisp_List*) args->data, 0);
+    lisp_Object* self = lisp_Vector_get(state, (lisp_Vector*) args->data, 0);
 
     if (self->type == state->Nil) {
         return lisp_String_from_ascii(state, "nil");
@@ -12,9 +12,9 @@ static lisp_Object* lisp_Nil_export_to_string(lisp_State* state, lisp_Object* ar
     }
 }
 static lisp_Object* lisp_Nil_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* other = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* other = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->Nil && other->type == state->Nil) {
         return state->true;
@@ -25,10 +25,10 @@ static lisp_Object* lisp_Nil_export_equal(lisp_State* state, lisp_Object* args, 
 
 static void lisp_Nil_boot(lisp_State* state) {
     lisp_Object* Nil = state->Nil;
-    lisp_List* values = (lisp_List*) Nil->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Vector* values = (lisp_Vector*) Nil->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Nil"));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Nil"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Nil_export_to_string));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "equal"), lisp_Native_new(state, lisp_Nil_export_equal));

@@ -14,11 +14,11 @@ static lisp_Object* lisp_Native_call(lisp_State* state, lisp_Object* native, lis
 }
 
 static lisp_Object* lisp_Native_export_call(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* fn_args = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* fn_args = lisp_Vector_get(state, vector, 1);
 
-    if (self->type == state->Native && fn_args->type == state->List) {
+    if (self->type == state->Native && fn_args->type == state->Vector) {
         return lisp_Native_call(state, self, fn_args, scope);
     } else {
         /* throw error */
@@ -29,9 +29,9 @@ static lisp_Object* lisp_Native_export_to_string(lisp_State* state, lisp_Object*
     return lisp_String_from_ascii(state, "(NativeFunction)");
 }
 static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* args, lisp_Object* scope) {
-    lisp_List* list = (lisp_List*) args->data;
-    lisp_Object* self = lisp_List_get(state, list, 0);
-    lisp_Object* other = lisp_List_get(state, list, 1);
+    lisp_Vector* vector = (lisp_Vector*) args->data;
+    lisp_Object* self = lisp_Vector_get(state, vector, 0);
+    lisp_Object* other = lisp_Vector_get(state, vector, 1);
 
     if (self->type == state->Native && other->type == state->Native) {
         lisp_Object* (*afn)(lisp_State*, lisp_Object*, lisp_Object*) = self->data;
@@ -44,10 +44,10 @@ static lisp_Object* lisp_Native_export_equal(lisp_State* state, lisp_Object* arg
 
 static void lisp_Native_boot(lisp_State* state) {
     lisp_Object* Native = state->Native;
-    lisp_List* values = (lisp_List*) Native->values->data;
-    lisp_Map* prototype = (lisp_Map*) lisp_List_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
+    lisp_Vector* values = (lisp_Vector*) Native->values->data;
+    lisp_Map* prototype = (lisp_Map*) lisp_Vector_get(state, values, LISP_IDX_TYPE_PROTOTYPE)->data;
 
-    lisp_List_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Native"));
+    lisp_Vector_mut_set(values, LISP_IDX_TYPE_NAME, lisp_String_from_ascii(state, "Native"));
 
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "call"), lisp_Native_new(state, lisp_Native_export_call));
     lisp_Map_mut_set(state, prototype, lisp_Symbol_from_ascii(state, "to-string"), lisp_Native_new(state, lisp_Native_export_to_string));

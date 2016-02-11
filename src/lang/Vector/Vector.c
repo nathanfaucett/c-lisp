@@ -35,7 +35,22 @@ static lisp_Object* lisp_Vector_clone(lisp_State* state, lisp_Vector* vector) {
 }
 
 static void lisp_Vector_mut_set_size(lisp_State* state, lisp_Vector* vector, lisp_usize size) {
+    lisp_usize i = 0, il = size;
+    for (; i < il; i++) {
+        lisp_Vector_mut_push(state, vector, state->nil);
+    }
+}
+
+static lisp_usize lisp_Vector_index_of(lisp_State* state, lisp_Vector* vector, lisp_Object* value) {
+    lisp_usize i = 0, il = vector->size;
+
+    for (; i < il; i++) {
+        if (lisp_Object_equal(state, lisp_Vector_get(state, vector, i), value)) {
+            return i + 1;
+        }
+    }
     
+    return 0;
 }
 
 static lisp_usize lisp_Vector_tail_off(lisp_usize size) {

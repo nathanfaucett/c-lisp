@@ -15,7 +15,7 @@ static lisp_Object* lisp_Number_Int(lisp_State* state, lisp_isize value) {
 
 static lisp_usize lisp_Number_get_UInt(lisp_State* state, lisp_Object* value) {
     if (lisp_Object_inherits(state, value->type, state->Number)) {
-        lisp_Object* size_object = lisp_List_get(state, (lisp_List*) value->type->values->data, LISP_IDX_TYPE_SIZE);
+        lisp_Object* size_object = lisp_Vector_get(state, (lisp_Vector*) value->type->values->data, LISP_IDX_TYPE_SIZE);
         lisp_usize size = LISP_GET_DATA(size_object, lisp_usize);
 
         switch (size) {
