@@ -1,16 +1,33 @@
-COMPILER_C := clang
-COMPILER_CPP := clang++
+CC := clang
 
 OPT_LVL := -O2
 
-C_FLAGS := -ansi $(OPT_LVL) -Wall -Wno-unused-function
-CPP_FLAGS := -ansi $(OPT_LVL) -Wall -Wno-c++11-compat-deprecated-writable-strings -Wno-unused-function
+DEPS = ./deps
+SRC = ./src
+SRC_CORE = ./src/core
+SRC_GC = ./src/gc
+SRC_LANG = ./src/lang
+SRC_LANG_LIST = ./src/lang/List
+SRC_LANG_VECTOR = ./src/lang/Vector
+SRCS = -I$(DEPS) -I$(SRC) -I$(SRC_CORE) -I$(SRC_GC) -I$(SRC_LANG) -I$(SRC_LANG_LIST)  -I$(SRC_LANG_VECTOR)
+
+C_FLAGS := -ansi $(OPT_LVL) $(SRCS) -Wall -Wno-unused-function
 
 
-build_simple_c:
-	$(COMPILER_C) $(C_FLAGS) ./test/simple.c -o ./test/simple.out
+all: install build_test run_test
 
-run_simple_c:
-	./test/simple.out
+run_test:
+	./test/main
 
-simple: build_simple_c run_simple_c
+build_test: build_lib.o
+	$(CC) $(C_FLAGS) ./test/lib.o ./test/main.c -o ./test/main
+
+build_lib.o:
+	$(CC) $(C_FLAGS) -c ./lib.c -o ./test/lib.o
+
+install:
+	clib install
+
+clean:
+	$(RM) ./test/main **/*.o **/*~
+	$(RM) -rf deps

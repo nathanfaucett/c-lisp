@@ -1,2 +1,4 @@
-*.out
-*.exe
+deps
+**/*.o
+**/*.out
+**/*.exe
