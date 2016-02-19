@@ -2,51 +2,49 @@
 #define __LISP_LANG_LIST_NODE_C__
 
 
-static void lisp_ListNode_mark(lisp_ListNode* node) {
-    if (lisp_GCHeader_mark(node->gc_header)) {
-        if (node->next != NULL) {
-            lisp_ListNode_mark(node->next);
-        }
-        lisp_Object_mark(node->value);
-    }
+
+static lisp_Object* lisp_ListNode_new(lisp_State* state, lisp_Object* next, lisp_Object* value) {
+    lisp_Object* object = lisp_Object_alloc(state, state->ListNode);
+    lisp_Object** values = (lisp_Object**) object->data;
+    values[LISP_IDX_LIST_NODE_NEXT] = next;
+    values[LISP_IDX_LIST_NODE_VALUE] = value;
+    return object;
 }
 
-static lisp_ListNode* lisp_ListNode_new(lisp_State* state, lisp_ListNode* next, lisp_Object* value) {
-    lisp_GCHeader* gc_header = lisp_State_alloc(state, sizeof(lisp_ListNode));
-    lisp_ListNode* node = (lisp_ListNode*) gc_header->data;
-    node->gc_header = gc_header;
-    node->next = next;
-    node->value = value;
-    return node;
-}
 
-static lisp_ListNode* lisp_ListNode_find_node(lisp_ListNode* node, uintsize index) {
+static lisp_Object* lisp_ListNode_find_node(lisp_Object* node, uintsize index) {
+    lisp_Object** values = NULL;
     uintsize i = 0;
 
     while (node != NULL && i != index) {
-        node = node->next;
+        values = (lisp_Object**) node->data;
+        node = values[LISP_IDX_LIST_NODE_NEXT];
         i += 1;
     }
 
     return node;
 }
-static lisp_ListNode* lisp_ListNode_copy_from_to(lisp_State* state, lisp_ListNode* from, lisp_ListNode* to, lisp_ListNode* new_node) {
+static lisp_Object* lisp_ListNode_copy_from_to(lisp_State* state, lisp_Object* from, lisp_Object* to, lisp_Object* new_node) {
     if (from != to) {
+        lisp_Object** values = (lisp_Object**) from->data;
+
         return lisp_ListNode_new(
             state,
-            lisp_ListNode_copy_from_to(state, from->next, to, new_node),
-            from->value
+            lisp_ListNode_copy_from_to(state, values[LISP_IDX_LIST_NODE_NEXT], to, new_node),
+            values[LISP_IDX_LIST_NODE_VALUE]
         );
     } else {
         return new_node;
     }
 }
-static lisp_ListNode* lisp_ListNode_push(lisp_State* state, lisp_ListNode* node, lisp_ListNode* last_node) {
+static lisp_Object* lisp_ListNode_push(lisp_State* state, lisp_Object* node, lisp_Object* last_node) {
     if (node != NULL) {
+        lisp_Object** values = (lisp_Object**) node->data;
+
         return lisp_ListNode_new(
             state,
-            lisp_ListNode_push(state, node->next, last_node),
-            node->value
+            lisp_ListNode_push(state, values[LISP_IDX_LIST_NODE_NEXT], last_node),
+            values[LISP_IDX_LIST_NODE_VALUE]
         );
     } else {
         return last_node;

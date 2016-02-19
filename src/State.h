@@ -1,5 +1,5 @@
-#ifndef __LISP_CORE_STATE_H__
-#define __LISP_CORE_STATE_H__
+#ifndef __LISP_STATE_H__
+#define __LISP_STATE_H__
 
 
 typedef struct lisp_State {
@@ -16,7 +16,10 @@ typedef struct lisp_State {
     struct lisp_Object* Keyed;
 
     struct lisp_Object* List;
+    struct lisp_Object* ListNode;
     struct lisp_Object* Vector;
+    struct lisp_Object* VectorNode;
+    struct lisp_Object* Map;
 
     struct lisp_Object* Callable;
     struct lisp_Object* Native;
@@ -25,6 +28,7 @@ typedef struct lisp_State {
 
     struct lisp_Object* Char;
     struct lisp_Object* Symbol;
+    struct lisp_Object* Keyword;
 
     struct lisp_Object* Number;
     struct lisp_Object* Real;
@@ -50,9 +54,19 @@ typedef struct lisp_State {
 
     struct lisp_Object* Bool;
 
-    struct lisp_Object* nil_value;
-    struct lisp_Object* true_value;
-    struct lisp_Object* false_value;
+    struct lisp_Object* nil;
+    struct lisp_Object* tru;
+    struct lisp_Object* fal;
+
+    struct lisp_Object* AnyList;
+
+    struct lisp_Object* AnyVector;
+    struct lisp_Object* CharVector;
+    struct lisp_Object* SymbolVector;
+    struct lisp_Object* AnnotationVector;
+
+    struct lisp_Object* AnyCallableMap;
+    struct lisp_Object* SymbolAnnotationMap;
 } lisp_State;
 
 lisp_State* lisp_State_new(void);

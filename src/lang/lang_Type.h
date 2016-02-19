@@ -2,23 +2,22 @@
 #define __LISP_LANG_TYPE_H__
 
 
-typedef struct lisp_Type {
-    lisp_Object* name;
-    lisp_Object* attributes;
-    lisp_Object* types;
-    lisp_Object* super;
-    lisp_Object* prototype;
-    lisp_Object* template;
-    bool abstract;
-    bool bytes;
-    uintsize size;
-    lisp_Object* subtypes;
-    void (*alloc)(lisp_State*, struct lisp_Object*);
-    void (*mark)(struct lisp_Object*);
-} lisp_Type;
+#define LISP_IDX_TYPE_NAME 0
+#define LISP_IDX_TYPE_ATTRIBUTES 1
+#define LISP_IDX_TYPE_TYPES 2
+#define LISP_IDX_TYPE_SIZE 3
+#define LISP_IDX_TYPE_SUPER 4
+#define LISP_IDX_TYPE_PROTOTYPE 5
+#define LISP_IDX_TYPE_TEMPLATE 6
+#define LISP_IDX_TYPE_ABSTRACT 7
+#define LISP_IDX_TYPE_BYTES 8
+#define LISP_IDX_TYPE_IMMUTABLE 9
+#define LISP_IDX_TYPE_SUB_TYPES 10
+#define LISP_TYPE_SIZE 11
 
-static void lisp_Type_alloc(lisp_State* state, lisp_Object* object);
-static void lisp_Type_mark(lisp_Object* object);
+static void lisp_Type_get(lisp_State* state, lisp_Object* annotation);
+
+static void lisp_Type_boot(lisp_Object* type);
 
 
 #endif

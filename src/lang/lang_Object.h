@@ -14,14 +14,10 @@ typedef struct lisp_Object {
     void* data;
 } lisp_Object;
 
+static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type);
 
 bool lisp_Object_mark(lisp_Object* object);
 bool lisp_Object_equal(lisp_State* state, lisp_Object* a, lisp_Object* b);
-
-static lisp_Object* lisp_Object_boot_alloc(lisp_State* state, lisp_Object* type);
-static lisp_Object* lisp_Object_boot_init(lisp_Object* object, lisp_GCHeader* gc_header, lisp_Object* type);
-static lisp_Object* lisp_Object_boot_size(lisp_State* state, lisp_Object* type, uintsize size);
-static lisp_Object* lisp_Object_boot_template_size(lisp_State* state, lisp_Object* type, lisp_Object* template, uintsize size);
 
 
 #endif

@@ -10,8 +10,9 @@ extern "C" {
 #include "lib.h"
 
 #include "gc_lib.c"
-#include "core_lib.c"
+#include "State.c"
 #include "lang_lib.c"
+#include "Boot.c"
 
 
 #ifdef __cplusplus

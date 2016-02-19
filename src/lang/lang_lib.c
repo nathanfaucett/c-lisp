@@ -4,10 +4,12 @@
 
 #include "lang_Object.c"
 
-#include "lang_ListNode.c"
 #include "lang_List.c"
-#include "lang_VectorNode.c"
+#include "lang_ListNode.c"
+#include "lang_Numbers.c"
 #include "lang_Vector.c"
+#include "lang_VectorNode.c"
+#include "lang_Map.c"
 #include "lang_Type.c"
 
 

@@ -15,8 +15,9 @@ extern void free(void* ptr);
 
 
 #include "gc_lib.h"
-#include "core_lib.h"
+#include "State.h"
 #include "lang_lib.h"
+#include "Boot.h"
 
 
 #ifdef __cplusplus
