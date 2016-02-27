@@ -4,7 +4,7 @@
 
 
 int main(void) {
-    char* code = "(do (fn [a, b] (+ a b)) nil false true)";
+    char* code = "(symbol :keyword {:key \"value\"} [0, 1, 2, 3] 'c')";
 
     lisp_State* state = lisp_State_new();
     lisp_Object* reader = lisp_Reader_new(state);

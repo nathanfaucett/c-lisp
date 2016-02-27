@@ -16,6 +16,9 @@ static lisp_Object* lisp_Reader_ascii_read_list(lisp_State* state, lisp_Object* 
 static lisp_Object* lisp_Reader_ascii_read_vector(lisp_State* state, lisp_Object* reader, char* ascii, char ch);
 static lisp_Object* lisp_Reader_ascii_read_map(lisp_State* state, lisp_Object* reader, char* ascii, char ch);
 
+static lisp_Object* lisp_Reader_ascii_read_string(lisp_State* state, lisp_Object* reader, char* ascii, char ch);
+static lisp_Object* lisp_Reader_ascii_read_char(lisp_State* state, lisp_Object* reader, char* ascii, char ch);
+
 static void lisp_Reader_ascii_read_comment(lisp_State* state, lisp_Object* reader, char* ascii, char ch);
 
 static lisp_Object* lisp_Reader_ascii_read_token(lisp_State* state, lisp_Object* reader, char* ascii, char ch);

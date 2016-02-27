@@ -106,7 +106,7 @@ lisp_Object* lisp_Reader_ascii_next(lisp_State* state, lisp_Object* reader, char
             ch = lisp_Reader_ascii_read(state, reader, ascii);
         }
 
-        if (ch == '\0' || ch == return_on) {
+        if (ch == '\0' || ch == return_on || ch == ')' || ch == ']' || ch == '}') {
             return NULL;
         }
 
@@ -125,6 +125,12 @@ lisp_Object* lisp_Reader_ascii_next(lisp_State* state, lisp_Object* reader, char
         }
         if (ch == '{') {
             return lisp_Reader_ascii_read_map(state, reader, ascii, ch);
+        }
+        if (ch == '"') {
+            return lisp_Reader_ascii_read_string(state, reader, ascii, ch);
+        }
+        if (ch == '\'') {
+            return lisp_Reader_ascii_read_char(state, reader, ascii, ch);
         }
 
         return lisp_Reader_ascii_read_token(state, reader, ascii, ch);
@@ -193,6 +199,37 @@ static lisp_Object* lisp_Reader_ascii_read_map(lisp_State* state, lisp_Object* r
     return map;
 }
 
+static lisp_Object* lisp_Reader_ascii_read_string(lisp_State* state, lisp_Object* reader, char* ascii, char ch) {
+    lisp_Object* string = lisp_Vector_new_type(state, state->CharVector);
+    lisp_Object* ch_object;
+
+    ch = lisp_Reader_ascii_read(state, reader, ascii);
+
+    /* fixme: parse utf-8 chars */
+    while (ch != '\0' && ch != '"') {
+        ch_object = lisp_Object_alloc(state, state->Char);
+        LISP_OBJECT_SET_DATA(ch_object, uint32, ch);
+
+        lisp_Vector_mut_push(state, string, ch_object);
+
+        ch = lisp_Reader_ascii_read(state, reader, ascii);
+    }
+
+    return string;
+}
+
+static lisp_Object* lisp_Reader_ascii_read_char(lisp_State* state, lisp_Object* reader, char* ascii, char ch) {
+    lisp_Object* ch_object = lisp_Object_alloc(state, state->Char);
+
+    do {
+        /* fixme: parse utf-8 chars */
+        ch = lisp_Reader_ascii_read(state, reader, ascii);
+        LISP_OBJECT_SET_DATA(ch_object, uint32, ch);
+    } while (ch != '\0' && ch != '\'');
+
+    return ch_object;
+}
+
 static void lisp_Reader_ascii_read_comment(lisp_State* state, lisp_Object* reader, char* ascii, char ch) {
     do {
         ch = lisp_Reader_ascii_read(state, reader, ascii);
@@ -209,6 +246,8 @@ static lisp_Object* lisp_Reader_ascii_read_token(lisp_State* state, lisp_Object*
         value = state->fal;
     } else if (lisp_cstring_equal(cstring, "nil")) {
         value = state->nil;
+    } else if (cstring[0] == ':') {
+        value = lisp_Keyword_from_ascii(state, cstring);
     } else {
         value = lisp_Symbol_from_ascii(state, cstring);
     }

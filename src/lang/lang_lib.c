@@ -10,6 +10,7 @@
 #include "lang_Vector.c"
 #include "lang_VectorNode.c"
 #include "lang_Annotation.c"
+#include "lang_Keyword.c"
 #include "lang_Map.c"
 
 #include "lang_Reader.c"
