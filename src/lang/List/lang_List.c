@@ -14,6 +14,10 @@ static lisp_Object* lisp_List_new_type(lisp_State* state, lisp_Object* type) {
     return lisp_List_init(state, object);
 }
 
+uintsize lisp_List_size(lisp_Object* list) {
+    return LISP_OBJECT_GET_DATA(((lisp_Object**) list->data)[LISP_IDX_LIST_SIZE], uintsize);
+}
+
 static lisp_Object* lisp_List_find_node(lisp_State* state, lisp_Object* list, uintsize index) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
@@ -28,7 +32,7 @@ static lisp_Object* lisp_List_find_node(lisp_State* state, lisp_Object* list, ui
         return state->nil;
     }
 }
-static uintsize lisp_List_index_of(lisp_State* state, lisp_Object* list, lisp_Object* key) {
+uintsize lisp_List_index_of(lisp_State* state, lisp_Object* list, lisp_Object* key) {
     lisp_Object** values = (lisp_Object**) list->data;
     lisp_Object* node = values[LISP_IDX_LIST_ROOT];
     uintsize index = 1;
@@ -48,7 +52,7 @@ static uintsize lisp_List_index_of(lisp_State* state, lisp_Object* list, lisp_Ob
     return 0;
 }
 
-static lisp_Object* lisp_List_concat(lisp_State* state, lisp_Object* a, lisp_Object* b) {
+lisp_Object* lisp_List_concat(lisp_State* state, lisp_Object* a, lisp_Object* b) {
     lisp_Object** avalues = (lisp_Object**) a->data;
     lisp_Object** bvalues = (lisp_Object**) b->data;
 
@@ -102,7 +106,7 @@ static void lisp_List_mut_set_size(lisp_State* state, lisp_Object* list, uintsiz
     values[LISP_IDX_LIST_SIZE] = lisp_Number_new_UInt(state, size);
 }
 
-static lisp_Object* lisp_List_get(lisp_State* state, lisp_Object* list, uintsize index) {
+lisp_Object* lisp_List_get(lisp_State* state, lisp_Object* list, uintsize index) {
     lisp_Object* node = lisp_List_find_node(state, list, index);
 
     if (node != state->nil) {
@@ -111,7 +115,7 @@ static lisp_Object* lisp_List_get(lisp_State* state, lisp_Object* list, uintsize
         return state->nil;
     }
 }
-static lisp_Object* lisp_List_set(lisp_State* state, lisp_Object* list, uintsize index, lisp_Object* value) {
+lisp_Object* lisp_List_set(lisp_State* state, lisp_Object* list, uintsize index, lisp_Object* value) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
 
@@ -147,7 +151,7 @@ static void lisp_List_mut_set(lisp_State* state, lisp_Object* list, uintsize ind
     }
 }
 
-static lisp_Object* lisp_List_push(lisp_State* state, lisp_Object* list, lisp_Object* value) {
+lisp_Object* lisp_List_push(lisp_State* state, lisp_Object* list, lisp_Object* value) {
     lisp_Object** values = (lisp_Object**) list->data;
 
     lisp_Object* new_list = lisp_List_new_type(state, list->type);
@@ -185,7 +189,7 @@ static void lisp_List_mut_push(lisp_State* state, lisp_Object* list, lisp_Object
     values[LISP_IDX_LIST_SIZE] = lisp_Number_new_UInt(state, size + 1);
 }
 
-static lisp_Object* lisp_List_unshift(lisp_State* state, lisp_Object* list, lisp_Object* value) {
+lisp_Object* lisp_List_unshift(lisp_State* state, lisp_Object* list, lisp_Object* value) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
 
@@ -207,7 +211,7 @@ static lisp_Object* lisp_List_unshift(lisp_State* state, lisp_Object* list, lisp
     return new_list;
 }
 
-static lisp_Object* lisp_List_pop(lisp_State* state, lisp_Object* list) {
+lisp_Object* lisp_List_pop(lisp_State* state, lisp_Object* list) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
 
@@ -245,7 +249,7 @@ static lisp_Object* lisp_List_pop(lisp_State* state, lisp_Object* list) {
         return lisp_List_new_type(state, list->type);
     }
 }
-static lisp_Object* lisp_List_shift(lisp_State* state, lisp_Object* list) {
+lisp_Object* lisp_List_shift(lisp_State* state, lisp_Object* list) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
 
@@ -262,7 +266,7 @@ static lisp_Object* lisp_List_shift(lisp_State* state, lisp_Object* list) {
         return lisp_List_new_type(state, list->type);
     }
 }
-static lisp_Object* lisp_List_remove(lisp_State* state, lisp_Object* list, uintsize index) {
+lisp_Object* lisp_List_remove(lisp_State* state, lisp_Object* list, uintsize index) {
     lisp_Object** values = (lisp_Object**) list->data;
     uintsize size = LISP_OBJECT_GET_DATA(values[LISP_IDX_LIST_SIZE], uintsize);
 

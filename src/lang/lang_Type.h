@@ -12,12 +12,10 @@
 #define LISP_IDX_TYPE_ABSTRACT 7
 #define LISP_IDX_TYPE_BYTES 8
 #define LISP_IDX_TYPE_IMMUTABLE 9
-#define LISP_IDX_TYPE_SUB_TYPES 10
+#define LISP_IDX_TYPE_SUBTYPES 10
 #define LISP_TYPE_SIZE 11
 
-static void lisp_Type_get(lisp_State* state, lisp_Object* annotation);
-
-static void lisp_Type_boot(lisp_Object* type);
+static void lisp_Type_boot(lisp_State* state, lisp_Object* Type);
 
 
 #endif

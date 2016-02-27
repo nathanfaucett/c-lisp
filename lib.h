@@ -8,6 +8,8 @@ extern "C" {
 
 
 #include "types/lib.h"
+#include "string_to_float/lib.h"
+#include "string_to_int/lib.h"
 
 
 extern void* malloc(uintsize size);
@@ -17,7 +19,7 @@ extern void free(void* ptr);
 #include "gc_lib.h"
 #include "State.h"
 #include "lang_lib.h"
-#include "Boot.h"
+#include "boot.h"
 
 
 #ifdef __cplusplus

@@ -53,6 +53,7 @@ typedef struct lisp_State {
     struct lisp_Object* Int64;
 
     struct lisp_Object* Bool;
+    struct lisp_Object* Reader;
 
     struct lisp_Object* nil;
     struct lisp_Object* tru;
@@ -65,8 +66,10 @@ typedef struct lisp_State {
     struct lisp_Object* SymbolVector;
     struct lisp_Object* AnnotationVector;
 
+    struct lisp_Object* AnyAnyMap;
     struct lisp_Object* AnyCallableMap;
     struct lisp_Object* SymbolAnnotationMap;
+    struct lisp_Object* AnnotationTypeMap;
 } lisp_State;
 
 lisp_State* lisp_State_new(void);

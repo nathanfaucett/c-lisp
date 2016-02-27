@@ -8,7 +8,8 @@ static lisp_Object* lisp_Object_alloc(lisp_State* state, lisp_Object* type) {
 
     lisp_GCHeader* gc_header = lisp_State_alloc(state, sizeof(lisp_Object));
     lisp_Object* object = (lisp_Object*) gc_header->data;
-    object->data = lisp_State_assoc(state, object->gc_header, size);
+    object->data = lisp_State_assoc(state, gc_header, size);
+    object->type = type;
 
     return object;
 }

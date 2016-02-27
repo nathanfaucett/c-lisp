@@ -6,6 +6,7 @@ static void lisp_boot(lisp_State* state);
 
 static void lisp_boot_type (
     lisp_State* state,
+    char* name,
     lisp_Object* type,
     lisp_Object* super,
     uintsize values,

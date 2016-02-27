@@ -9,7 +9,13 @@
 #include "lang_Numbers.h"
 #include "lang_Vector.h"
 #include "lang_VectorNode.h"
+#include "lang_Annotation.h"
 #include "lang_Map.h"
+
+#include "lang_Reader.h"
+#include "lang_Reader_ascii.h"
+
+#include "lang_Symbol.h"
 #include "lang_Type.h"
 
 

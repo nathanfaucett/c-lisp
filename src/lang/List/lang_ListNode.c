@@ -4,13 +4,12 @@
 
 
 static lisp_Object* lisp_ListNode_new(lisp_State* state, lisp_Object* next, lisp_Object* value) {
-    lisp_Object* object = lisp_Object_alloc(state, state->ListNode);
+    lisp_Object* object = lisp_boot_object_size(state, state->ListNode, sizeof(void*) * 2);
     lisp_Object** values = (lisp_Object**) object->data;
     values[LISP_IDX_LIST_NODE_NEXT] = next;
     values[LISP_IDX_LIST_NODE_VALUE] = value;
     return object;
 }
-
 
 static lisp_Object* lisp_ListNode_find_node(lisp_Object* node, uintsize index) {
     lisp_Object** values = NULL;

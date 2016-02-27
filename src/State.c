@@ -63,6 +63,7 @@ lisp_State* lisp_State_new(void) {
     }
 
     state->Bool = lisp_boot_object_size(state, state->Type, sizeof_values);
+    state->Reader = lisp_boot_object_size(state, state->Type, sizeof_values);
 
     state->nil = lisp_boot_object_alloc(state, state->Nil);
     state->tru = lisp_boot_object_size(state, state->Bool, 1);
@@ -75,8 +76,10 @@ lisp_State* lisp_State_new(void) {
     state->SymbolVector = lisp_boot_object_size(state, state->Type, sizeof_values);
     state->AnnotationVector = lisp_boot_object_size(state, state->Type, sizeof_values);
 
+    state->AnyAnyMap = lisp_boot_object_size(state, state->Type, sizeof_values);
     state->AnyCallableMap = lisp_boot_object_size(state, state->Type, sizeof_values);
     state->SymbolAnnotationMap = lisp_boot_object_size(state, state->Type, sizeof_values);
+    state->AnnotationTypeMap = lisp_boot_object_size(state, state->Type, sizeof_values);
 
     LISP_OBJECT_SET_DATA(state->tru, bool, true);
     LISP_OBJECT_SET_DATA(state->fal, bool, false);

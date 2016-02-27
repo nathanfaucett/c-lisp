@@ -12,7 +12,7 @@ extern "C" {
 #include "gc_lib.c"
 #include "State.c"
 #include "lang_lib.c"
-#include "Boot.c"
+#include "boot.c"
 
 
 #ifdef __cplusplus
