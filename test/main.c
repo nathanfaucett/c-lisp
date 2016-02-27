@@ -4,7 +4,7 @@
 
 
 int main(void) {
-    char* code = "(symbol :keyword {:key \"value\"} [0, 1, 2, 3] 'c')";
+    char* code = "(10 symbol :keyword {:key \"Hello, World!\"} [0, 1] 'a')";
 
     lisp_State* state = lisp_State_new();
     lisp_Object* reader = lisp_Reader_new(state);

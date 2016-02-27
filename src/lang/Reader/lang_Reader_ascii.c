@@ -106,12 +106,11 @@ lisp_Object* lisp_Reader_ascii_next(lisp_State* state, lisp_Object* reader, char
             ch = lisp_Reader_ascii_read(state, reader, ascii);
         }
 
-        if (ch == '\0' || ch == return_on || ch == ')' || ch == ']' || ch == '}') {
+        if (ch == '\0' || ch == return_on) {
             return NULL;
         }
-
-        if (ch == ';') {
-            lisp_Reader_ascii_read_comment(state, reader, ascii, ch);
+        if (ch == ')' || ch == ']' || ch == '}') {
+            return NULL;
         }
 
         if (lisp_is_numeric(ch) || (ch == '-' && lisp_is_numeric(lisp_Reader_ascii_index(reader, ascii, 0)))) {
@@ -133,7 +132,11 @@ lisp_Object* lisp_Reader_ascii_next(lisp_State* state, lisp_Object* reader, char
             return lisp_Reader_ascii_read_char(state, reader, ascii, ch);
         }
 
-        return lisp_Reader_ascii_read_token(state, reader, ascii, ch);
+        if (ch == ';') {
+            lisp_Reader_ascii_read_comment(state, reader, ascii, ch);
+        } else {
+            return lisp_Reader_ascii_read_token(state, reader, ascii, ch);
+        }
     }
 }
 
@@ -182,18 +185,17 @@ static lisp_Object* lisp_Reader_ascii_read_vector(lisp_State* state, lisp_Object
 }
 static lisp_Object* lisp_Reader_ascii_read_map(lisp_State* state, lisp_Object* reader, char* ascii, char ch) {
     lisp_Object* map = lisp_Map_new_type(state, state->AnyAnyMap);
+    lisp_Object* key;
+    lisp_Object* value;
 
-    lisp_Object* key = lisp_Reader_ascii_next(state, reader, ascii, '}');
-    lisp_Object* value = lisp_Reader_ascii_next(state, reader, ascii, '}');
-
-    while (key != NULL) {
-        if (value == NULL) {
-            value = state->nil;
+    while (true) {
+        key = lisp_Reader_ascii_next(state, reader, ascii, '}');
+        if (key != NULL) {
+            value = lisp_Reader_ascii_next(state, reader, ascii, '}');
+        } else {
+            break;
         }
         lisp_Map_mut_set(state, map, key, value);
-
-        key = lisp_Reader_ascii_next(state, reader, ascii, '}');
-        value = lisp_Reader_ascii_next(state, reader, ascii, '}');
     }
 
     return map;
@@ -221,10 +223,12 @@ static lisp_Object* lisp_Reader_ascii_read_string(lisp_State* state, lisp_Object
 static lisp_Object* lisp_Reader_ascii_read_char(lisp_State* state, lisp_Object* reader, char* ascii, char ch) {
     lisp_Object* ch_object = lisp_Object_alloc(state, state->Char);
 
+    ch = lisp_Reader_ascii_read(state, reader, ascii);
+
     do {
         /* fixme: parse utf-8 chars */
-        ch = lisp_Reader_ascii_read(state, reader, ascii);
         LISP_OBJECT_SET_DATA(ch_object, uint32, ch);
+        ch = lisp_Reader_ascii_read(state, reader, ascii);
     } while (ch != '\0' && ch != '\'');
 
     return ch_object;
